@@ -10,25 +10,22 @@ Rhine Lab 是基于《明日方舟》莱茵生命终端视觉制作的非官方�
 
 ## 项目路径
 
-以下为本机路径，移动项目或换电脑后需要调整。
+以下路径均相对于仓库根目录；便携程序中的路径相对于解压目录。
 
-| 用途 | 路径 |
+| 用途 | 相对路径 |
 | --- | --- |
-| 主项目与交付源码 | `E:\CodexSandbox\Projects\RhineLabUI-main` |
-| 本文件 | `E:\CodexSandbox\Projects\RhineLabUI-main\README.md` |
-| 本机环境说明 | `E:\CodexSandbox\AGENT.md` |
-| 项目开发约束 | `E:\CodexSandbox\Projects\RhineLabUI-main\AGENTS.md` |
-| 原始桌面改造计划 | `E:\CodexSandbox\Projects\RhineLabUI-main\plan.md` |
-| 客户端程序 | `E:\CodexSandbox\Projects\RhineLabUI-main\release\packages\RhineLab-win32-x64\RhineLab.exe` |
-| 1.1.1 便携压缩包 | `E:\CodexSandbox\Projects\RhineLabUI-main\release\packages\make\zip\win32\x64\RhineLab-win32-x64-1.1.1.zip` |
-| 压缩包校验清单 | `E:\CodexSandbox\Projects\RhineLabUI-main\release\packages\make\SHA256SUMS.txt` |
-| 当前交付程序的知识库 | `E:\CodexSandbox\Projects\RhineLabUI-main\release\packages\RhineLab-win32-x64\RhineLabData`，首次启动创建 |
-| 网页开发地址 | `http://127.0.0.1:5173/`，需要开发服务正在运行 |
-| 网页生产构建 | `E:\CodexSandbox\Projects\RhineLabUI-main\dist` |
-| 桌面页面构建 | `E:\CodexSandbox\Projects\RhineLabUI-main\release\desktop\site` |
-| 前次开发与验证工作副本 | `C:\Users\Administrator\Documents\ChatGPT\CodexSandbox\RhineLabUI-desktop` |
+| 项目说明 | `README.md` |
+| 开发约束与原始计划 | `AGENTS.md`、`plan.md` |
+| 客户端程序 | `release/packages/RhineLab-win32-x64/RhineLab.exe` |
+| 便携压缩包 | `release/packages/make/zip/win32/x64/RhineLab-win32-x64-1.1.1.zip` |
+| 压缩包校验清单 | `release/packages/make/SHA256SUMS.txt` |
+| 打包客户端知识库 | `release/packages/RhineLab-win32-x64/RhineLabData/`，首次启动创建 |
+| 开发模式知识库 | `RhineLabData/` |
+| 网页生产构建 | `dist/` |
+| 桌面页面构建 | `release/desktop/site/` |
+| 编辑器演示文档 | `content/desktop-demos/` |
 
-**以 E 盘主项目为交付位置。** C 盘工作副本用于前次构建和验证，并非自动同步目录；继续开发前必须比较两边文件，不能直接用旧副本覆盖主项目。
+网页开发地址为 `http://127.0.0.1:5173/`，需要开发服务正在运行。构建产物和个人知识库不进入 Git；在新检出目录中需先构建打包。若使用多个工作副本，应逐项比较后同步，避免用旧文件覆盖当前源码或用户数据。
 
 在线网页版入口：[rhine.lubeiluchen.cc](https://rhine.lubeiluchen.cc/)。Wallpaper Engine 版本另行维护于 [RhineLabWallpaper](https://github.com/LBEILC/RhineLabWallpaper)，不等同于本地知识库客户端。
 
@@ -77,6 +74,28 @@ Rhine Lab 是基于《明日方舟》莱茵生命终端视觉制作的非官方�
 文档仍保存在本地 Markdown 文件中，下划线使用 `++文字++`，公式使用 `$...$` / `$$...$$`。界面只显示排版结果；进入编辑或无修改保存不会主动重写原文。当前版本尚不支持图片附件管理，不会自动载入 Markdown 中的图片，附件引用会保留。脚本不执行，阅读状态的 HTTP/HTTPS 外链通过系统浏览器打开。
 
 编辑时可用 `Ctrl+B` / `Ctrl+I` / `Ctrl+U` 设置粗体、斜体和下划线，`Ctrl+Z` / `Ctrl+Shift+Z` 撤销／重做。`Ctrl+N` 新建文档，`Ctrl+F` 聚焦全文搜索。
+
+### 演示文档：试用编辑器
+
+本次已向现有客户端知识库添加“编辑器演示”分类。打开知识库并点击“刷新”，即可选择以下五篇文档练习：
+
+| 文档 | 演示内容 |
+| --- | --- |
+| [快速上手](content/desktop-demos/演示01-快速上手.md) | 编辑、保存、分类、拖动与快捷键 |
+| [标题与文字格式](content/desktop-demos/演示02-标题与文字格式.md) | 一至四级标题、粗斜体、下划线、列表与链接 |
+| [表格与项目记录](content/desktop-demos/演示03-表格与项目记录.md) | 项目表格、增删行列与会议笔记 |
+| [代码与技术笔记](content/desktop-demos/演示04-代码与技术笔记.md) | TypeScript、Python 代码块与选区转换 |
+| [LaTeX 公式](content/desktop-demos/演示05-LaTeX公式.md) | 行内公式、独立公式、求和与矩阵 |
+
+这五篇是可选演示，不改变网页版档案或首次初始化的 40 篇内容。新安装时，可将上述 Markdown 文件复制到自己的 `RhineLabData/documents/` 并刷新；它们先出现在未分类中，可拖入自建分类。
+
+开发者也可在仓库根目录运行以下命令，自动建立“编辑器演示”分类并导入文档。请先运行客户端完成知识库初始化；使用其他目录时替换 `--root` 参数。
+
+```powershell
+node scripts/add-desktop-demos.mjs --root ".\release\packages\RhineLab-win32-x64\RhineLabData"
+```
+
+重复导入会跳过同名文档，包括回收区中的同名文档，不覆盖原有内容。演示源文件随仓库提交，个人知识库仍保留在本地。
 
 ### 4. 搜索、分类和排序
 
@@ -158,10 +177,10 @@ RhineLab-win32-x64/
 
 ## 开发与构建
 
-以下命令在项目根目录执行。开发需要 Node.js 和 npm；本机使用 Node.js 24，Windows PowerShell 使用 `npm.cmd`，避免调用被执行策略阻止的 `npm.ps1`。工具路径见 `E:\CodexSandbox\AGENT.md`。
+以下命令在项目根目录执行。开发需要 Node.js 和 npm；本机使用 Node.js 24，Windows PowerShell 使用 `npm.cmd`，避免调用被执行策略阻止的 `npm.ps1`。请确认 `node`、`npm.cmd` 和 `git` 已加入 PATH。
 
 ```powershell
-Set-Location 'E:\CodexSandbox\Projects\RhineLabUI-main'
+# 在仓库根目录执行
 npm.cmd ci
 ```
 
@@ -194,11 +213,14 @@ npm.cmd ci
 | `desktop.html`、`src/desktop-entry.ts` | 桌面入口：先读取本地仓库，再启动界面 |
 | `src/desktop-main.ts` | 网页交互入口的桌面适配，保留同一视觉与场景模块 |
 | `src/desktop.ts`、`src/desktop.css` | 知识库窗口、编辑预览、搜索、排序与冲突提示 |
-| `src/desktop-data.ts` | 完整文档列表到 40 个展陈槽位的映射与当前文档保持 |
+| `src/desktop-data.ts` | 分类与文档到动态阵列的映射、稳定 ID 及当前选择保持 |
+| `src/desktop-rich-editor.ts` | 排版编辑、选区工具、Markdown 序列化与撤销隔离 |
 | `src/desktop-markdown.ts` | 详情页本地 Markdown 安全渲染 |
 | `src/desktop-api.d.ts` | 渲染端桌面 API 类型 |
 | `desktop/main.mjs` | Electron 窗口、协议、权限、IPC 和退出处理 |
 | `desktop/preload.cjs` | 受限桥接 API，渲染端使用 `window.rhine` |
+| `desktop/directory.mjs` | 独立分类、文档归属和稳定阵列列号 |
+| `content/desktop-demos/`、`scripts/add-desktop-demos.mjs` | 可选编辑器演示及重复导入保护 |
 | `desktop/repository.mjs` | 文件仓库、原子写入、修订、备份、回收区及监听 |
 | `src/data.ts`、`content/archives.json` | 网页演示档案数据 |
 | `src/scene.ts`、`src/archive-loop.ts` | 共享三维阵列、运动和循环位置 |
@@ -214,10 +236,10 @@ npm.cmd ci
 
 ### 先读取，再确定本次范围
 
-1. 读取 `E:\CodexSandbox\AGENT.md`，确认本机工具与权限条件。
+1. 确认当前环境的工具、权限及仓库根目录；本机环境说明由运行环境提供，不在本 README 固定路径。
 2. 读取项目 `AGENTS.md`、`plan.md` 和本 README；涉及视觉时继续读取 `DESIGN.md`。
-3. 阅读 [桌面说明](docs/DESKTOP.md)、[最新视觉对齐验收](verification/DESKTOP-ALIGNMENT.md) 和 `verification/desktop-alignment/result.json`。较早的 [桌面验收](verification/DESKTOP.md) 用于了解历史实现，不应当作当前 UI 基准。
-4. 检查实际 Git 分支、未提交修改、源码和发行包时间。前次交付没有完成 Git 提交，不能根据文件存在就推断已提交、合并或发布。
+3. 阅读 [桌面说明](docs/DESKTOP.md)、[富文本编辑器验收](verification/rich-editor/README.md) 和 [分类目录验收](verification/category-directory/README.md)。[首页视觉对齐](verification/DESKTOP-ALIGNMENT.md) 用于共享场景对照；较早的桌面验收不应当作当前知识库 UI 基准。
+4. 检查实际 Git 分支、未提交修改、源码和发行包时间；源码提交与本机构建产物分别核对，不能仅凭文件存在推断已同步。
 5. 以用户本次需求定义完成标准；下述路线是建议，不是自动获得的发布或大规模重构授权。
 
 ### 必须保持的边界
@@ -231,13 +253,13 @@ npm.cmd ci
 - 不删除、覆盖或打包真实 `RhineLabData`；测试使用隔离目录。保留原子写入、修订冲突检查、路径及链接校验、回收区事务恢复。
 - `window.rhine` 是桌面桥接接口；客户端调试控制为 `window.rhineReview`，网页调试控制仍为 `window.rhine`，不要覆盖 preload 暴露的属性。
 - 保持桌面禁用 PWA、外链交给系统浏览器、Node 隔离和受限 IPC；不能为解决加载问题而放开任意文件或网络访问。
-- 同步 E/C 两个目录时逐项比较，只同步本次文件并核对哈希；不得使用整目录镜像删除覆盖用户数据。不要自动发布、推送或清理已有改动。
+- 同步 E/C 两个目录时逐项比较，只同步本次文件并核对哈希；不得使用整目录镜像删除覆盖用户数据。提交与同步遵循 `AGENTS.md` 及用户授权；不得清理用户已有改动，公开发布另按用户要求执行。
 
 ### 建议的下一步顺序
 
 | 优先级 | 建议工作 | 完成判据 |
 | --- | --- | --- |
-| P1 | 补齐动态文档与展陈语义：分类已独立持久化并对应稳定阵列列号 | 明确任意分类、手动排序、空槽和展示子集的规则；稳定 ID 与选择连续，不改变原始阵列视觉 |
+| P1 | 维护已实现的动态分类与展陈语义回归 | 验证分类、手动排序、空槽及删除独立性；稳定 ID 与选择连续，不改变原始阵列视觉 |
 | P1 | 扩大视觉回归到开场关键帧、详情、360° 查看器、亮暗主题及不同 DPI | 同尺寸、同设置、同时间点比较网页与客户端，保留截图及差异说明；不靠更新基准掩盖回归 |
 | P1 | 完善编辑工作流验收：外部修改时的未保存草稿、关闭程序、拖动排序和键盘操作 | 真实打包程序中复现并验证，保存状态与磁盘内容一致，编辑输入不传到底层场景 |
 | P2 | 评估 `desktop-main.ts` 与 `main.ts` 的重复维护问题 | 先给出最小适配方案；仅在获准调整共享结构后实施，并证明网页行为和画面不变 |
@@ -265,7 +287,7 @@ npm.cmd run check:desktop:ui
 
 ## 当前验证范围与限制
 
-1.1.1 已通过首页布局对照、真实客户端新建/保存/搜索/删除恢复、未保存取消/放弃、键盘隔离、重启持久化、1000×680 窗口、空库/单篇/超过 40 篇文档及离线资源检查。原网页构建、PWA 和仓库测试通过。详细证据见 [视觉对齐验收](verification/DESKTOP-ALIGNMENT.md)。
+1.1.1 已通过首页布局对照、真实客户端新建/保存/搜索/删除恢复、未保存取消/放弃、键盘隔离、重启持久化、1000×680 窗口、空库/单篇/超过 40 篇文档及离线资源检查。原网页构建、PWA 和仓库测试通过。分类独立持久化、整条文档拖放、富文本工具栏、表格、离线公式和保存后继续编辑也已通过实际打包程序验证。详细证据见 [编辑器验收](verification/rich-editor/README.md)、[分类目录验收](verification/category-directory/README.md) 和 [视觉对齐验收](verification/DESKTOP-ALIGNMENT.md)。
 
 当前交付为 Windows x64 便携测试构建，尚未签名；没有云同步、自动更新或图片附件管理。未宣称完成所有 Windows 硬件、多显示器及睡眠恢复验收。开场 Novecento 字体未确认桌面再分发范围，因此使用项目已有回退字形。
 
