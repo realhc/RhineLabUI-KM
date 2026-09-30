@@ -1,0 +1,33 @@
+{
+  "width": 1440,
+  "height": 900,
+  "viewport": [
+    1440,
+    900
+  ],
+  "directoryBackground": "rgba(0, 0, 0, 0)",
+  "axisTop": 0,
+  "axisBottom": 900,
+  "controls": {
+    "x": 342,
+    "y": 24,
+    "width": 1070,
+    "height": 251.83334350585938,
+    "top": 24,
+    "right": 1412,
+    "bottom": 275.8333435058594,
+    "left": 342
+  },
+  "content": {
+    "x": 342,
+    "y": 297.8333435058594,
+    "width": 1070,
+    "height": 578.1666870117188,
+    "top": 297.8333435058594,
+    "right": 1412,
+    "bottom": 876.0000305175781,
+    "left": 342
+  },
+  "blur": "blur(12px) saturate(0.85)",
+  "background": "color(srgb 0.929412 0.921569 0.894118 / 0.34)"
+}

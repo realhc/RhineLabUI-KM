@@ -1,0 +1,256 @@
+{
+  "geometry": {
+    ".brand": {
+      "x": 49.16666793823242,
+      "y": 95,
+      "width": 225,
+      "height": 92.5,
+      "font": "MiSans, \"Mi Sans\", \"PingFang SC\", \"Microsoft YaHei\", system-ui, sans-serif",
+      "color": "rgb(8, 10, 8)"
+    },
+    ".system-nav": {
+      "x": 1062.85595703125,
+      "y": 103.33333587646484,
+      "width": 327.97747802734375,
+      "height": 23.33333396911621,
+      "font": "MiSans, \"Mi Sans\", \"PingFang SC\", \"Microsoft YaHei\", system-ui, sans-serif",
+      "color": "rgb(8, 10, 8)"
+    },
+    ".archive-callout": {
+      "x": 727.5,
+      "y": 392.5,
+      "width": 712.5,
+      "height": 220.5555419921875,
+      "font": "MiSans, \"Mi Sans\", \"PingFang SC\", \"Microsoft YaHei\", system-ui, sans-serif",
+      "color": "rgb(8, 10, 8)"
+    },
+    ".archive-navigation": {
+      "x": 377.99481201171875,
+      "y": 752.5,
+      "width": 295,
+      "height": 38.333335876464844,
+      "font": "MiSans, \"Mi Sans\", \"PingFang SC\", \"Microsoft YaHei\", system-ui, sans-serif",
+      "color": "rgb(8, 10, 8)"
+    },
+    ".column-navigation": {
+      "x": 753.75,
+      "y": 752.5,
+      "width": 233.33334350585938,
+      "height": 38.333335876464844,
+      "font": "MiSans, \"Mi Sans\", \"PingFang SC\", \"Microsoft YaHei\", system-ui, sans-serif",
+      "color": "rgb(8, 10, 8)"
+    },
+    ".system-footer": {
+      "x": 49.16666793823242,
+      "y": 859.72216796875,
+      "width": 1341.666748046875,
+      "height": 11.111166000366211,
+      "font": "MiSans, \"Mi Sans\", \"PingFang SC\", \"Microsoft YaHei\", system-ui, sans-serif",
+      "color": "rgb(120, 119, 110)"
+    },
+    "#three-scene": {
+      "x": 0,
+      "y": 0,
+      "width": 1440,
+      "height": 900,
+      "font": "MiSans, \"Mi Sans\", \"PingFang SC\", \"Microsoft YaHei\", system-ui, sans-serif",
+      "color": "rgb(8, 10, 8)"
+    }
+  },
+  "matchingWebLayout": true,
+  "sharedOriginalScene": true,
+  "createSaveRead": true,
+  "fulltext": true,
+  "unsavedCancelDiscard": true,
+  "trashRestore": true,
+  "keyboardIsolation": true,
+  "nodeIsolation": true,
+  "offline": true,
+  "errors": [],
+  "failed": [],
+  "stats": {
+    "decryption": {
+      "time": -1,
+      "intervals": [],
+      "markers": 0,
+      "point": 0,
+      "label": 0,
+      "labelValue": 0,
+      "clarity": 0,
+      "phase": "waiting",
+      "modelClarity": 0
+    },
+    "topLeft": [
+      777,
+      285
+    ],
+    "topRight": [
+      1102,
+      117
+    ],
+    "labelTopLeft": [
+      848,
+      321
+    ],
+    "labelBottomLeft": [
+      848,
+      377
+    ],
+    "modelPosition": [
+      4.9998,
+      -3.2341,
+      -2.4681
+    ],
+    "cameraPosition": [
+      -114.5261,
+      45.5271,
+      68.6718
+    ],
+    "fieldOfView": 3.3325144946539234,
+    "loaded": true,
+    "drawCalls": 126,
+    "renderedFrames": 1188,
+    "reusedFrames": 0,
+    "superPerformance": false,
+    "presentation": 1,
+    "triangles": 4113475,
+    "archiveCount": 283,
+    "archiveCandidates": 407,
+    "archiveCulled": 124,
+    "archiveCapacity": 576,
+    "archiveCoverage": "standard",
+    "returningFiles": 1,
+    "selectionPhase": "wave",
+    "pendingPulse": null,
+    "pulses": [
+      {
+        "lane": 4,
+        "row": 11,
+        "time": 13.451600000000001
+      },
+      {
+        "lane": 2,
+        "row": 12,
+        "time": 15.9308
+      },
+      {
+        "lane": 2,
+        "row": 12,
+        "time": 16.3807
+      },
+      {
+        "lane": 4,
+        "row": 11,
+        "time": 16.434900000000003
+      }
+    ],
+    "referenceTime": 45.7,
+    "selectedSlot": 147,
+    "selectedLane": 4,
+    "selectedCell": {
+      "lane": 4,
+      "row": 11
+    },
+    "hoverCell": null,
+    "hoverLifts": {},
+    "dragTrack": null,
+    "archiveMomentum": null,
+    "holdingArchive": false,
+    "dragProjection": {
+      "lane": {
+        "x": -280.5485283801463,
+        "y": 150.13224826693843
+      },
+      "row": {
+        "x": -56.1323781131335,
+        "y": -10.758560821379257
+      }
+    },
+    "dragMapping": null,
+    "coordinateOrigin": {
+      "lane": 0,
+      "row": 0
+    },
+    "poolBounds": {
+      "minLane": -3,
+      "maxLane": 9,
+      "minRow": -21,
+      "maxRow": 53
+    },
+    "laneFocus": 2.9565224317000407,
+    "columnCamera": 5.400223981679271,
+    "rotation": 0,
+    "clearance": -3.611698489927286,
+    "canInspect": false,
+    "returnPhase": "lowering",
+    "extraction": 0.166,
+    "appearance": 0.344,
+    "cameraDetail": 0,
+    "idleGain": 1.1424929717584462e-18,
+    "flatten": 0,
+    "spectrumActivity": 0,
+    "selectedIndexDim": 0,
+    "returningIndexDims": [
+      {
+        "cell": {
+          "lane": 2,
+          "row": 12
+        },
+        "dim": 0
+      }
+    ],
+    "cameraDistance": 139.97930086156066,
+    "cameraNear": 5,
+    "cameraFar": 300,
+    "fogNear": 140.97902650809735,
+    "fogFar": 155.97875215463404,
+    "returningAppearance": [
+      {
+        "slot": 76,
+        "clarity": 0,
+        "cell": {
+          "lane": 2,
+          "row": 12
+        },
+        "lift": 0.21912370515170726,
+        "quality": 0.5890974723030443,
+        "rotation": 0,
+        "worldY": -3.5156571204173783,
+        "phase": "lowering"
+      }
+    ],
+    "rail": 0.322,
+    "threeState": "on",
+    "fps": 123,
+    "mode": "archive",
+    "ready": true,
+    "startup": "started",
+    "motion": {
+      "reduced": false,
+      "preset": "full"
+    },
+    "bootTime": null,
+    "selected": "58ce7e78-6a7d-4971-9697-caab0b6ed33f",
+    "saved": [],
+    "audio": {
+      "state": "running",
+      "scene": "archive",
+      "tracks": 3,
+      "voices": 2,
+      "loaded": true,
+      "playedKeys": 0,
+      "error": "",
+      "preferences": {
+        "sound": true,
+        "music": true,
+        "soundVolume": 0.55,
+        "musicVolume": 0.5
+      }
+    },
+    "wallpaper": null
+  },
+  "restartPersistence": true,
+  "smallWindow": true,
+  "emptyLibrary": true,
+  "singleDocument": true
+}

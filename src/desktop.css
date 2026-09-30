@@ -199,3 +199,73 @@
 @media (prefers-reduced-transparency:reduce) { #library-overlay .directory-wheel .directory-label { opacity:1; } }
 
 [data-dark-surface="true"] #library-overlay .directory-wheel #documents .document { box-shadow:none; }
+
+/* Full-screen glass workspace with three independent surfaces. */
+#library-overlay { --workspace-gap:22px; --directory-width:320px; position:fixed; inset:0; margin:0; width:100vw; height:100dvh; max-width:none; max-height:none; min-height:0; padding:24px 28px 24px 0; border:0; border-radius:0; background:transparent; box-shadow:none; backdrop-filter:none; -webkit-backdrop-filter:none; overflow:hidden; }
+#library-overlay[open] { display:grid; grid-template-columns:var(--directory-width) minmax(0,1fr); grid-template-rows:auto minmax(0,1fr); gap:var(--workspace-gap); }
+#library-overlay::backdrop { background:color-mix(in srgb,var(--theme-panel,#edebe4) 34%,transparent); backdrop-filter:blur(12px) saturate(.85); }
+#library-overlay .shell { display:contents; }
+#library-overlay aside { grid-column:1; grid-row:1 / -1; position:relative; padding:0 8px 0 20px; border:0; background:transparent; gap:13px; overflow:visible; }
+#library-overlay aside::before { content:""; position:absolute; top:-24px; bottom:-24px; left:25px; width:7px; pointer-events:none; background:linear-gradient(to bottom,var(--glass-stroke),var(--ink) 45%,var(--ink) 55%,var(--glass-stroke)); clip-path:polygon(45% 0,55% 0,72% 16%,91% 34%,100% 50%,91% 66%,72% 84%,55% 100%,45% 100%,28% 84%,9% 66%,0 50%,9% 34%,28% 16%); opacity:.72; }
+#library-overlay aside > :not(.directory-wheel) { margin-left:40px; }
+#library-overlay aside > #search { width:calc(100% - 40px); }
+#library-overlay aside .eyebrow { font-size:9px; letter-spacing:1px; }
+#library-overlay .directory-wheel::before { display:none; }
+#library-overlay .directory-wheel #documents { scrollbar-width:none; }
+#library-overlay .directory-wheel #documents::-webkit-scrollbar { display:none; }
+#library-overlay .directory-wheel .document:hover:not(:disabled), #library-overlay .directory-wheel .document.selected { background:transparent; }
+#library-overlay .side-footer { border:0; padding-top:0; }
+#library-overlay .library-controls { grid-column:2; grid-row:1; min-width:0; padding:18px 22px 12px; background:var(--glass); border:1px solid var(--glass-stroke); border-radius:18px; box-shadow:0 10px 36px #00000012,inset 0 1px #ffffff50; }
+#library-overlay .library-controls > header { display:flex; align-items:center; justify-content:space-between; gap:18px; margin-bottom:18px; }
+#library-overlay .library-controls .library-brand { font-size:13px; }
+#library-overlay .library-controls .header-actions { gap:5px; }
+#library-overlay .library-controls .header-actions button { padding:6px 9px; font-size:11px; }
+#library-overlay .library-controls .metadata { margin-bottom:8px; }
+#library-overlay .library-controls .toolbar { margin-bottom:8px; padding:8px 0; }
+#library-overlay .library-controls #format { padding-bottom:8px; }
+#library-overlay .library-controls > footer { display:flex; justify-content:space-between; gap:12px; padding-top:8px; border-top:1px solid var(--glass-stroke); color:var(--muted); font:9px/1.6 Consolas,monospace; }
+#library-overlay:has(#editor[hidden]) .library-controls :is(.metadata,.toolbar,#format) { display:none; }
+#library-overlay main { grid-column:2; grid-row:2; padding:0; border:1px solid var(--glass-stroke); border-radius:18px; background:var(--content); box-shadow:0 12px 40px #00000014; min-height:0; }
+#library-overlay #editor { min-height:0; }
+#library-overlay #panes { border:0; border-radius:0; box-shadow:none; }
+#library-overlay #document-info { padding:6px 20px 9px; margin:0; border-top:1px solid var(--glass-stroke); }
+#library-overlay #notice { margin:12px 16px; flex:none; }
+[data-dark-surface="true"] #library-overlay { box-shadow:none; }
+[data-dark-surface="true"] #library-overlay #panes { box-shadow:none; }
+@media (max-width:1050px) {
+ #library-overlay { --directory-width:270px; --workspace-gap:16px; padding:18px 18px 18px 0; }
+ #library-overlay aside::before { top:-18px; bottom:-18px; }
+ #library-overlay .library-controls { padding:15px 16px 10px; }
+ #library-overlay .library-controls > header { align-items:flex-start; gap:10px; }
+ #library-overlay .library-controls .header-actions { max-width:72%; }
+}
+@media (max-width:720px) {
+ #library-overlay { --directory-width:210px; --workspace-gap:10px; padding:12px 12px 12px 0; }
+ #library-overlay aside { padding-left:12px; gap:9px; }
+ #library-overlay aside::before { left:17px; top:-12px; bottom:-12px; }
+ #library-overlay aside > :not(.directory-wheel) { margin-left:24px; }
+ #library-overlay aside > #search { width:calc(100% - 24px); }
+ #library-overlay aside > .row { flex-wrap:wrap; }
+ #library-overlay .library-controls { padding:12px; }
+ #library-overlay .library-controls > header { flex-direction:column; margin-bottom:10px; }
+ #library-overlay .library-controls .header-actions { max-width:none; justify-content:flex-start; }
+ #library-overlay .library-controls > footer { flex-wrap:wrap; }
+}
+@media (max-width:520px) {
+ #library-overlay { --directory-width:160px; --workspace-gap:8px; padding-right:8px; }
+ #library-overlay .shell { display:contents; }
+ #library-overlay aside { max-height:none; border:0; padding-right:0; }
+ #library-overlay aside .filters { grid-template-columns:1fr; }
+ #library-overlay .directory-wheel .document { padding-left:26px; }
+ #library-overlay .directory-wheel .document::before { max-width:23px; }
+ #library-overlay main { padding:0; }
+ #library-overlay .library-controls .header-actions button { padding:5px; font-size:9px; }
+ #library-overlay .library-controls .library-brand small { white-space:normal; }
+}
+@supports not (backdrop-filter:blur(1px)) { #library-overlay::backdrop { background:color-mix(in srgb,var(--theme-panel,#edebe4) 85%,transparent); } }
+@media (prefers-reduced-motion:no-preference) {
+ #library-overlay::backdrop { animation:library-glass-in .22s ease-out both; }
+ #library-overlay aside, #library-overlay .library-controls, #library-overlay main { animation:library-surface-in .26s .12s ease-out both; }
+ @keyframes library-glass-in { from { opacity:0; } to { opacity:1; } }
+ @keyframes library-surface-in { from { opacity:0; transform:translateY(8px); } to { opacity:1; transform:none; } }
+}
