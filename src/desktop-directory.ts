@@ -61,7 +61,7 @@ export function mountDirectoryWheel(list: HTMLElement) {
     const rows = Array.from(list.querySelectorAll<HTMLButtonElement>('.document'));
     if (!rows.length) return;
     const current = rows.indexOf(document.activeElement as HTMLButtonElement);
-    const page = Math.max(1, Math.floor(list.clientHeight / 78));
+    const page = Math.max(1, Math.floor(list.clientHeight / 60));
     const next = event.key === 'Home' ? 0 : event.key === 'End' ? rows.length - 1 : current + (event.key === 'PageDown' ? page : event.key === 'PageUp' ? -page : event.key === 'ArrowDown' ? 1 : -1);
     event.preventDefault();
     const row = rows[Math.max(0, Math.min(rows.length - 1, next))];

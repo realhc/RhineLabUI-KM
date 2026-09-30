@@ -21,7 +21,7 @@ try {
  assert.equal(await page.locator('#detail-content .detail-title-cn').innerText(),'莱茵生命\n机构档案');
  await page.locator('[data-action="edit-local"]').click();await page.waitForFunction(()=>document.querySelector('#library-overlay').open);
  assert.equal(await page.locator('#title').inputValue(),'莱茵生命');
- await page.locator('#new').click();await page.waitForFunction(()=>document.querySelectorAll('#documents .document').length===41);
+ await page.keyboard.press('Control+n');await page.waitForFunction(()=>document.querySelectorAll('#documents .document').length===41);
  await page.locator('#title').fill('Visual alignment document');await page.locator('#body').fill('# Local Markdown\n\n| A | B |\n| --- | --- |\n| 1 | 2 |\n\n<script>window.unsafe=true</script>\n\nAlignmentNeedle');await page.locator('#save').click();
  await page.waitForFunction(()=>document.querySelector('#state').textContent.includes('已保存'));
  const created=(await docs()).documents.find(d=>d.title==='Visual alignment document');assert.ok(created);assert.equal(await page.locator('#preview table').count(),1);assert.equal(await page.evaluate(()=>window.unsafe),undefined);
@@ -54,6 +54,6 @@ try {
  await p.locator('[data-action="search"]').click();await p.waitForFunction(()=>document.querySelector('#library-overlay').open);await p.screenshot({path:join(out,'desktop-small.png')});await p.locator('#library-close').click();
  await p.evaluate(async()=>{const result=await window.rhine.list();for(const doc of result.documents)await window.rhine.trash(doc.id,doc.revision);});
  await p.waitForTimeout(700);await p.locator('[data-action="search"]').click();await p.waitForFunction(()=>document.querySelectorAll('#documents .document').length===0);await p.screenshot({path:join(out,'desktop-empty.png')});
- await p.locator('#new').click();await p.waitForFunction(()=>document.querySelectorAll('#documents .document').length===1);await p.locator('#library-close').click();await p.waitForTimeout(500);assert.equal(await p.evaluate(()=>window.rhineReview.stats().ready),true);assert.deepEqual(faults,[]);
+ await p.keyboard.press('Control+n');await p.waitForFunction(()=>document.querySelectorAll('#documents .document').length===1);await p.locator('#library-close').click();await p.waitForTimeout(500);assert.equal(await p.evaluate(()=>window.rhineReview.stats().ready),true);assert.deepEqual(faults,[]);
  const result=JSON.parse(await readFile(join(out,'result.json'),'utf8'));Object.assign(result,{restartPersistence:true,smallWindow:true,emptyLibrary:true,singleDocument:true});await writeFile(join(out,'result.json'),JSON.stringify(result,null,2));console.log('Restart, small window, empty library and single document passed.');
 }finally{await again.close();}

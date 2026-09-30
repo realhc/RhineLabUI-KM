@@ -30,9 +30,9 @@ try {
  assert.deepEqual(await page.evaluate(async()=>(await window.rhine.list()).documents.map(d=>[d.id,d.order])),order,'browsing leaves persisted order intact');
  await list.evaluate(el=>el.scrollTop=0);await page.waitForTimeout(200);
  await page.locator('#documents .document').first().focus();await page.keyboard.press('ArrowDown');assert.equal(await page.evaluate(()=>document.activeElement?.dataset.id),await page.locator('#documents .document').nth(1).getAttribute('data-id'),'arrow moves exactly one row');
- const moving=await page.locator('#documents .document').nth(1).getAttribute('data-id');
+ const moving=await page.locator('#documents .document').nth(1).getAttribute('data-id');const targetId=await page.locator('#documents .document').first().getAttribute('data-id');
  await page.locator('#documents .document').nth(1).locator('.directory-reorder').dragTo(page.locator('#documents .document').first());
- await page.waitForFunction(async(id)=>{const d=(await window.rhine.list()).documents.sort((a,b)=>a.order-b.order);return d[0].id===id;},moving);
+ await page.waitForFunction(async(id)=>{const d=(await window.rhine.list()).documents.sort((a,b)=>a.order-b.order);return d.findIndex(x=>x.id===id[0])+1===d.findIndex(x=>x.id===id[1]);},[moving,targetId]);
  await page.locator('#search').fill('NOT_A_DOCUMENT_39201');assert.equal(await page.locator('#documents .document').count(),0);await page.locator('#search').fill('');
  await page.locator('#library-close').click();await page.locator('[data-action="settings"]').click();await page.locator('[data-color-theme="dark"]').click();await page.waitForTimeout(500);await page.locator('[data-action="close-modal"]').click();await page.waitForTimeout(300);await page.locator('[data-action="search"]').click();
  await app.evaluate(({BrowserWindow})=>BrowserWindow.getAllWindows()[0].setContentSize(1000,680));await page.waitForTimeout(300);await page.screenshot({path:join(out,'dark-small.png')});

@@ -15,7 +15,7 @@ import "./quality-settings.css";
 import "./responsive.css";
 import { viewportLayout, openingLayout } from "./viewport-layout";
 import { assetUrl } from "./asset-url";
-import { desktopDocuments, setDesktopDocuments, exhibitDocument, documentForRecord, displayCode } from "./desktop-data";
+import { desktopDocuments, desktopCategories, desktopNextLane, setDesktopDocuments, exhibitDocument, documentForRecord, displayCode } from "./desktop-data";
 import { openLibrary } from "./desktop";
 import { renderMarkdown } from "./desktop-markdown";
 let libraryVisible = false;
@@ -90,7 +90,7 @@ $("#stage").innerHTML = `
     <div id="hover-label" class="hover-label" hidden>X-<span id="hover-code">001</span> / <span id="hover-title"></span></div>
     <div class="archive-counter"><span class="tiny-label">ARCHIVE / SELECT</span><div><span id="selected-number">01</span><i>/</i><span class="count-total">12</span></div></div>
     <div class="archive-navigation"><button data-action="prev" aria-label="上一个档案">↑</button><div id="file-ticks" class="file-ticks"></div><button data-action="next" aria-label="下一个档案">↓</button></div>
-    <div class="column-navigation"><button data-action="column-prev" aria-label="上一列">←</button><div><span id="column-number">COLUMN <span id="column-index">03</span> / 05</span><strong id="column-name">机构档案</strong></div><button data-action="column-next" aria-label="下一列">→</button></div>
+    <div class="column-navigation"><button data-action="column-prev" aria-label="上一列">←</button><div><span id="column-number">COLUMN <span id="column-index">03</span> / <span id="column-total">05</span></span><strong id="column-name">机构档案</strong></div><button data-action="column-next" aria-label="下一列">→</button></div>
     <div class="archive-hint"><kbd>←</kbd> <kbd>→</kbd> 切换列 <span>／</span> <kbd>↑</kbd> <kbd>↓</kbd> 前后档案 <span>／</span> <kbd>ENTER</kbd> 读取</div>
   </section>
   <section id="detail-ui" class="detail-ui" aria-label="档案内容" hidden>
@@ -408,7 +408,7 @@ $("#file-ticks").innerHTML = columnFiles(fileLocation(selected).lane)
     (index) => `<button data-select="${index}"></button>`,
   )
   .join("");
-const fileTicks = [...$("#file-ticks").querySelectorAll<HTMLButtonElement>("button")];
+let fileTicks = [...$("#file-ticks").querySelectorAll<HTMLButtonElement>("button")];
 
 function setMode(next: Mode) {
   if (workbench?.enabled && next === "detail") next = "archive";
@@ -523,6 +523,8 @@ function updateSelection(navigation?: ArchiveNavigation) {
   columnTitle.update({ text: archiveColumns[lane], animated: motionActive("rollingText") && mode === "archive" });
   $<HTMLButtonElement>('[data-action="column-prev"]').disabled = false;
   $<HTMLButtonElement>('[data-action="column-next"]').disabled = false;
+  $("#column-total").textContent=String(archiveColumns.length).padStart(2,"0");
+  if(fileTicks.length!==files.length){$("#file-ticks").innerHTML=files.map(index=>`<button data-select="${index}"></button>`).join("");fileTicks=[...$("#file-ticks").querySelectorAll<HTMLButtonElement>("button")];}
   fileTicks.forEach((button, slot) => {
     const index = files[slot], record = records[index];
     button.dataset.select = String(index);
@@ -1407,17 +1409,18 @@ window.addEventListener("rhine-library-visibility", event => {
   if (!libraryVisible) { saved.clear(); readLocal<string[]>("rhine-saved", []).forEach(id => saved.add(id)); updateSelection(); }
 });
 window.addEventListener("rhine-open-settings", () => openModal("settings"));
-window.addEventListener("rhine-library-changed", event => refreshExhibit((event as CustomEvent<RhineDocument[]>).detail));
+window.addEventListener("rhine-library-changed", event => refreshExhibit((event as CustomEvent<Awaited<ReturnType<typeof window.rhine.list>>>).detail));
 window.addEventListener("rhine-library-selected", event => {
   const id = (event as CustomEvent<string>).detail;
   if (!id) return;
   const index = exhibitDocument(id);
   if (index >= 0) select(index);
 });
-function refreshExhibit(documents: RhineDocument[]) {
-  if (documents.length === desktopDocuments.length && documents.every((doc, index) => doc.id === desktopDocuments[index].id && doc.revision === desktopDocuments[index].revision)) return;
+function refreshExhibit(data: Awaited<ReturnType<typeof window.rhine.list>>) {
+  const {documents}=data;
+  if (data.nextLane===desktopNextLane && JSON.stringify(data.categories)===JSON.stringify(desktopCategories) && documents.length===desktopDocuments.length && documents.every((doc,index)=>doc.id===desktopDocuments[index].id&&doc.revision===desktopDocuments[index].revision&&doc.categoryId===desktopDocuments[index].categoryId&&doc.category===desktopDocuments[index].category)) return;
   const id = records[selected]?.id;
-  setDesktopDocuments(documents);
+  setDesktopDocuments(documents,data.categories,data.nextLane);
   const next = records.findIndex(record => record.id === id);
   columnMemory.splice(0, columnMemory.length, ...archiveColumns.map((_, lane) => columnFiles(lane)[0]));
   select(next < 0 ? 0 : next);
@@ -1425,5 +1428,5 @@ function refreshExhibit(documents: RhineDocument[]) {
 let diskRefresh = 0;
 window.rhine.onChanged(() => {
   const request = ++diskRefresh;
-  void window.rhine.list().then(result => { if (request === diskRefresh) refreshExhibit(result.documents); }).catch(error => notify(String(error)));
+  void window.rhine.list().then(result => { if (request === diskRefresh) refreshExhibit(result); }).catch(error => notify(String(error)));
 });

@@ -26,6 +26,9 @@ const read = (key: string, fallback: any): any => {
   }
 };
 let dragged = "";
+let directoryCategories: RhineCategory[] = [];
+let activeCategory: string | null = null;
+const collapsed = new Set<string>(read("rhine-directory-collapsed", []));
 let documents: RhineDocument[] = [],
   trash: RhineDocument[] = [],
   selected: RhineDocument | undefined;
@@ -50,7 +53,7 @@ md.renderer.rules.image = (tokens, index) =>
 
 overlay.innerHTML =
   `<header><div class="library-brand">RHINE LAB<small>ARCHIVE DIRECTORY / 本地知识库</small></div><div class="header-actions"><button id="refresh" title="刷新磁盘索引">刷新</button><button id="folder">打开知识库文件夹 ↗</button><button id="preferences">设置</button><button id="fullscreen" title="F11 全屏 / Esc 退出">⛶</button><button id="library-close" aria-label="关闭知识库">CLOSE ×</button></div></header>
-<div class="shell"><aside><div class="row" style="justify-content:space-between"><span class="eyebrow">ARCHIVE DIRECTORY</span><button id="new" class="solid">＋ 新建</button></div><input id="search" type="search" placeholder="搜索标题、分类和正文…" aria-label="全文搜索"/><div class="nav"><button data-view="all" class="active">全部</button><button data-view="saved">收藏</button><button data-view="trash">回收区</button></div><div class="filters"><select id="filter" aria-label="分类"><option value="">全部分类</option></select><select id="sort" aria-label="排序"><option value="manual">手动顺序</option><option value="title">标题 A–Z</option><option value="modified">最近修改</option></select></div><div class="directory-wheel"><div id="documents" role="list" aria-label="文档刻度目录"></div></div><div class="side-footer"><span id="count"></span><br>本地 Markdown · 数据位于程序旁<br>上下拖动 / 滚轮浏览 · 拖动 ⋮⋮ 调整顺序</div></aside>
+<div class="shell"><aside><div class="row" style="justify-content:space-between"><span class="eyebrow">ARCHIVE DIRECTORY</span><div class="directory-add"><button id="new" class="solid" aria-label="新建分类或文档" aria-expanded="false">＋</button><div id="new-menu" hidden><button id="new-category">新建分类</button><button id="new-document">新建文档</button></div></div></div><input id="search" type="search" placeholder="搜索标题、分类和正文…" aria-label="全文搜索"/><div class="nav"><button data-view="all" class="active">全部</button><button data-view="saved">收藏</button><button data-view="trash">回收区</button></div><div class="filters"><select id="sort" aria-label="排序"><option value="manual">手动顺序</option><option value="title">标题 A–Z</option><option value="modified">最近修改</option></select></div><div class="directory-wheel"><div id="documents" role="list" aria-label="文档刻度目录"></div></div><div class="side-footer"><span id="count"></span><br>本地 Markdown · 数据位于程序旁<br>上下拖动 / 滚轮浏览 · 拖动小刻度归类 / 排序</div></aside>
 <main><div id="notice" role="alert"></div><section id="empty-main" class="empty"><div class="eyebrow">NO ARCHIVE SELECTED</div><h2>从一份记录开始</h2><p>选择左侧档案，或新建一篇 Markdown 文档。</p></section><section id="editor" hidden><div class="metadata"><input id="title" aria-label="文档标题" placeholder="文档标题" maxlength="240"/><input id="category" aria-label="文档分类" placeholder="未分类" list="categories" maxlength="120"/><datalist id="categories"></datalist></div><div class="toolbar"><div class="row"><button id="save" class="solid" title="Ctrl+S">保存</button><button id="favorite">☆ 收藏</button><button id="remove" class="danger">移入回收区</button><button id="restore" hidden>恢复</button><button id="purge" class="danger" hidden>永久删除</button></div><div class="mode"><button data-mode="source">源码</button><button data-mode="split" class="active">分栏</button><button data-mode="preview">阅读</button></div></div><div id="format" class="row"><button data-wrap="**" title="Ctrl+B">B 粗体</button><button data-wrap="*" title="Ctrl+I">I 斜体</button><button data-prefix="## ">H 标题</button><button data-prefix="- ">列表</button><button data-prefix="> ">引用</button><button data-wrap="&#96;">代码</button></div><div id="panes" class="split"><textarea id="body" aria-label="Markdown 源码" spellcheck="false" placeholder="写下你的第一行 Markdown…"></textarea><article id="preview" aria-label="Markdown 预览"></article></div><div id="document-info"></div></section></main></div><footer><span>RHINE LAB · OFFLINE WORKSPACE</span><span id="state" role="status" aria-live="polite">正在读取知识库…</span></footer><dialog id="dialog"><h2 id="dialog-title"></h2><p id="dialog-copy"></p><div class="row" id="dialog-actions"></div></dialog><input id="import-file" type="file" accept="application/json,.json" hidden/>`;
 
 // Regroup existing nodes without changing document operations.
@@ -138,7 +141,6 @@ function visible() {
   return source
     .filter(
       (d) =>
-        (!filter || d.category === filter) &&
         (view !== "saved" || saved.has(d.id)) &&
         (!query ||
           `${d.title}\n${d.category}\n${d.body}`
@@ -155,41 +157,24 @@ function visible() {
 }
 function renderList() {
   if (dragged) return;
-  const list = visible();
-  const previousScroll = $("documents").scrollTop;
-  const previousSelection = $("documents").querySelector<HTMLElement>(".selected")?.dataset.id;
-  const focusedId = $("documents").contains(document.activeElement) ? (document.activeElement as HTMLElement)?.dataset.id : undefined;
-  $("documents").innerHTML = list.length
-    ? list
-        .map(
-          (d) =>
-            `<button role="listitem" class="document ${selected?.id === d.id ? "selected" : ""}" data-id="${escape(d.id)}" aria-current="${selected?.id === d.id ? "true" : "false"}"><span class="directory-label"><strong>${saved.has(d.id) ? "★ " : ""}${escape(d.title)}</strong><small>${escape(d.category || "未分类")} · ${escape(d.modified.slice(0, 10))}</small></span>${sort === "manual" && view !== "trash" ? '<span class="directory-reorder" draggable="true" title="拖动调整文档顺序" aria-hidden="true">⋮⋮</span>' : ""}</button>`,
-        )
-        .join("")
-    : '<div class="empty">没有匹配的文档</div>';
-  $("documents").scrollTop = previousScroll;
-  if (focusedId) Array.from($("documents").querySelectorAll<HTMLElement>(".document")).find(el => el.dataset.id === focusedId)?.focus({preventScroll:true});
-  if (overlay.open && selected?.id !== previousSelection) $("documents").querySelector<HTMLElement>(".selected")?.scrollIntoView({block:"nearest"});
+  const list = visible(), el = $("documents"), scroll = el.scrollTop;
+  const focused = (document.activeElement as HTMLElement)?.dataset.id;
+  const previousSelection = el.querySelector<HTMLElement>(".selected")?.dataset.id;
+  const documentRow = (d:RhineDocument) => `<button role="listitem" class="document ${selected?.id===d.id?"selected":""}" data-id="${escape(d.id)}" aria-current="${selected?.id===d.id}"><span class="directory-label"><strong>${saved.has(d.id)?"★ ":""}${escape(d.title)}</strong><small>${escape(d.modified.slice(0,10))}</small></span>${view!=="trash"?'<span class="directory-reorder" draggable="true" title="拖动文档刻度：归类或排序" aria-hidden="true">⋮⋮</span>':""}</button>`;
+  const groupRow = (id:string|null,name:string,items:RhineDocument[]) => {
+    const shut = !!id && collapsed.has(id) && !query;
+    return `<section class="category-group" data-drop-category="${id??""}"><div class="category-tick ${activeCategory===id?"active":""}" data-category-id="${id??""}"><button class="category-toggle" data-collapse="${id??""}" aria-expanded="${!shut}" ${items.length?"":"data-empty=true"}><span class="category-arrow">${items.length?(shut?"▸":"▾"):"·"}</span><strong>${escape(name)}</strong><small>${items.length}</small></button>${id&&view!=="trash"?`<span class="category-actions"><button data-category-action="add" title="在分类中新增文档">＋</button><button data-category-action="rename" title="重命名分类">✎</button><button data-category-action="remove" title="移除分类，保留文档">×</button></span>`:""}</div>${!shut?items.map(documentRow).join(""):""}</section>`;
+  };
+  el.innerHTML = directoryCategories.filter(c=>view==="all"&&!query||list.some(d=>d.categoryId===c.id)).map(c=>groupRow(c.id,c.name,list.filter(d=>d.categoryId===c.id))).join("") + groupRow(null,"未分类",list.filter(d=>!d.categoryId));
+  if(!list.length && (query||view!=="all")) el.insertAdjacentHTML("beforeend",'<div class="empty">没有匹配的文档</div>');
+  el.scrollTop=scroll;
+  if(focused)Array.from(el.querySelectorAll<HTMLElement>(".document")).find(row=>row.dataset.id===focused)?.focus({preventScroll:true});
+  if(overlay.open&&selected?.id!==previousSelection)el.querySelector<HTMLElement>(".selected")?.scrollIntoView({block:"nearest"});
   directoryWheel.refresh();
-  $("count").textContent =
-    `${list.length} 篇显示 / ${documents.length} 篇文档 · 回收区 ${trash.length}`;
-  const categories = [
-    ...new Set(documents.map((d) => d.category).filter(Boolean)),
-  ].sort();
-  $("filter").innerHTML =
-    '<option value="">全部分类</option>' +
-    categories.map((c) => `<option>${escape(c)}</option>`).join("");
-  if (filter && !categories.includes(filter))
-    $("filter").insertAdjacentHTML(
-      "beforeend",
-      `<option>${escape(filter)}</option>`,
-    );
-  ($("filter") as HTMLSelectElement).value = filter;
-  $("categories").innerHTML = categories
-    .map((c) => `<option value="${escape(c)}"></option>`)
-    .join("");
-
+  $("count").textContent=`${list.length} 篇文档 · ${directoryCategories.length} 个分类 · 回收区 ${trash.length}`;
+  $("categories").innerHTML=directoryCategories.map(c=>`<option value="${escape(c.name)}"></option>`).join("");
 }
+
 function preview() {
   $("preview").innerHTML = md.render($<HTMLTextAreaElement>("body").value);
 }
@@ -212,9 +197,10 @@ function renderEditor() {
   preview();
 }
 async function select(id: string) {
-  if (selected?.id === id) return;
+  if (selected?.id === id) { activeCategory = selected.categoryId ?? null; renderList(); return; }
   if (!(await canLeave())) return;
   selected = [...documents, ...trash].find((d) => d.id === id);
+  activeCategory = selected?.categoryId ?? null;
   const index = visible().findIndex((d) => d.id === id);
   if (index >= 0) page = Math.floor(index / 20);
   conflict = false;
@@ -228,7 +214,9 @@ async function refresh() {
   const data = await api.list();
   if (version !== refreshVersion) return;
   documents = data.documents;
-  window.dispatchEvent(new CustomEvent("rhine-library-changed", {detail:documents}));
+  directoryCategories = data.categories;
+  if(activeCategory&&!directoryCategories.some(c=>c.id===activeCategory))activeCategory=null;
+  window.dispatchEvent(new CustomEvent("rhine-library-changed", {detail:data}));
   trash = data.trash;
   if (data.issues?.length)
     notify(
@@ -261,6 +249,7 @@ async function save(): Promise<boolean> {
     category: $<HTMLInputElement>("category").value.trim() || "未分类",
     body: $<HTMLTextAreaElement>("body").value,
     revision: selected.revision,
+    categoryId: ($<HTMLInputElement>("category").value.trim() || "未分类") === selected.category ? selected.categoryId ?? null : ($<HTMLInputElement>("category").value.trim() === "未分类" ? null : directoryCategories.find(c=>c.name===$<HTMLInputElement>("category").value.trim())?.id),
   };
   if (conflict) {
     const choice = await dialog(
@@ -310,6 +299,7 @@ async function save(): Promise<boolean> {
   try {
     const result = await api.save(payload);
     selected = result;
+    activeCategory = result.categoryId ?? null;
     const changed =
       $<HTMLInputElement>("title").value.trim() !== payload.title ||
       ($<HTMLInputElement>("category").value.trim() || "未分类") !==
@@ -329,20 +319,23 @@ async function save(): Promise<boolean> {
     $<HTMLButtonElement>("save").disabled = false;
   }
 }
-async function create() {
+async function create(options?: {title:string; categoryId:string|null}) {
   if (!(await canLeave())) return;
   const previous = selected;
-  let title = "未命名文档",
+  let title = options?.title || "未命名文档",
     count = 2;
-  while (documents.some((d) => d.title === title))
+  while (!options && documents.some((d) => d.title === title))
     title = "未命名文档 " + count++;
   selected = undefined;
   renderEditor();
   $<HTMLButtonElement>("new").disabled = true;
   try {
+    const destination = options ? options.categoryId : activeCategory;
+    if (destination) collapsed.delete(destination);
     selected = await api.create({
       title,
-      category: filter || "未分类",
+      category: directoryCategories.find(c=>c.id===(options?.categoryId??activeCategory))?.name || "未分类",
+      categoryId: options ? options.categoryId : activeCategory,
       body: "",
     });
     view = "all";
@@ -373,17 +366,21 @@ function run(action: () => unknown) {
   return operations;
 }
 $("refresh").onclick = () => run(refresh);
-$("new").onclick = () => run(create);
+$("new").onclick = () => {const menu=$("new-menu");menu.hidden=!menu.hidden;$("new").setAttribute("aria-expanded",String(!menu.hidden));};
+async function askName(title:string,initial="") {
+ const answer=dialog(title,"请输入名称",[["cancel","取消"],["confirm","确认"]]);
+ const input=document.createElement("input");input.id="directory-name";input.setAttribute("aria-label","名称");input.maxLength=200;input.value=initial;$("dialog-copy").append(input);input.focus();input.select();
+ input.onkeydown=e=>{if(e.key==="Enter"){e.preventDefault();$("dialog-actions").querySelector<HTMLButtonElement>('[data-choice="confirm"]')?.click();}};
+ return (await answer)==="confirm"?input.value.trim():null;
+}
+async function namedDocument(categoryId:string|null=activeCategory){$("new-menu").hidden=true;$("new").setAttribute("aria-expanded","false");if(!(await canLeave()))return;const title=await askName("新建文档");if(title)await create({title,categoryId});}
+$("new-document").onclick=()=>run(()=>namedDocument());
+$("new-category").onclick=()=>run(async()=>{$("new-menu").hidden=true;$("new").setAttribute("aria-expanded","false");const name=await askName("新建分类");if(!name)return;const c=await api.createCategory(name);activeCategory=c.id;await refresh();$("documents").querySelector<HTMLElement>(`[data-category-id="${c.id}"]`)?.scrollIntoView({block:"nearest"});});
 $("save").onclick = () => run(save);
 $("folder").onclick = () => run(() => api.openFolder());
 $("fullscreen").onclick = () => run(() => api.fullscreen());
 $("search").oninput = () => {
   query = $<HTMLInputElement>("search").value.trim().toLocaleLowerCase();
-  page = 0;
-  renderList();
-};
-$("filter").onchange = () => {
-  filter = $<HTMLSelectElement>("filter").value;
   page = 0;
   renderList();
 };
@@ -407,10 +404,18 @@ overlay.querySelectorAll<HTMLElement>("[data-view]").forEach(
         renderList();
       })),
 );
-$("documents").onclick = (e) => {
-  const el = (e.target as HTMLElement).closest<HTMLElement>("[data-id]");
-  if (el) run(() => select(el.dataset.id!));
+$("documents").onclick = e => {
+ const target=e.target as HTMLElement, group=target.closest<HTMLElement>("[data-category-id]"), action=target.closest<HTMLElement>("[data-category-action]")?.dataset.categoryAction;
+ if(group){const id=group.dataset.categoryId||null;activeCategory=id;
+  if(action==="add")run(()=>namedDocument(id));
+  else if(action==="rename"&&id)run(async()=>{if(!(await canLeave()))return;const name=await askName("重命名分类",directoryCategories.find(c=>c.id===id)?.name);if(name){await api.renameCategory(id,name);await refresh();}});
+  else if(action==="remove"&&id)run(async()=>{if(!(await canLeave()))return;if(await dialog("移除分类","分类中的文档将保留，并移到未分类。",[["cancel","取消"],["remove-category","移除分类"]])==="remove-category"){await api.removeCategory(id);await refresh();}});
+  else if(id){if(!group.querySelector("[data-empty]")){collapsed.has(id)?collapsed.delete(id):collapsed.add(id);}localStorage.setItem("rhine-directory-collapsed",JSON.stringify([...collapsed]));renderList();}
+  return;
+ }
+ const el=target.closest<HTMLElement>("[data-id]");if(el)run(()=>{const doc=documents.find(d=>d.id===el.dataset.id);if(doc?.categoryId)collapsed.delete(doc.categoryId);return select(el.dataset.id!);});
 };
+
 for (const id of ["title", "category", "body"])
   $(id).oninput = () => {
     setDirty(true);
@@ -519,7 +524,7 @@ document.addEventListener("keydown", (e) => {
   }
   if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "n") {
     e.preventDefault();
-    run(create);
+    run(() => create());
   }
   if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "f") {
     e.preventDefault();
@@ -536,45 +541,31 @@ document.addEventListener("keydown", (e) => {
 });
 
 $("documents").ondragstart = (e) => {
-  if (!(e.target as HTMLElement).closest(".directory-reorder") || sort !== "manual" || view === "trash") { e.preventDefault(); return; }
+  if (!(e.target as HTMLElement).closest(".directory-reorder") || view === "trash") { e.preventDefault(); return; }
   const el = (e.target as HTMLElement).closest<HTMLElement>("[data-id]");
   dragged = el?.dataset.id || "";
   e.dataTransfer?.setData("text/plain", dragged);
 };
 $("documents").ondragend = () => {
   dragged = "";
+  overlay.querySelectorAll(".drop-target").forEach(el=>el.classList.remove("drop-target"));
   renderList();
 };
 $("documents").ondragover = (e) => {
-  if (sort === "manual" && view !== "trash") e.preventDefault();
+  if (view !== "trash") { e.preventDefault(); const group=(e.target as HTMLElement).closest<HTMLElement>("[data-drop-category]"); overlay.querySelectorAll(".drop-target").forEach(el=>el.classList.remove("drop-target"));group?.classList.add("drop-target"); }
 };
-$("documents").ondrop = (e) => {
-  e.preventDefault();
-  const target = (e.target as HTMLElement).closest<HTMLElement>("[data-id]")
-    ?.dataset.id;
-  if (
-    !target ||
-    !dragged ||
-    target === dragged ||
-    sort !== "manual" ||
-    view === "trash"
-  )
-    return;
-  const movingId = dragged;
-  run(async () => {
-    if (!(await canLeave())) return;
-    const ids = [...documents]
-      .sort((a, b) => a.order - b.order || a.id.localeCompare(b.id))
-      .map((d) => d.id);
-    const from = ids.indexOf(movingId);
-    if (from < 0) return;
-    ids.splice(from, 1);
-    ids.splice(ids.indexOf(target), 0, movingId);
-    await api.reorder(ids);
-    await refresh();
-    status("手动顺序已保存");
-  });
+$("documents").ondrop = e => {
+ e.preventDefault();overlay.querySelectorAll(".drop-target").forEach(el=>el.classList.remove("drop-target"));
+ const target=(e.target as HTMLElement).closest<HTMLElement>("[data-id]")?.dataset.id, group=(e.target as HTMLElement).closest<HTMLElement>("[data-drop-category]");
+ if(!dragged||!group||view==="trash"||target===dragged)return;
+ const movingId=dragged, categoryId=group.dataset.dropCategory||null;
+ run(async()=>{if(!(await canLeave()))return;const moving=documents.find(d=>d.id===movingId);if(!moving)return;
+  if((moving.categoryId??null)!==categoryId)await api.moveDocument(movingId,categoryId);
+  if(target&&sort==="manual"){const current=await api.list();const ids=current.documents.map(d=>d.id);ids.splice(ids.indexOf(movingId),1);ids.splice(ids.indexOf(target),0,movingId);await api.reorder(ids);}
+  if(categoryId)collapsed.delete(categoryId);await refresh();status("文档归类与顺序已保存");
+ });
 };
+
 
 
 $("preferences").onclick = () => run(async () => {
@@ -602,7 +593,7 @@ export async function openLibrary(id?: string, requestedView: "all" | "saved" | 
     $<HTMLInputElement>("search").value = "";
     $<HTMLSelectElement>("sort").value = sort;
     await refresh();
-    if (id) await select(id);
+    if (id) {const c=documents.find(d=>d.id===id)?.categoryId;if(c)collapsed.delete(c);await select(id);}
     else { selected = undefined; renderEditor(); }
     updateNav(); renderList();
     if (!overlay.open) overlay.showModal();

@@ -1,0 +1,13 @@
+{
+  "createNamedCategory": true,
+  "createNamedDocument": true,
+  "dragIntoCategory": true,
+  "collapse": true,
+  "rename": true,
+  "columnMapping": true,
+  "independentCategoryRemoval": true,
+  "independentDocumentRemoval": true,
+  "restart": true,
+  "emptyArrayStillRendered": true,
+  "errors": []
+}

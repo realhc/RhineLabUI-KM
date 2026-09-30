@@ -21,6 +21,10 @@ export default defineConfig(({ mode }) => ({
   },
   plugins: [...(mode === "desktop" ? [{
     name: "desktop-library-data", enforce: "pre" as const,
+    transform(code:string,id:string) {
+      if(!/[/\\]src[/\\]scene\.ts$/.test(id))return;
+      return {code:'import { archiveColumns as desktopColumnNames, columnFiles as desktopColumnFiles } from "./desktop-data";\n'+code.replace('Math.round((this.selectedCell.lane - 2) / 5) * 5','Math.round((this.selectedCell.lane - 2) / desktopColumnNames.length) * desktopColumnNames.length').replace('Math.floor((this.selectedCell.row - 12) / 8) * 8','Math.floor((this.selectedCell.row - 12) / desktopColumnFiles(((this.selectedCell.lane % desktopColumnNames.length)+desktopColumnNames.length)%desktopColumnNames.length).length) * desktopColumnFiles(((this.selectedCell.lane % desktopColumnNames.length)+desktopColumnNames.length)%desktopColumnNames.length).length'),map:null};
+    },
     resolveId(source: string, importer: string | undefined) {
       if (importer && /\/src\//.test(importer.replaceAll("\\", "/")) && /^\.\/data(?:\.ts)?$/.test(source))
         return new URL("./src/desktop-data.ts", import.meta.url).pathname.replace(/^\/(\w:)/, "$1");

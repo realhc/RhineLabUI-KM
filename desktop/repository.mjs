@@ -1,3 +1,4 @@
+import { Directory } from "./directory.mjs";
 import { promises as fs, watch as watchFs } from "node:fs";
 import path from "node:path";
 import { randomUUID, createHash } from "node:crypto";
@@ -66,9 +67,11 @@ function decode(raw, filename, stat) {
 }
 
 export class Repository {
-  constructor(root, sampleRecords = []) {
+  constructor(root, sampleRecords = [], sampleColumns = []) {
     this.root = path.resolve(root);
     this.sampleRecords = sampleRecords;
+    this.sampleColumns = sampleColumns;
+    this.directory = new Directory(this);
     this.watchers = [];
     this.queue = Promise.resolve();
   }
@@ -242,7 +245,7 @@ export class Repository {
     return { result, locations };
   }
   async list() {
-    return (await this.scan()).result;
+    return this.directory.decorate((await this.scan()).result);
   }
   async locate(id, trash = false) {
     this.assertId(id);
@@ -260,7 +263,8 @@ export class Repository {
     return entry;
   }
   async read(id, trash = false) {
-    return (await this.locate(id, trash)).doc;
+    const doc = (await this.locate(id, trash)).doc;
+    return (await this.directory.decorate({documents:[doc],trash:[],issues:[]})).documents[0];
   }
   validateInput(input) {
     if (
@@ -276,6 +280,10 @@ export class Repository {
       Buffer.byteLength(input.body) > 15 * 1024 * 1024
     )
       throw fail("INPUT", "标题、分类或正文无效（正文上限 15 MB）。");
+  }
+  async validateCategory(input) {
+    if(input.categoryId===undefined)return;
+    if(input.categoryId!==null){this.assertId(input.categoryId);const {value}=await this.directory.load();if(!value.categories.some(c=>c.id===input.categoryId))throw fail('NOT_FOUND','分类已被移除。');}
   }
   assertUniqueTitle(documents, title, exceptId) {
     if (
@@ -341,6 +349,7 @@ export class Repository {
   create(input) {
     return this.serialize(async () => {
       this.validateInput(input);
+      await this.validateCategory(input);
       const { documents } = await this.list(),
         now = new Date().toISOString();
       this.assertUniqueTitle(documents, input.title);
@@ -359,12 +368,14 @@ export class Repository {
         raw,
         null,
       );
-      return { ...doc, revision: hash(raw) };
+      await this.directory.assign(doc.id, input.category, input.categoryId);
+      return this.read(doc.id);
     });
   }
   save(input) {
     return this.serialize(async () => {
       this.validateInput(input);
+      await this.validateCategory(input);
       if (
         typeof input.revision !== "string" ||
         !/^[a-f0-9]{64}$/.test(input.revision)
@@ -388,7 +399,8 @@ export class Repository {
       const raw = encode(doc);
       await this.backup(entry);
       await this.atomic(entry.target, raw, input.revision);
-      return { ...doc, revision: hash(raw) };
+      await this.directory.assign(doc.id, input.category, input.categoryId);
+      return this.read(doc.id);
     });
   }
   reorder(ids) {
@@ -420,6 +432,21 @@ export class Repository {
       }
       return this.list();
     });
+  }
+  createCategory(name) {
+    return this.serialize(async()=>{
+      if(typeof name!=='string'||!name.trim()||name.length>200)throw fail('INPUT','请输入分类名称（最多200字）。');
+      let created;await this.directory.change(value=>{if(value.categories.some(c=>titleKey(c.name)===titleKey(name)))throw fail('DUPLICATE_TITLE','已有同名分类。');created={id:randomUUID(),name:name.trim(),lane:value.nextLane++};value.categories.push(created);});return created;
+    });
+  }
+  renameCategory(id,name) {
+    return this.serialize(async()=>{this.assertId(id);if(typeof name!=='string'||!name.trim()||name.length>200)throw fail('INPUT','分类名称无效。');await this.directory.change(value=>{const c=value.categories.find(c=>c.id===id);if(!c)throw fail('NOT_FOUND','分类已被移除。');if(value.categories.some(other=>other.id!==id&&titleKey(other.name)===titleKey(name)))throw fail('DUPLICATE_TITLE','已有同名分类。');c.name=name.trim();});return this.list();});
+  }
+  removeCategory(id) {
+    return this.serialize(async()=>{this.assertId(id);const {result}=await this.scan();await this.directory.change(value=>{if(!value.categories.some(c=>c.id===id))throw fail('NOT_FOUND','分类已被移除。');for(const doc of [...result.documents,...result.trash])if(this.directory.member(value,doc)===id)value.assignments[doc.id]=null;value.categories=value.categories.filter(c=>c.id!==id);});return this.list();});
+  }
+  moveDocument(id,categoryId) {
+    return this.serialize(async()=>{this.assertId(id);const entry=await this.locate(id);const {value}=await this.directory.load();const c=value.categories.find(c=>c.id===categoryId);if(categoryId!==null&&!c)throw fail('NOT_FOUND','分类已被移除。');const {documents}=await this.list();const doc={...entry.doc,category:c?.name??'未分类',order:Math.max(-1,...documents.map(d=>d.order))+1};await this.backup(entry);await this.atomic(entry.target,encode(doc),entry.doc.revision);await this.directory.assign(id,doc.category,categoryId);return this.read(id);});
   }
   async move(id, toTrash, revision) {
     await this.recoverMove();
@@ -558,7 +585,7 @@ export class Repository {
       clearTimeout(timer);
       timer = setTimeout(() => callback(), 180);
     };
-    const watchers = ["documents", ".trash"].map((folder) => {
+    const watchers = ["", "documents", ".trash"].map((folder) => {
       const watcher = watchFs(path.join(this.root, folder), notify);
       watcher.on("error", notify);
       return watcher;

@@ -91,15 +91,13 @@ else {
     .then(async () => {
       // Probe the actual portable directory before opening a renderer. Never redirect documents.
       try {
-        repository = new Repository(
-          data,
-          JSON.parse(
+        const samples = JSON.parse(
             await readFile(
               join(app.getAppPath(), "content/archives.json"),
               "utf8",
             ),
-          ).records,
-        );
+          );
+        repository = new Repository(data, samples.records, samples.columns);
         await repository.init();
       } catch (error) {
         dialog.showErrorBox(
@@ -263,6 +261,10 @@ else {
         "create",
         "save",
         "reorder",
+      "createCategory",
+      "renameCategory",
+      "removeCategory",
+      "moveDocument",
         "trash",
         "restore",
         "purge",

@@ -3,7 +3,7 @@ import "./desktop-shell.css";
 async function startDesktop() {
   try {
     const result = await window.rhine.list();
-    setDesktopDocuments(result.documents);
+    setDesktopDocuments(result.documents,result.categories,result.nextLane);
     await import("./desktop-main");
   } catch (error) {
     const message = document.createElement("p");

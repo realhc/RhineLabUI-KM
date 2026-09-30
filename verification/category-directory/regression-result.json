@@ -1,0 +1,296 @@
+{
+  "geometry": {
+    ".brand": {
+      "x": 49.16666793823242,
+      "y": 95,
+      "width": 225,
+      "height": 92.5,
+      "font": "MiSans, \"Mi Sans\", \"PingFang SC\", \"Microsoft YaHei\", system-ui, sans-serif",
+      "color": "rgb(8, 10, 8)"
+    },
+    ".system-nav": {
+      "x": 1062.85595703125,
+      "y": 103.33333587646484,
+      "width": 327.97747802734375,
+      "height": 23.33333396911621,
+      "font": "MiSans, \"Mi Sans\", \"PingFang SC\", \"Microsoft YaHei\", system-ui, sans-serif",
+      "color": "rgb(8, 10, 8)"
+    },
+    ".archive-callout": {
+      "x": 727.5,
+      "y": 392.5,
+      "width": 712.5,
+      "height": 220.5555419921875,
+      "font": "MiSans, \"Mi Sans\", \"PingFang SC\", \"Microsoft YaHei\", system-ui, sans-serif",
+      "color": "rgb(8, 10, 8)"
+    },
+    ".archive-navigation": {
+      "x": 377.99481201171875,
+      "y": 752.5,
+      "width": 295,
+      "height": 38.333335876464844,
+      "font": "MiSans, \"Mi Sans\", \"PingFang SC\", \"Microsoft YaHei\", system-ui, sans-serif",
+      "color": "rgb(8, 10, 8)"
+    },
+    ".column-navigation": {
+      "x": 753.75,
+      "y": 752.5,
+      "width": 233.33334350585938,
+      "height": 38.333335876464844,
+      "font": "MiSans, \"Mi Sans\", \"PingFang SC\", \"Microsoft YaHei\", system-ui, sans-serif",
+      "color": "rgb(8, 10, 8)"
+    },
+    ".system-footer": {
+      "x": 49.16666793823242,
+      "y": 859.72216796875,
+      "width": 1341.666748046875,
+      "height": 11.111166000366211,
+      "font": "MiSans, \"Mi Sans\", \"PingFang SC\", \"Microsoft YaHei\", system-ui, sans-serif",
+      "color": "rgb(120, 119, 110)"
+    },
+    "#three-scene": {
+      "x": 0,
+      "y": 0,
+      "width": 1440,
+      "height": 900,
+      "font": "MiSans, \"Mi Sans\", \"PingFang SC\", \"Microsoft YaHei\", system-ui, sans-serif",
+      "color": "rgb(8, 10, 8)"
+    }
+  },
+  "matchingWebLayout": true,
+  "sharedOriginalScene": true,
+  "createSaveRead": true,
+  "fulltext": true,
+  "unsavedCancelDiscard": true,
+  "trashRestore": true,
+  "keyboardIsolation": true,
+  "nodeIsolation": true,
+  "offline": true,
+  "errors": [],
+  "failed": [],
+  "stats": {
+    "decryption": {
+      "time": -1,
+      "intervals": [],
+      "markers": 0,
+      "point": 0,
+      "label": 0,
+      "labelValue": 0,
+      "clarity": 0,
+      "phase": "waiting",
+      "modelClarity": 0
+    },
+    "topLeft": [
+      2087,
+      -268
+    ],
+    "topRight": [
+      2345,
+      -405
+    ],
+    "labelTopLeft": [
+      2146,
+      -235
+    ],
+    "labelBottomLeft": [
+      2144,
+      -184
+    ],
+    "modelPosition": [
+      26.4919,
+      -4.168,
+      -2.17
+    ],
+    "cameraPosition": [
+      -114.502,
+      45.5227,
+      68.6801
+    ],
+    "fieldOfView": 3.332694562040962,
+    "loaded": true,
+    "drawCalls": 178,
+    "renderedFrames": 1112,
+    "reusedFrames": 0,
+    "superPerformance": false,
+    "presentation": 1,
+    "triangles": 4360893,
+    "archiveCount": 283,
+    "archiveCandidates": 401,
+    "archiveCulled": 118,
+    "archiveCapacity": 576,
+    "archiveCoverage": "standard",
+    "returningFiles": 3,
+    "selectionPhase": "wave",
+    "pendingPulse": null,
+    "pulses": [
+      {
+        "lane": 5,
+        "row": 12,
+        "time": 12.799700000000001
+      },
+      {
+        "lane": 7,
+        "row": 12,
+        "time": 15.2497
+      },
+      {
+        "lane": 8,
+        "row": 12,
+        "time": 15.5705
+      },
+      {
+        "lane": 11,
+        "row": 12,
+        "time": 15.6039
+      }
+    ],
+    "referenceTime": 45.38,
+    "selectedSlot": 172,
+    "selectedLane": 5,
+    "selectedCell": {
+      "lane": 11,
+      "row": 12
+    },
+    "hoverCell": null,
+    "hoverLifts": {},
+    "dragTrack": null,
+    "archiveMomentum": null,
+    "holdingArchive": false,
+    "dragProjection": {
+      "lane": {
+        "x": -223.44237248508233,
+        "y": 122.11892982218811
+      },
+      "row": {
+        "x": -52.07614898021568,
+        "y": -8.754015987114027
+      }
+    },
+    "dragMapping": null,
+    "coordinateOrigin": {
+      "lane": 0,
+      "row": 0
+    },
+    "poolBounds": {
+      "minLane": 0,
+      "maxLane": 11,
+      "minRow": -20,
+      "maxRow": 53
+    },
+    "laneFocus": 5.992475733831002,
+    "columnCamera": 20.30811277868933,
+    "rotation": 0,
+    "clearance": -3.7401406919275804,
+    "canInspect": false,
+    "returnPhase": "lowering",
+    "extraction": 0.004,
+    "appearance": 0,
+    "cameraDetail": 0,
+    "idleGain": 3.929211930470006e-18,
+    "flatten": 0,
+    "spectrumActivity": 0,
+    "selectedIndexDim": 0,
+    "returningIndexDims": [
+      {
+        "cell": {
+          "lane": 5,
+          "row": 12
+        },
+        "dim": 0
+      },
+      {
+        "cell": {
+          "lane": 7,
+          "row": 12
+        },
+        "dim": 0
+      },
+      {
+        "cell": {
+          "lane": 8,
+          "row": 12
+        },
+        "dim": 0
+      }
+    ],
+    "cameraDistance": 139.96666817024342,
+    "cameraNear": 5,
+    "cameraFar": 300,
+    "fogNear": 140.96622903831982,
+    "fogFar": 155.9657899063962,
+    "returningAppearance": [
+      {
+        "slot": 172,
+        "clarity": 0,
+        "cell": {
+          "lane": 5,
+          "row": 12
+        },
+        "lift": 0.1896432500335177,
+        "quality": 0.4515394528787305,
+        "rotation": 0,
+        "worldY": -3.2165926951922046,
+        "phase": "lowering"
+      },
+      {
+        "slot": 76,
+        "clarity": 0,
+        "cell": {
+          "lane": 7,
+          "row": 12
+        },
+        "lift": 0.179829571200533,
+        "quality": 0.4060902729805178,
+        "rotation": 0,
+        "worldY": -3.5486626022723025,
+        "phase": "lowering"
+      },
+      {
+        "slot": 76,
+        "clarity": 0,
+        "cell": {
+          "lane": 8,
+          "row": 12
+        },
+        "lift": 0.01002885284836191,
+        "quality": 0.00015173853514454289,
+        "rotation": 0,
+        "worldY": -3.4553409513501325,
+        "phase": "lowering"
+      }
+    ],
+    "rail": 0,
+    "threeState": "on",
+    "fps": 119,
+    "mode": "archive",
+    "ready": true,
+    "startup": "started",
+    "motion": {
+      "reduced": false,
+      "preset": "full"
+    },
+    "bootTime": null,
+    "selected": "d56bb706-e874-4819-8cd4-8e1673c08ddd",
+    "saved": [],
+    "audio": {
+      "state": "running",
+      "scene": "archive",
+      "tracks": 3,
+      "voices": 2,
+      "loaded": true,
+      "playedKeys": 0,
+      "error": "",
+      "preferences": {
+        "sound": true,
+        "music": true,
+        "soundVolume": 0.55,
+        "musicVolume": 0.5
+      }
+    },
+    "wallpaper": null
+  },
+  "restartPersistence": true,
+  "smallWindow": true,
+  "emptyLibrary": true,
+  "singleDocument": true
+}
