@@ -1,4 +1,5 @@
 import "./desktop.css";
+import { mountDirectoryWheel } from "./desktop-directory";
 import MarkdownIt from "markdown-it";
 
 const api = window.rhine;
@@ -49,8 +50,10 @@ md.renderer.rules.image = (tokens, index) =>
 
 overlay.innerHTML =
   `<header><div class="library-brand">RHINE LAB<small>ARCHIVE DIRECTORY / 本地知识库</small></div><div class="header-actions"><button id="refresh" title="刷新磁盘索引">刷新</button><button id="folder">打开知识库文件夹 ↗</button><button id="preferences">设置</button><button id="fullscreen" title="F11 全屏 / Esc 退出">⛶</button><button id="library-close" aria-label="关闭知识库">CLOSE ×</button></div></header>
-<div class="shell"><aside><div class="row" style="justify-content:space-between"><span class="eyebrow">ARCHIVE DIRECTORY</span><button id="new" class="solid">＋ 新建</button></div><input id="search" type="search" placeholder="搜索标题、分类和正文…" aria-label="全文搜索"/><div class="nav"><button data-view="all" class="active">全部</button><button data-view="saved">收藏</button><button data-view="trash">回收区</button></div><div class="filters"><select id="filter" aria-label="分类"><option value="">全部分类</option></select><select id="sort" aria-label="排序"><option value="manual">手动顺序</option><option value="title">标题 A–Z</option><option value="modified">最近修改</option></select></div><div id="documents" role="list" aria-label="文档列表"></div><div class="side-footer"><span id="count"></span><br>本地 Markdown · 数据位于程序旁<br>手动排序时拖动文档调整顺序</div></aside>
+<div class="shell"><aside><div class="row" style="justify-content:space-between"><span class="eyebrow">ARCHIVE DIRECTORY</span><button id="new" class="solid">＋ 新建</button></div><input id="search" type="search" placeholder="搜索标题、分类和正文…" aria-label="全文搜索"/><div class="nav"><button data-view="all" class="active">全部</button><button data-view="saved">收藏</button><button data-view="trash">回收区</button></div><div class="filters"><select id="filter" aria-label="分类"><option value="">全部分类</option></select><select id="sort" aria-label="排序"><option value="manual">手动顺序</option><option value="title">标题 A–Z</option><option value="modified">最近修改</option></select></div><div class="directory-wheel"><div id="documents" role="list" aria-label="文档刻度目录"></div></div><div class="side-footer"><span id="count"></span><br>本地 Markdown · 数据位于程序旁<br>上下拖动 / 滚轮浏览 · 拖动 ⋮⋮ 调整顺序</div></aside>
 <main><div id="notice" role="alert"></div><section id="empty-main" class="empty"><div class="eyebrow">NO ARCHIVE SELECTED</div><h2>从一份记录开始</h2><p>选择左侧档案，或新建一篇 Markdown 文档。</p></section><section id="editor" hidden><div class="metadata"><input id="title" aria-label="文档标题" placeholder="文档标题" maxlength="240"/><input id="category" aria-label="文档分类" placeholder="未分类" list="categories" maxlength="120"/><datalist id="categories"></datalist></div><div class="toolbar"><div class="row"><button id="save" class="solid" title="Ctrl+S">保存</button><button id="favorite">☆ 收藏</button><button id="remove" class="danger">移入回收区</button><button id="restore" hidden>恢复</button><button id="purge" class="danger" hidden>永久删除</button></div><div class="mode"><button data-mode="source">源码</button><button data-mode="split" class="active">分栏</button><button data-mode="preview">阅读</button></div></div><div id="format" class="row"><button data-wrap="**" title="Ctrl+B">B 粗体</button><button data-wrap="*" title="Ctrl+I">I 斜体</button><button data-prefix="## ">H 标题</button><button data-prefix="- ">列表</button><button data-prefix="> ">引用</button><button data-wrap="&#96;">代码</button></div><div id="panes" class="split"><textarea id="body" aria-label="Markdown 源码" spellcheck="false" placeholder="写下你的第一行 Markdown…"></textarea><article id="preview" aria-label="Markdown 预览"></article></div><div id="document-info"></div></section></main></div><footer><span>RHINE LAB · OFFLINE WORKSPACE</span><span id="state" role="status" aria-live="polite">正在读取知识库…</span></footer><dialog id="dialog"><h2 id="dialog-title"></h2><p id="dialog-copy"></p><div class="row" id="dialog-actions"></div></dialog><input id="import-file" type="file" accept="application/json,.json" hidden/>`;
+
+const directoryWheel = mountDirectoryWheel($("documents"));
 
 function notify(message: string) {
   $("notice").textContent = message;
@@ -144,14 +147,21 @@ function visible() {
 function renderList() {
   if (dragged) return;
   const list = visible();
+  const previousScroll = $("documents").scrollTop;
+  const previousSelection = $("documents").querySelector<HTMLElement>(".selected")?.dataset.id;
+  const focusedId = $("documents").contains(document.activeElement) ? (document.activeElement as HTMLElement)?.dataset.id : undefined;
   $("documents").innerHTML = list.length
     ? list
         .map(
           (d) =>
-            `<button role="listitem" class="document ${selected?.id === d.id ? "selected" : ""}" data-id="${escape(d.id)}" draggable="${sort === "manual" && view !== "trash"}"><strong>${saved.has(d.id) ? "★ " : ""}${escape(d.title)}</strong><small>${escape(d.category || "未分类")} · ${escape(d.modified.slice(0, 10))}</small></button>`,
+            `<button role="listitem" class="document ${selected?.id === d.id ? "selected" : ""}" data-id="${escape(d.id)}" aria-current="${selected?.id === d.id ? "true" : "false"}"><span class="directory-label"><strong>${saved.has(d.id) ? "★ " : ""}${escape(d.title)}</strong><small>${escape(d.category || "未分类")} · ${escape(d.modified.slice(0, 10))}</small></span>${sort === "manual" && view !== "trash" ? '<span class="directory-reorder" draggable="true" title="拖动调整文档顺序" aria-hidden="true">⋮⋮</span>' : ""}</button>`,
         )
         .join("")
     : '<div class="empty">没有匹配的文档</div>';
+  $("documents").scrollTop = previousScroll;
+  if (focusedId) Array.from($("documents").querySelectorAll<HTMLElement>(".document")).find(el => el.dataset.id === focusedId)?.focus({preventScroll:true});
+  if (overlay.open && selected?.id !== previousSelection) $("documents").querySelector<HTMLElement>(".selected")?.scrollIntoView({block:"nearest"});
+  directoryWheel.refresh();
   $("count").textContent =
     `${list.length} 篇显示 / ${documents.length} 篇文档 · 回收区 ${trash.length}`;
   const categories = [
@@ -392,25 +402,6 @@ $("documents").onclick = (e) => {
   const el = (e.target as HTMLElement).closest<HTMLElement>("[data-id]");
   if (el) run(() => select(el.dataset.id!));
 };
-$("documents").onkeydown = (e) => {
-  if (!["ArrowUp", "ArrowDown", "Home", "End"].includes(e.key)) return;
-  const items = [
-    ...$("documents").querySelectorAll<HTMLButtonElement>("[data-id]"),
-  ];
-  if (!items.length) return;
-  e.preventDefault();
-  const current = items.indexOf(document.activeElement as HTMLButtonElement);
-  const index =
-    e.key === "Home"
-      ? 0
-      : e.key === "End"
-        ? items.length - 1
-        : Math.min(
-            items.length - 1,
-            Math.max(0, current + (e.key === "ArrowDown" ? 1 : -1)),
-          );
-  items[index].focus();
-};
 for (const id of ["title", "category", "body"])
   $(id).oninput = () => {
     setDirty(true);
@@ -536,6 +527,7 @@ document.addEventListener("keydown", (e) => {
 });
 
 $("documents").ondragstart = (e) => {
+  if (!(e.target as HTMLElement).closest(".directory-reorder") || sort !== "manual" || view === "trash") { e.preventDefault(); return; }
   const el = (e.target as HTMLElement).closest<HTMLElement>("[data-id]");
   dragged = el?.dataset.id || "";
   e.dataTransfer?.setData("text/plain", dragged);
