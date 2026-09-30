@@ -1,0 +1,256 @@
+{
+  "geometry": {
+    ".brand": {
+      "x": 49.16666793823242,
+      "y": 95,
+      "width": 225,
+      "height": 92.5,
+      "font": "MiSans, \"Mi Sans\", \"PingFang SC\", \"Microsoft YaHei\", system-ui, sans-serif",
+      "color": "rgb(8, 10, 8)"
+    },
+    ".system-nav": {
+      "x": 1062.85595703125,
+      "y": 103.33333587646484,
+      "width": 327.97747802734375,
+      "height": 23.33333396911621,
+      "font": "MiSans, \"Mi Sans\", \"PingFang SC\", \"Microsoft YaHei\", system-ui, sans-serif",
+      "color": "rgb(8, 10, 8)"
+    },
+    ".archive-callout": {
+      "x": 727.5,
+      "y": 392.5,
+      "width": 712.5,
+      "height": 220.5555419921875,
+      "font": "MiSans, \"Mi Sans\", \"PingFang SC\", \"Microsoft YaHei\", system-ui, sans-serif",
+      "color": "rgb(8, 10, 8)"
+    },
+    ".archive-navigation": {
+      "x": 377.99481201171875,
+      "y": 752.5,
+      "width": 295,
+      "height": 38.333335876464844,
+      "font": "MiSans, \"Mi Sans\", \"PingFang SC\", \"Microsoft YaHei\", system-ui, sans-serif",
+      "color": "rgb(8, 10, 8)"
+    },
+    ".column-navigation": {
+      "x": 753.75,
+      "y": 752.5,
+      "width": 233.33334350585938,
+      "height": 38.333335876464844,
+      "font": "MiSans, \"Mi Sans\", \"PingFang SC\", \"Microsoft YaHei\", system-ui, sans-serif",
+      "color": "rgb(8, 10, 8)"
+    },
+    ".system-footer": {
+      "x": 49.16666793823242,
+      "y": 859.72216796875,
+      "width": 1341.666748046875,
+      "height": 11.111166000366211,
+      "font": "MiSans, \"Mi Sans\", \"PingFang SC\", \"Microsoft YaHei\", system-ui, sans-serif",
+      "color": "rgb(120, 119, 110)"
+    },
+    "#three-scene": {
+      "x": 0,
+      "y": 0,
+      "width": 1440,
+      "height": 900,
+      "font": "MiSans, \"Mi Sans\", \"PingFang SC\", \"Microsoft YaHei\", system-ui, sans-serif",
+      "color": "rgb(8, 10, 8)"
+    }
+  },
+  "matchingWebLayout": true,
+  "sharedOriginalScene": true,
+  "createSaveRead": true,
+  "fulltext": true,
+  "unsavedCancelDiscard": true,
+  "trashRestore": true,
+  "keyboardIsolation": true,
+  "nodeIsolation": true,
+  "offline": true,
+  "errors": [],
+  "failed": [],
+  "stats": {
+    "decryption": {
+      "time": -1,
+      "intervals": [],
+      "markers": 0,
+      "point": 0,
+      "label": 0,
+      "labelValue": 0,
+      "clarity": 0,
+      "phase": "waiting",
+      "modelClarity": 0
+    },
+    "topLeft": [
+      788,
+      289
+    ],
+    "topRight": [
+      1115,
+      121
+    ],
+    "labelTopLeft": [
+      859,
+      324
+    ],
+    "labelBottomLeft": [
+      859,
+      380
+    ],
+    "modelPosition": [
+      5.1241,
+      -3.3092,
+      -2.4755
+    ],
+    "cameraPosition": [
+      -113.9255,
+      45.3818,
+      68.936
+    ],
+    "fieldOfView": 3.3383660903705605,
+    "loaded": true,
+    "drawCalls": 126,
+    "renderedFrames": 745,
+    "reusedFrames": 0,
+    "superPerformance": false,
+    "presentation": 1,
+    "triangles": 4113475,
+    "archiveCount": 283,
+    "archiveCandidates": 403,
+    "archiveCulled": 120,
+    "archiveCapacity": 576,
+    "archiveCoverage": "standard",
+    "returningFiles": 1,
+    "selectionPhase": "wave",
+    "pendingPulse": null,
+    "pulses": [
+      {
+        "lane": 4,
+        "row": 11,
+        "time": 13.106200000000001
+      },
+      {
+        "lane": 2,
+        "row": 12,
+        "time": 14.9062
+      },
+      {
+        "lane": 2,
+        "row": 12,
+        "time": 15.2437
+      },
+      {
+        "lane": 4,
+        "row": 11,
+        "time": 15.3188
+      }
+    ],
+    "referenceTime": 41.58,
+    "selectedSlot": 147,
+    "selectedLane": 4,
+    "selectedCell": {
+      "lane": 4,
+      "row": 11
+    },
+    "hoverCell": null,
+    "hoverLifts": {},
+    "dragTrack": null,
+    "archiveMomentum": null,
+    "holdingArchive": false,
+    "dragProjection": {
+      "lane": {
+        "x": -282.2355662709027,
+        "y": 149.84319833718405
+      },
+      "row": {
+        "x": -56.023262721615566,
+        "y": -10.837611705080977
+      }
+    },
+    "dragMapping": null,
+    "coordinateOrigin": {
+      "lane": 0,
+      "row": 0
+    },
+    "poolBounds": {
+      "minLane": -3,
+      "maxLane": 8,
+      "minRow": -21,
+      "maxRow": 53
+    },
+    "laneFocus": 2.9355601893553493,
+    "columnCamera": 5.275901684725014,
+    "rotation": 0,
+    "clearance": -3.6303872829884796,
+    "canInspect": false,
+    "returnPhase": "lowering",
+    "extraction": 0.163,
+    "appearance": 0.332,
+    "cameraDetail": 0.003,
+    "idleGain": 1.5645290714900837e-12,
+    "flatten": 0,
+    "spectrumActivity": 0,
+    "selectedIndexDim": 0,
+    "returningIndexDims": [
+      {
+        "cell": {
+          "lane": 2,
+          "row": 12
+        },
+        "dim": 0
+      }
+    ],
+    "cameraDistance": 139.57155002260464,
+    "cameraNear": 5,
+    "cameraFar": 300,
+    "fogNear": 140.56589056463687,
+    "fogFar": 155.56023110666914,
+    "returningAppearance": [
+      {
+        "slot": 76,
+        "clarity": 0,
+        "cell": {
+          "lane": 2,
+          "row": 12
+        },
+        "lift": 0.222111217060828,
+        "quality": 0.6028048717107602,
+        "rotation": 0,
+        "worldY": -3.213096835604243,
+        "phase": "lowering"
+      }
+    ],
+    "rail": 0.315,
+    "threeState": "on",
+    "fps": 104,
+    "mode": "archive",
+    "ready": true,
+    "startup": "started",
+    "motion": {
+      "reduced": false,
+      "preset": "full"
+    },
+    "bootTime": null,
+    "selected": "fbe1611d-3cc5-4b03-b384-1d15a169ec96",
+    "saved": [],
+    "audio": {
+      "state": "running",
+      "scene": "archive",
+      "tracks": 3,
+      "voices": 2,
+      "loaded": true,
+      "playedKeys": 0,
+      "error": "",
+      "preferences": {
+        "sound": true,
+        "music": true,
+        "soundVolume": 0.55,
+        "musicVolume": 0.5
+      }
+    },
+    "wallpaper": null
+  },
+  "restartPersistence": true,
+  "smallWindow": true,
+  "emptyLibrary": true,
+  "singleDocument": true
+}
