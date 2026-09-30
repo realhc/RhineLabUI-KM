@@ -1,7 +1,7 @@
 # 桌面便携构建的资源说明
 
 - 项目代码：仓库根目录 LICENSE（MIT）。
-- Three.js：MIT；Markdown-it：MIT。运行代码已由 Vite 打包。依赖完整许可随构建收录在 THIRD-PARTY-NOTICES.txt。
+- Three.js、Markdown-it、Tiptap、ProseMirror、Marked 和 KaTeX：MIT。运行代码已由 Vite 打包。依赖完整许可随构建收录在 THIRD-PARTY-NOTICES.txt。
 - Electron / Chromium：发行目录中的 LICENSE、LICENSES.chromium.html。
 - MiSans：字体与许可一并打包，详见 site/fonts/MiSans-license.pdf，字体版权归小米。
 - Novecento：现有材料仅支持网站字体使用，桌面输出主动排除该字体目录，使用 MiSans 与系统回退字体。

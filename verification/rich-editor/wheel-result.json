@@ -1,0 +1,14 @@
+{
+  "wheel": true,
+  "drag": true,
+  "dragDoesNotSelect": true,
+  "click": true,
+  "unsavedGuard": true,
+  "keyboard": true,
+  "browsePreservesOrder": true,
+  "reorderHandle": true,
+  "arrowSingleStep": true,
+  "emptySearch": true,
+  "darkSmall": true,
+  "errors": []
+}

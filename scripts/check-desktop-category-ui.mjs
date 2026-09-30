@@ -72,7 +72,7 @@ try {
   documentId = doc.id;
   assert.equal(doc.categoryId, firstId);
   assert.equal(await p.locator(`[data-id="${documentId}"]`).isVisible(), true);
-  await p.locator("#body").fill("# 入门说明\n\n分类大刻度与文档小刻度。");
+  await p.locator("#preview .tiptap").fill("# 入门说明\n\n分类大刻度与文档小刻度。");
   await p.locator("#save").click();
   await poll(p,() =>
     document.querySelector("#state").textContent.includes("已保存"),
@@ -85,7 +85,6 @@ try {
   );
   await p
     .locator('[data-id="' + documentId + '"]')
-    .locator(".directory-reorder")
     .dragTo(p.locator('[data-category-id="' + secondId + '"]'));
   await poll(p,
     async ([doc, category]) =>
@@ -169,7 +168,7 @@ try {
     null,
   );
   await p.locator('[data-id="' + documentId + '"]').click();
-  assert.match(await p.locator("#body").inputValue(), /分类大刻度/);
+  assert.match(await p.locator("#preview .tiptap").innerText(), /分类大刻度/);
   await p.locator("#remove").click();
   await p.locator('[data-choice="delete"]').click();
   await poll(p,

@@ -28,7 +28,10 @@ for (const path of [
 await copyFile("LICENSE", `${site}/LICENSE`);
 await copyFile("docs/DESKTOP-LICENSES.md", `${site}/DESKTOP-LICENSES.md`);
 const notices = [];
-for (const name of [
+const runtimePackages = Object.entries(JSON.parse(await readFile("package-lock.json","utf8")).packages)
+  .filter(([name,pkg]) => name.startsWith("node_modules/") && !pkg.dev)
+  .map(([name]) => name.slice("node_modules/".length));
+for (const name of new Set([...runtimePackages,
   "three",
   "@kitlangton/rolling-number",
   "markdown-it",
@@ -38,7 +41,7 @@ for (const name of [
   "mdurl",
   "punycode.js",
   "uc.micro",
-]) {
+])) {
   const pkg = JSON.parse(
     await readFile(`node_modules/${name}/package.json`, "utf8"),
   );

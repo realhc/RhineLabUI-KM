@@ -21,8 +21,8 @@ export function mountDirectoryWheel(list: HTMLElement) {
   let pointer: {id:number; y:number; scroll:number; moved:boolean} | undefined;
   let suppressClick = false;
   list.addEventListener('pointerdown', event => {
-    if (event.button !== 0 || (event.target as HTMLElement).closest('.directory-reorder')) return;
     suppressClick = false;
+    if (event.button !== 0 || (event.target as HTMLElement).closest('.document,[data-category-id]')) return;
     pointer = {id:event.pointerId, y:event.clientY, scroll:list.scrollTop, moved:false};
   });
   list.addEventListener('pointermove', event => {

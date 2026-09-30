@@ -16,13 +16,13 @@ try {
  const initial=await page.evaluate(()=>document.querySelector('#documents').scrollTop);
  await page.mouse.move(box.x+box.width/2,box.y+box.height/2);await page.mouse.wheel(0,420);await page.waitForTimeout(700);
  const wheeled=await list.evaluate(el=>el.scrollTop);assert.ok(wheeled>initial+60,'wheel scrolls documents');
- await page.mouse.move(box.x+box.width*.6,box.y+box.height*.7);await page.mouse.down();await page.mouse.move(box.x+box.width*.6,box.y+box.height*.3,{steps:16});await page.mouse.up();await page.waitForTimeout(500);
+ await page.mouse.move(box.x+3,box.y+box.height*.7);await page.mouse.down();await page.mouse.move(box.x+box.width*.6,box.y+box.height*.3,{steps:16});await page.mouse.up();await page.waitForTimeout(500);
  const dragged=await list.evaluate(el=>el.scrollTop);assert.ok(dragged>wheeled+30,'drag browses documents');assert.equal(await page.locator('#editor').isVisible(),false,'drag does not click document');
  const order=await page.evaluate(async()=>(await window.rhine.list()).documents.map(d=>[d.id,d.order]));
  await list.evaluate(el=>el.scrollTop=0);await page.waitForTimeout(250);
  await page.locator('#documents .document').first().click();assert.equal(await page.locator('#editor').isVisible(),true);
- await page.locator('#body').fill('Wheel unsaved guard');
- await page.locator('#documents .document').nth(1).click();await page.locator('[data-choice="cancel"]').click();assert.equal(await page.locator('#body').inputValue(),'Wheel unsaved guard');
+ await page.locator('#save').click();await page.locator('#preview .tiptap').fill('Wheel unsaved guard');
+ await page.locator('#documents .document').nth(1).click();await page.locator('[data-choice="cancel"]').click();assert.equal((await page.locator('#preview .tiptap').innerText()).trim(),'Wheel unsaved guard');
  await page.locator('#documents .document').nth(1).click();await page.locator('[data-choice="discard"]').click();
  await page.screenshot({path:join(out,'light.png')});
  await page.locator('#documents .document').first().focus();await page.keyboard.press('End');await page.waitForTimeout(300);assert.equal(await page.evaluate(()=>document.activeElement?.dataset.id),await page.locator('#documents .document').last().getAttribute('data-id'));
@@ -31,7 +31,7 @@ try {
  await list.evaluate(el=>el.scrollTop=0);await page.waitForTimeout(200);
  await page.locator('#documents .document').first().focus();await page.keyboard.press('ArrowDown');assert.equal(await page.evaluate(()=>document.activeElement?.dataset.id),await page.locator('#documents .document').nth(1).getAttribute('data-id'),'arrow moves exactly one row');
  const moving=await page.locator('#documents .document').nth(1).getAttribute('data-id');const targetId=await page.locator('#documents .document').first().getAttribute('data-id');
- await page.locator('#documents .document').nth(1).locator('.directory-reorder').dragTo(page.locator('#documents .document').first());
+ await page.locator('#documents .document').nth(1).dragTo(page.locator('#documents .document').first());
  await page.waitForFunction(async(id)=>{const d=(await window.rhine.list()).documents.sort((a,b)=>a.order-b.order);return d.findIndex(x=>x.id===id[0])+1===d.findIndex(x=>x.id===id[1]);},[moving,targetId]);
  await page.locator('#search').fill('NOT_A_DOCUMENT_39201');assert.equal(await page.locator('#documents .document').count(),0);await page.locator('#search').fill('');
  await page.locator('#library-close').click();await page.locator('[data-action="settings"]').click();await page.locator('[data-color-theme="dark"]').click();await page.waitForTimeout(500);await page.locator('[data-action="close-modal"]').click();await page.waitForTimeout(300);await page.locator('[data-action="search"]').click();

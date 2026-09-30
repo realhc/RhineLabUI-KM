@@ -294,3 +294,60 @@
 #library-overlay .directory-wheel .document:hover .directory-reorder { opacity:.6; background:var(--glass-soft); }
 #library-overlay #directory-name { display:block; margin-top:12px; width:100%; }
 [data-dark-surface="true"] #library-overlay #documents :is(.category-toggle,.category-actions button) { box-shadow:none; }
+
+/* Transparent controls and a single rendered document in reading and editing. */
+#library-overlay .library-controls { background:transparent; border:0; border-radius:0; box-shadow:none; backdrop-filter:none; -webkit-backdrop-filter:none; }
+#library-overlay .library-controls > header { background:transparent; border:0; box-shadow:none; backdrop-filter:none; }
+#library-overlay .library-controls > footer { border:0; padding-top:2px; }
+#library-overlay .library-controls .toolbar { border:0; margin-bottom:4px; }
+#library-overlay .library-controls .metadata { margin-bottom:0; }
+#library-overlay #title { border:0; box-shadow:none; font-size:24px; }
+#library-overlay #title[readonly] { cursor:default; }
+#library-overlay #panes.preview { display:block; min-height:0; overflow:auto; }
+#library-overlay #preview { min-height:100%; overflow:visible; padding:30px 40px 60px; }
+#library-overlay .rich-document { outline:none; min-height:160px; max-width:960px; margin:0 auto; font:15px/1.9 MiSans,"Microsoft YaHei",sans-serif; overflow-wrap:anywhere; cursor:text; }
+#library-overlay .rich-document[contenteditable=false] { cursor:auto; }
+#library-overlay .rich-document > :first-child { margin-top:0; }
+#library-overlay .rich-document p { margin:0 0 1em; line-height:1.9; }
+#library-overlay .rich-document h1 { font-size:30px; line-height:1.45; margin:1.3em 0 .6em; }
+#library-overlay .rich-document h2 { font-size:25px; line-height:1.5; margin:1.2em 0 .6em; }
+#library-overlay .rich-document h3 { font-size:21px; line-height:1.5; margin:1.1em 0 .5em; }
+#library-overlay .rich-document h4 { font-size:17px; line-height:1.6; margin:1em 0 .5em; }
+#library-overlay .rich-document ul, #library-overlay .rich-document ol { padding-left:1.6em; }
+#library-overlay .rich-document li p { margin-bottom:.25em; }
+#library-overlay .rich-document pre { border:1px solid var(--glass-stroke); border-radius:9px; font:13px/1.75 Consolas,monospace; white-space:pre-wrap; tab-size:2; }
+#library-overlay .rich-document pre code { padding:0; background:none; color:inherit; }
+#library-overlay .rich-document :not(pre)>code { background:var(--theme-field); border-radius:4px; padding:2px 4px; font-size:.9em; }
+#library-overlay .rich-document table { table-layout:fixed; margin:1em 0; }
+#library-overlay .rich-document td, #library-overlay .rich-document th { min-width:60px; position:relative; vertical-align:top; }
+#library-overlay .rich-document th { background:var(--theme-field); }
+#library-overlay .rich-document td p, #library-overlay .rich-document th p { margin:0; }
+#library-overlay .rich-document .selectedCell::after { content:""; position:absolute; inset:0; background:color-mix(in srgb,var(--theme-accent) 15%,transparent); pointer-events:none; }
+#library-overlay .rich-document .ProseMirror-selectednode { outline:2px solid var(--theme-accent); outline-offset:3px; }
+#library-overlay .rich-document [data-type=block-math] { margin:1em 0; padding:12px; overflow-x:auto; }
+#library-overlay .rich-document .katex { color:inherit; font-size:1.12em; }
+#library-overlay .rich-document [data-type$=math] { cursor:pointer; }
+#library-overlay #format { flex-wrap:wrap; overflow:visible; gap:5px 10px; align-items:center; }
+#library-overlay #format .format-group { display:flex; align-items:center; gap:2px; padding-right:8px; border-right:1px solid var(--glass-stroke); }
+#library-overlay #format .format-group:last-child { border:0; }
+#library-overlay #format button { border:0; background:transparent; box-shadow:none; border-radius:6px; padding:6px 8px; min-height:30px; }
+#library-overlay #format button:hover:not(:disabled), #library-overlay #format button.active { background:var(--glass-soft); color:var(--theme-accent); }
+#library-overlay #format button[data-command=bold] { font-weight:800; }
+#library-overlay #format button[data-command=italic] { font-style:italic; }
+#library-overlay #format button[data-command=underline] { text-decoration:underline; }
+#library-overlay #format button[data-command=strike] { text-decoration:line-through; }
+#library-overlay #format select { background:transparent; border:0; padding:6px 4px; font-size:12px; max-width:130px; }
+#library-overlay .editor-inputs { display:grid; gap:12px; margin-top:16px; }
+#library-overlay .editor-inputs label { display:grid; gap:6px; font-size:12px; }
+#library-overlay .editor-inputs input, #library-overlay .editor-inputs textarea { width:100%; padding:9px; border:1px solid var(--glass-stroke); border-radius:8px; background:var(--theme-field); }
+#library-overlay .document[draggable=true] { cursor:grab; }
+#library-overlay .document[draggable=true]:active { cursor:grabbing; }
+[data-dark-surface=true] #library-overlay .library-controls { background:transparent; box-shadow:none; }
+@media(max-width:1050px) { #library-overlay #preview { padding:24px 28px 45px; } }
+@media(max-width:720px) { #library-overlay #preview { padding:18px 20px 35px; } #library-overlay #format { gap:3px; } }
+
+#library-overlay .rich-document [data-type=inline-math] { display:inline-flex; align-items:center; vertical-align:middle; padding:3px 2px; }
+#library-overlay .rich-document strong { font-weight:700; }
+#library-overlay .rich-document em { font-style:italic; }
+#library-overlay .rich-document u { text-decoration:underline; }
+#library-overlay .rich-document pre code { display:block; position:static; opacity:1; visibility:visible; color:var(--ink); }

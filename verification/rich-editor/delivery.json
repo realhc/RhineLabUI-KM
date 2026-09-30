@@ -1,0 +1,10 @@
+{
+  "date": "2026-09-30T19:22:05.439Z",
+  "appAsarSHA256": "3c04dcfefb76cf6f345f98a96f32e62159e6901b28bd41406198e959ca845763",
+  "portableZipSHA256": "861681b96d404f3597ad0578f99844f02122a33ba52d7e942bfe457f713a259a",
+  "sourceMatchesBuild": true,
+  "zipMatchesTestedBuild": true,
+  "zipContainsNoUserData": true,
+  "userDataFiles": 47,
+  "userDataUnchanged": true
+}
