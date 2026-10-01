@@ -134,7 +134,7 @@ npm.cmd run check:desktop:package
 
 ## 原作者与许可
 
-本项目基于 **[LBEILC / RhineLabUI](https://github.com/LBEILC/RhineLabUI)** 衍生开发，感谢原作者的终端视觉、三维模型、开场、声音及相关实现。本仓库由 realhc 独立维护，新增本地知识库、排版编辑与桌面文件管理。
+本项目基于 **[LBEILC / RhineLabUI](https://github.com/LBEILC/RhineLabUI)** 衍生开发，感谢原作者的终端视觉、三维模型、开场、声音及相关实现。本仓库由 **[realhc / Hong Chang](https://github.com/realhc)** 独立维护，新增本地知识库、排版编辑与桌面文件管理。
 
 保留原作者 **Copyright (c) 2026 LBEILC** 与 [MIT License](LICENSE)。原作者有权授权的代码、模型、Blender 工程、原创配乐和素材依照该许可分发；修改并未取消第三方版权。MiSans、依赖库及 Electron/Chromium 保留各自许可，发行包附带第三方声明。
 
