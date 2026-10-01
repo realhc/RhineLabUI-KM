@@ -1,6 +1,6 @@
 {
   "name": "rhine-lab-analysis-os",
-  "version": "1.1.1",
+  "version": "1.1.2",
   "description": "Rhine Lab portable local Markdown knowledge base",
   "author": "Rhine Lab contributors",
   "main": "desktop/main.mjs",
@@ -33,7 +33,10 @@
     "check:desktop:categories": "node scripts/check-desktop-categories.mjs",
     "check:desktop:workflow": "node scripts/check-desktop-p1-workflow.mjs",
     "check:desktop:visual": "node scripts/check-desktop-p1-visual.mjs",
-    "check:desktop:p1": "node scripts/check-desktop-p1.mjs"
+    "check:desktop:p1": "node scripts/check-desktop-p1.mjs",
+    "check:desktop:recovery": "node scripts/check-desktop-render-recovery.mjs",
+    "check:desktop:package": "node scripts/check-desktop-package.mjs",
+    "check:desktop:motion": "node scripts/check-desktop-library-motion.mjs"
   },
   "dependencies": {
     "@kitlangton/rolling-number": "0.4.1",

@@ -11,7 +11,7 @@ module.exports = {
       const file = path.replaceAll("\\", "/");
       return (
         file !== "" &&
-        !/^\/(package\.json$|desktop(?:\/|$)|content$|content\/archives\.json$|release$|release\/desktop$|release\/desktop\/site(?:\/|$)|LICENSE$)/.test(
+        !/^\/(package\.json$|desktop$|desktop\/(?:main\.mjs|preload\.cjs|repository\.mjs|directory\.mjs)$|content$|content\/archives\.json$|release$|release\/desktop$|release\/desktop\/site(?:\/|$)|LICENSE$)/.test(
           file,
         )
       );

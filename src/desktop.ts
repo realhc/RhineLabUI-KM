@@ -1,5 +1,6 @@
 import "./desktop.css";
 import { mountDirectoryWheel } from "./desktop-directory";
+import { mountLibraryMotion } from "./desktop-library-motion";
 import { mountRichEditor, richToolbar } from "./desktop-rich-editor";
 
 const api = window.rhine;
@@ -57,11 +58,16 @@ const controls = document.createElement("section");
 controls.className = "library-controls";
 controls.setAttribute("aria-label", "文档与知识库操作");
 controls.append(overlay.querySelector("header")!);
-for (const selector of [".metadata", ".toolbar", "#format"]) controls.append(overlay.querySelector(selector)!);
+const documentHeading = document.createElement("div");
+documentHeading.className = "document-heading";
+for (const selector of [".metadata", ".toolbar"])
+  documentHeading.append(overlay.querySelector(selector)!);
+controls.append(documentHeading, overlay.querySelector("#format")!);
 controls.append(overlay.querySelector("footer")!);
 overlay.append(controls);
 
-const directoryWheel = mountDirectoryWheel($("documents"));
+const libraryMotion = mountLibraryMotion(overlay);
+const directoryWheel = mountDirectoryWheel($("documents"), () => libraryMotion.enabled("dragMomentum"));
 const rich = mountRichEditor($("preview"),$("format"), () => setDirty(true), requestEditorInput);
 
 function notify(message: string) {
@@ -172,7 +178,11 @@ function renderList() {
 }
 
 
+let displayedDocumentId: string | undefined;
 function renderEditor() {
+  const changedDocument = displayedDocumentId !== selected?.id;
+  displayedDocumentId = selected?.id;
+  overlay.dataset.editing = String(editing && !!selected);
   $("editor").hidden = !selected;
   $("empty-main").hidden = !!selected;
   if (!selected) { editing = false; rich.setEditable(false); return; }
@@ -189,6 +199,7 @@ function renderEditor() {
   $("favorite").textContent = saved.has(selected.id) ? "★ 已收藏" : "☆ 收藏";
   $("document-info").textContent =
     `${selected.id} · 修改 ${new Date(selected.modified).toLocaleString()}${removed ? " · 回收区（只读）" : ""}`;
+  if (changedDocument) libraryMotion.revealDocument();
 }
 async function select(id: string) {
   if (selected?.id === id) { activeCategory = selected.categoryId ?? null; renderList(); return; }
@@ -380,7 +391,7 @@ $("new-document").onclick=()=>run(()=>namedDocument());
 $("new-category").onclick=()=>run(async()=>{$("new-menu").hidden=true;$("new").setAttribute("aria-expanded","false");const name=await askName("新建分类");if(!name)return;const c=await api.createCategory(name);activeCategory=c.id;await refresh();$("documents").querySelector<HTMLElement>(`[data-category-id="${c.id}"]`)?.scrollIntoView({block:"nearest"});});
 function startEditing() {
   if(!selected || trash.some(d=>d.id===selected!.id))return;
-  editing=true;rich.setEditable(true);$<HTMLInputElement>("title").readOnly=false;$("save").textContent="保存";$("save").title="Ctrl+S 保存（继续编辑）";rich.focus();
+  editing=true;overlay.dataset.editing="true";rich.setEditable(true);$<HTMLInputElement>("title").readOnly=false;$("save").textContent="保存";$("save").title="Ctrl+S 保存（继续编辑）";rich.focus();
 }
 $("save").onclick = () => editing ? run(save) : startEditing();
 $("folder").onclick = () => run(() => api.openFolder());
@@ -490,7 +501,7 @@ $("preview").onclick = (e) => {
   else notify("仅支持通过系统浏览器打开 http / https 外链。");
 };
 document.addEventListener("keydown", (e) => {
-  if (!overlay.open) return;
+  if (!overlay.open || overlay.dataset.motionState === "closing") return;
   if ($<HTMLDialogElement>("dialog").open) return;
   if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "s") {
     e.preventDefault();
@@ -513,10 +524,12 @@ $("documents").ondragstart = (e) => {
   if (!(e.target as HTMLElement).closest(".document") || view === "trash") { e.preventDefault(); return; }
   const el = (e.target as HTMLElement).closest<HTMLElement>("[data-id]");
   dragged = el?.dataset.id || "";
+  overlay.dataset.directoryDragging = "true";
   e.dataTransfer?.setData("text/plain", dragged);
 };
 $("documents").ondragend = () => {
   dragged = "";
+  delete overlay.dataset.directoryDragging;
   overlay.querySelectorAll(".drop-target").forEach(el=>el.classList.remove("drop-target"));
   renderList();
 };
@@ -543,17 +556,20 @@ $("preferences").onclick = () => run(async () => {
 $("library-close").onclick = () => run(closeLibrary);
 overlay.addEventListener("cancel", event => { event.preventDefault(); run(closeLibrary); });
 async function closeLibrary() {
+  if (!overlay.open) return true;
   if (!(await canLeave())) return false;
-  overlay.close();
+  directoryWheel.stop();
+  if (!(await libraryMotion.hide())) return false;
   window.dispatchEvent(new CustomEvent("rhine-library-visibility", {detail:false}));
   window.dispatchEvent(new CustomEvent("rhine-library-selected", {detail:selected?.id}));
   opener?.focus({preventScroll:true});
   return true;
 }
 export async function openLibrary(id?: string, requestedView: "all" | "saved" | "trash" = "all") {
+  if (overlay.dataset.motionState === "closing") void libraryMotion.show();
   return run(async () => {
     if (overlay.open && !(await canLeave())) return;
-    opener = document.activeElement as HTMLElement;
+    if (!overlay.open) opener = document.activeElement as HTMLElement;
     saved.clear();
     const stored = read("rhine-saved", []);
     if (Array.isArray(stored)) stored.filter(value => typeof value === "string").forEach(value => saved.add(value));
@@ -565,7 +581,7 @@ export async function openLibrary(id?: string, requestedView: "all" | "saved" | 
     if (id) {const c=documents.find(d=>d.id===id)?.categoryId;if(c)collapsed.delete(c);await select(id);}
     else { selected = undefined; renderEditor(); }
     updateNav(); renderList();
-    if (!overlay.open) overlay.showModal();
+    if (!overlay.open) void libraryMotion.show();
     window.dispatchEvent(new CustomEvent("rhine-library-visibility", {detail:true}));
     $(id ? "save" : "search").focus();
   });

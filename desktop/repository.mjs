@@ -74,6 +74,8 @@ export class Repository {
     this.directory = new Directory(this);
     this.watchers = [];
     this.queue = Promise.resolve();
+    this.listInFlight = null;
+    this.mutating = false;
   }
   async safe(target, allowMissing = false) {
     const absolute = path.resolve(target);
@@ -98,7 +100,17 @@ export class Repository {
     }
   }
   serialize(action) {
-    const task = this.queue.then(action);
+    const task = this.queue.then(async () => {
+      // Concurrent renderer refreshes may share reads, never a write transaction.
+      this.listInFlight = null;
+      this.mutating = true;
+      try {
+        return await action();
+      } finally {
+        this.mutating = false;
+        this.listInFlight = null;
+      }
+    });
     this.queue = task.catch(() => {});
     return task;
   }
@@ -245,7 +257,18 @@ export class Repository {
     return { result, locations };
   }
   async list() {
-    return this.directory.decorate((await this.scan()).result);
+    if (this.mutating)
+      return this.directory.decorate((await this.scan()).result);
+    // Share only an unfinished scan. The next completed request reads disk again,
+    // including external changes that retain the same size and modification time.
+    const snapshot = this.listInFlight ??= (async () =>
+      this.directory.decorate((await this.scan()).result))();
+    try {
+      // Callers retain the independent result objects returned by fresh scans.
+      return structuredClone(await snapshot);
+    } finally {
+      if (this.listInFlight === snapshot) this.listInFlight = null;
+    }
   }
   async locate(id, trash = false) {
     this.assertId(id);
@@ -582,6 +605,8 @@ export class Repository {
   watch(callback) {
     let timer;
     const notify = () => {
+      // Invalidate immediately; UI notification remains debounced.
+      this.listInFlight = null;
       clearTimeout(timer);
       timer = setTimeout(() => callback(), 180);
     };

@@ -1,0 +1,62 @@
+{
+  "version": "1.1.2",
+  "checkedAt": "2026-10-01T14:37:19.441Z",
+  "typescript": true,
+  "desktopBuild": true,
+  "packageResources": true,
+  "repository": true,
+  "categories": true,
+  "exhibit": true,
+  "richEditor": {
+    "renderedOnly": true,
+    "transparentControls": true,
+    "editShortcut": true,
+    "saveKeepsEditing": true,
+    "originalBytesPreserved": true,
+    "headingLevels": true,
+    "selectedMarks": true,
+    "link": true,
+    "codeBlock": true,
+    "tableEditing": true,
+    "latexRoundtrip": true,
+    "attachmentPreserved": true,
+    "undoIsolation": true,
+    "unsavedGuard": true,
+    "wholeRowDrag": true,
+    "trashRestore": true,
+    "restart": true,
+    "offline": true,
+    "errors": [],
+    "failed": []
+  },
+  "recovery": {
+    "editorLoadsOnDemand": true,
+    "invisibleScan": {
+      "mutations": 0,
+      "skippedFrames": 304
+    },
+    "transientFrameRecovers": true,
+    "contextRestoredWithoutReload": true,
+    "unrestoredContextRebuildKeepsDraft": true,
+    "resizeAndToolbar": true,
+    "minimizeRestore": true,
+    "startupAndSkipRepeatedWithEarlyGpuLoss": true,
+    "darkTransparentControls": true
+  },
+  "motion": {
+    "finiteOpeningAndFixedAxis": true,
+    "selectionOnlyContentAnimation": true,
+    "dirtyCancelKeepsDraft": true,
+    "wholeRowDragStillClassifies": true,
+    "nativeMomentumAndStop": true,
+    "finiteClosingAndStoppedHiddenMotion": true,
+    "closingShortcutsIsolated": true,
+    "systemReducedMotion": true,
+    "applicationReducedMotion": true
+  },
+  "visual": {
+    "light": 9,
+    "dark": 9,
+    "sourceNote": "Scene comparisons ran before overlay-only motion was added; shared scene and original motion settings remain unchanged"
+  }
+}

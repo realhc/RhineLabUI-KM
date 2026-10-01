@@ -64,8 +64,8 @@ const LiteralHTML = Node.create({
 });
 
 export const richToolbar =
-  '<div class="format-group"><select id="text-style" aria-label="段落样式"><option value="0">正文</option><option value="1">一级标题</option><option value="2">二级标题</option><option value="3">三级标题</option><option value="4">四级标题</option></select></div>' +
-  '<div class="format-group">' +
+  '<div class="format-group" role="group" aria-label="段落样式"><select id="text-style" aria-label="段落样式"><option value="0">正文</option><option value="1">一级标题</option><option value="2">二级标题</option><option value="3">三级标题</option><option value="4">四级标题</option></select></div>' +
+  '<div class="format-group" role="group" aria-label="文字格式">' +
   [
     ["bold", "B", "粗体 · Ctrl+B"],
     ["italic", "I", "斜体 · Ctrl+I"],
@@ -86,12 +86,21 @@ export const richToolbar =
     )
     .join("") +
   "</div>" +
-  '<div class="format-group">' +
+  '<div class="format-group" role="group" aria-label="列表与引用">' +
   [
-    ["link", "链接", "插入或修改链接"],
     ["bulletList", "• 列表", "无序列表"],
     ["orderedList", "1. 列表", "有序列表"],
     ["blockquote", "引用", "引用"],
+  ]
+    .map(
+      ([action, label, title]) =>
+        '<button data-command="' + action + '" aria-label="' + title + '" title="' + title + '">' + label + '</button>',
+    )
+    .join("") +
+  "</div>" +
+  '<div class="format-group" role="group" aria-label="插入内容">' +
+  [
+    ["link", "链接", "插入或修改链接"],
     ["codeBlock", "代码块", "把选中的内容设为代码块"],
     ["math", "∑ 公式", "插入 LaTeX 公式"],
     ["table", "表格", "插入表格"],
@@ -108,8 +117,8 @@ export const richToolbar =
     )
     .join("") +
   "</div>" +
-  '<div class="format-group"><button data-command="undo" title="Ctrl+Z">↶</button><button data-command="redo" title="Ctrl+Shift+Z">↷</button></div>' +
-  '<div id="table-tools" class="format-group" hidden><button data-command="addRowAfter">＋行</button><button data-command="addColumnAfter">＋列</button><button data-command="deleteRow">删行</button><button data-command="deleteColumn">删列</button><button data-command="deleteTable">移除表格</button></div>' +
+  '<div class="format-group format-history" role="group" aria-label="编辑历史"><button data-command="undo" title="Ctrl+Z" aria-label="撤销 · Ctrl+Z">↶</button><button data-command="redo" title="Ctrl+Shift+Z" aria-label="重做 · Ctrl+Shift+Z">↷</button></div>' +
+  '<div id="table-tools" class="format-group" role="group" aria-label="表格操作" hidden><button data-command="addRowAfter">＋行</button><button data-command="addColumnAfter">＋列</button><button data-command="deleteRow">删行</button><button data-command="deleteColumn">删列</button><button data-command="deleteTable">移除表格</button></div>' +
   '<select id="code-language" aria-label="代码语言" hidden><option value="">纯文本</option><option>javascript</option><option>typescript</option><option>python</option><option>json</option><option>html</option><option>css</option><option>bash</option><option>sql</option></select>';
 
 type Request = (

@@ -2,3 +2,6 @@
 .local-markdown pre { overflow: auto; padding: 16px; background: var(--theme-field); }
 .local-markdown table { border-collapse: collapse; width: 100%; }
 .local-markdown td, .local-markdown th { padding: 8px; border: 1px solid var(--theme-line); }
+.graphics-status { position: fixed; z-index: 10000; right: 24px; bottom: 24px; max-width: calc(100vw - 48px); padding: 14px 18px; color: var(--theme-ink); background: var(--theme-panel); border: 1px solid var(--theme-line); font: 14px MiSans, sans-serif; }
+.graphics-status[hidden] { display: none; }
+.graphics-status button { margin-left: 16px; padding: 6px 10px; font: inherit; color: inherit; border: 1px solid var(--theme-line); background: transparent; cursor: pointer; }

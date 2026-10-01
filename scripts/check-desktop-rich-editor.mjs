@@ -97,9 +97,10 @@ try {
   await p.evaluate(() => window.rhineReview.archive());
   await p.waitForTimeout(2400);
   await p.locator('[data-action="search"]').click();
-  await poll(() => document.querySelector("#library-overlay").open);
+  await poll(() => document.querySelector("#library-overlay")?.open);
   await p.locator("#search").fill("富文本测试");
   await p.locator("#documents .document").click();
+  await poll(() => document.querySelector("#title").value === "富文本测试" && document.querySelector("#preview .tiptap").contentEditable === "false");
   assert.equal(
     await p
       .locator("#library-overlay")
@@ -227,18 +228,25 @@ try {
   );
   await p.locator("#search").fill("富文本测试");
   await p.locator("#documents .document").click();
+  await poll(() => document.querySelector("#title").value === "富文本测试" && document.querySelector("#preview .tiptap").contentEditable === "false");
   assert.equal(await content().getAttribute("contenteditable"), "false");
   assert.equal(await p.locator("#preview u").count(), 1);
   assert.equal(await p.locator("#preview table").count(), 1);
   assert.equal(await p.locator("#preview .katex").count(), 3);
   await p.keyboard.press("e");
-  await content().fill("未保存内容");
+  // Add a real draft after the multi-node document. Table selection is a separate
+  // interaction and must not decide whether the unsaved-document guard is tested.
+  await content().press("Control+End");
+  await p.keyboard.insertText("未保存内容");
+  const unsavedText = (await content().innerText()).trim();
+  assert(unsavedText.includes("未保存内容"));
   await p.locator("#search").fill("另一份文档");
   await p.locator("#documents .document").click();
   await p.locator("[data-choice=cancel]").click();
-  assert.equal((await content().innerText()).trim(), "未保存内容");
+  assert.equal((await content().innerText()).trim(), unsavedText);
   await p.locator("#documents .document").click();
   await p.locator("[data-choice=discard]").click();
+  await poll(() => document.querySelector("#title").value === "另一份文档");
   assert.equal((await content().innerText()).trim(), "独立内容");
   // Drag from the title at the centre of the whole row, not the tick handle.
   const dest = await p.evaluate(() => window.rhine.createCategory("拖放目标"));

@@ -2,7 +2,7 @@
 
 Rhine Lab 是基于《明日方舟》莱茵生命终端视觉制作的非官方交互项目。当前同时保留网页版和 **Windows 本地 Markdown 知识库客户端**。
 
-客户端当前版本为 **1.1.1**。首页复用网页版的完整三维阵列、灯光、镜头、开场、详情和模型查看器；知识库通过全屏磨砂玻璃层打开，左侧透明刻度目录、右上功能区和右下正文区彼此独立。文档保存在程序旁的本地文件夹中，打包后无需安装 Node.js、启动开发服务器或登录账户即可离线使用。
+客户端当前版本为 **1.1.2**。首页复用网页版的完整三维阵列、灯光、镜头、开场、详情和模型查看器；知识库通过全屏磨砂玻璃层打开，左侧透明刻度目录、右上功能区和右下正文区彼此独立。文档保存在程序旁的本地文件夹中，打包后无需安装 Node.js、启动开发服务器或登录账户即可离线使用。
 
 [用户教程](#用户使用教程) · [项目路径](#项目路径) · [技术栈](#项目技术栈) · [开发与构建](#开发与构建) · [AI 开发指引](#面向-ai-的下一步开发指引)
 
@@ -17,7 +17,7 @@ Rhine Lab 是基于《明日方舟》莱茵生命终端视觉制作的非官方�
 | 项目说明 | `README.md` |
 | 开发约束与原始计划 | `AGENTS.md`、`plan.md` |
 | 客户端程序 | `release/packages/RhineLab-win32-x64/RhineLab.exe` |
-| 便携压缩包 | `release/packages/make/zip/win32/x64/RhineLab-win32-x64-1.1.1.zip` |
+| 便携压缩包 | `release/packages/make/zip/win32/x64/RhineLab-win32-x64-1.1.2.zip` |
 | 压缩包校验清单 | `release/packages/make/SHA256SUMS.txt` |
 | 打包客户端知识库 | `release/packages/RhineLab-win32-x64/RhineLabData/`，首次启动创建 |
 | 开发模式知识库 | `RhineLabData/` |
@@ -28,6 +28,16 @@ Rhine Lab 是基于《明日方舟》莱茵生命终端视觉制作的非官方�
 网页开发地址为 `http://127.0.0.1:5173/`，需要开发服务正在运行。构建产物和个人知识库不进入 Git；在新检出目录中需先构建打包。若使用多个工作副本，应逐项比较后同步，避免用旧文件覆盖当前源码或用户数据。
 
 在线网页版入口：[rhine.lubeiluchen.cc](https://rhine.lubeiluchen.cc/)。Wallpaper Engine 版本另行维护于 [RhineLabWallpaper](https://github.com/LBEILC/RhineLabWallpaper)，不等同于本地知识库客户端。
+
+## 1.1.2 客户端更新
+
+- 开场与跳过开场增加图形恢复保护。临时渲染异常不再停止后续帧；WebGL 中断会显示恢复提示，持续中断时只重建三维场景，保留知识库草稿与选中项。启动期等待原模型请求结束后再恢复，避免新旧资源交叠。
+- 分类和文档刻度接到同一主轴，右上按全局操作、文档标题与操作、编辑工具、保存状态排列；保持透明无底和原有编辑功能。
+- 知识库采用玻璃层淡入、三块区域错峰显现与退出、文档切换淡入、选中刻度呼吸和目录滚动惯性。编辑、拖拽或滚动时收束持续动效；系统和应用的减少动态效果设置均生效，主轴、布局和正文节点保持原位。
+- 富文本编辑器在打开知识库时加载；隐藏扫描标记跳过投影和 DOM 更新，目录统一测量后更新样式，同时刷新共享一次文件扫描，不缓存已完成的磁盘结果。
+- 桌面发行包清除 PWA 页面、网页导出文本和重复模型等无用资源。网页版源码和共享视觉资源保留，打包时自动校验引用、模型原始哈希与许可证。
+
+检查和截图见 [客户端修复验收](verification/client-repair/README.md)。已有程序需退出后重新打开；升级保留程序旁的 `RhineLabData`。
 
 ## 用户使用教程
 
@@ -140,6 +150,8 @@ RhineLab-win32-x64/
 
 顶部“设置”提供亮暗配色、音效和音乐音量、画质、完整/减少/自定义动画以及全屏。运行不够流畅时可启用“超级性能模式”，它与减少动画分别控制。客户端支持 `F11` 切换全屏，`Esc` 退出全屏。
 
+知识库动效复用这些分项：`SURFACE TRANSITIONS` 控制进退场和按钮反馈，`DOCUMENT REVEAL` 控制文档切换淡入，`IDLE MOTION` 控制选中刻度呼吸，`DRAG MOMENTUM` 控制目录惯性。选择“减少”或启用系统减少动态效果后，知识库直接显示静态内容，编辑操作保持一致。
+
 设置中可以导出和导入偏好与收藏 JSON，文件上限为 1 MB。导入会替换当前偏好与收藏；文件不包含 Markdown 正文。网页与客户端的示例编号相同，因此示例收藏可以迁移。
 
 ### 网页版与客户端的区别
@@ -199,6 +211,9 @@ npm.cmd ci
 | `npm.cmd run check:desktop:exhibit` | 校验桌面展陈映射与空库/超额文档 |
 | `npm.cmd run check:desktop:ui` | 对当前已打包程序运行实际 Electron 回归 |
 | `npm.cmd run check:desktop:p1` | 顺序验证动态分类、阵列、草稿冲突、退出保护及多 DPI 视觉对照 |
+| `npm.cmd run check:desktop:recovery` | 检查启动、跳过开场、图形中断恢复、草稿保留和工具区布局 |
+| `npm.cmd run check:desktop:package` | 检查桌面资源引用、原始模型哈希和打包白名单 |
+| `npm.cmd run check:desktop:motion` | 检查知识库动效、刻度连接、滚动惯性、草稿和输入隔离 |
 | `npm.cmd run check:desktop:workflow` | 单独运行编辑工作流验收 |
 | `npm.cmd run check:desktop:visual` | 单独运行 54 组网页／客户端视觉对照，读取本地 `dist/` |
 
@@ -241,7 +256,7 @@ npm.cmd ci
 
 1. 确认当前环境的工具、权限及仓库根目录；本机环境说明由运行环境提供，不在本 README 固定路径。
 2. 读取项目 `AGENTS.md`、`plan.md` 和本 README；涉及视觉时继续读取 `DESIGN.md`。
-3. 阅读 [P1 验收记录](verification/p1/README.md)、[桌面说明](docs/DESKTOP.md)、[富文本编辑器验收](verification/rich-editor/README.md) 和 [分类目录验收](verification/category-directory/README.md)。[首页视觉对齐](verification/DESKTOP-ALIGNMENT.md) 用于共享场景对照；较早的桌面验收不应当作当前知识库 UI 基准。
+3. 阅读 [客户端修复验收](verification/client-repair/README.md)、[P1 验收记录](verification/p1/README.md)、[桌面说明](docs/DESKTOP.md)、[富文本编辑器验收](verification/rich-editor/README.md) 和 [分类目录验收](verification/category-directory/README.md)。[首页视觉对齐](verification/DESKTOP-ALIGNMENT.md) 用于共享场景对照；较早的桌面验收不应当作当前知识库 UI 基准。
 4. 检查实际 Git 分支、未提交修改、源码和发行包时间；源码提交与本机构建产物分别核对，不能仅凭文件存在推断已同步。
 5. 以用户本次需求定义完成标准；下述路线是建议，不是自动获得的发布或大规模重构授权。
 
@@ -250,6 +265,7 @@ npm.cmd ci
 - **用户最新要求：客户端效果与网页版一致，不要修改网页版。** 保持网页入口、静态内容、样式与动画；优先在 `desktop-*` 文件及桌面宿主内实现需求。
 - `src/scene.ts`、`src/boot.ts` 等是共享模块，修改它们会影响网页版。若需求确实需要更改共享行为，先明确影响范围，不能将桌面修复直接写成网页视觉变化。
 - 不重新设计独立客户端首页，不恢复绿色双栏首页或简化小阵列。知识库样式限定在 `#library-overlay`，不能污染全局按钮、正文、主题与布局。
+- 知识库动效由 `desktop-library-motion.ts` 管理可见生命周期，`desktop-directory.ts` 管理真实 `scrollTop` 惯性。退出完成前保留对话框与背景输入隔离；数据更新和关闭必须停止目录动量；不得通过移轴、改字号或反复重建编辑器制造动画。相关修改运行 `check:desktop:motion`。
 - 沿用原生实现流程，不启用前端设计或动效 Skill 重做界面。新美术资源按项目约束通过 Blender MCP 制作并保留源工程与脚本。
 - 保留已确认的原始灯光、波浪、惯性、循环和镜头规则：抽取只作竖直升降；镜头负责构图；收回时先转正再下降。
 - Markdown 文件是文档事实来源；按稳定 ID 定位，不能把数组下标当文档身份，不能将内容仅写入 localStorage。`desktop-rich-editor.ts` 管理排版编辑、选区、Markdown 序列化与撤销历史；不要重新加入源码面板，切换文档必须隔离撤销栈。

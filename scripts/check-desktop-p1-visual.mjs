@@ -3,7 +3,10 @@ import { cp, mkdir, readFile, writeFile, stat } from "node:fs/promises";
 import { createServer } from "node:http";
 import { join, resolve, extname } from "node:path";
 import assert from "node:assert/strict";
-const out = resolve("verification/p1/visual"),
+const out = resolve(
+    process.argv.find((a) => a.startsWith("--out="))?.slice(6) ??
+      "verification/p1/visual",
+  ),
   run = resolve("release/p1-visual", Date.now().toString()),
   portable = join(run, "portable"),
   webRoot = resolve("dist");
@@ -408,8 +411,20 @@ try {
               ).ready,
           ))
         ) {
-          if (Date.now() > end)
-            throw Error("Viewer native loading timeout: " + p.url());
+          if (Date.now() > end) {
+            const diagnostics = await p.evaluate(() => ({
+              health: (window.rhineReview ?? window.rhine).stats(),
+              viewer: document.querySelector(".model-viewer")?.dataset.stats,
+              message: document.querySelector(".viewer-loading")?.innerText,
+              hidden: document.hidden,
+            }));
+            throw Error(
+              "Viewer native loading timeout: " +
+                p.url() +
+                " " +
+                JSON.stringify(diagnostics),
+            );
+          }
           await p.waitForTimeout(80);
         }
       }

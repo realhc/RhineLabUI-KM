@@ -1,0 +1,579 @@
+{
+  "checkedAt": "2026-10-01T14:31:27.224Z",
+  "checks": {
+    "finiteOpeningAndFixedAxis": true,
+    "selectionOnlyContentAnimation": true,
+    "dirtyCancelKeepsDraft": true,
+    "wholeRowDragStillClassifies": true,
+    "nativeMomentumAndStop": true,
+    "finiteClosingAndStoppedHiddenMotion": true,
+    "closingShortcutsIsolated": true,
+    "systemReducedMotion": true,
+    "applicationReducedMotion": true
+  },
+  "samples": {
+    "open": {
+      "open": true,
+      "motionState": "open",
+      "inert": false,
+      "animations": 0,
+      "running": 0,
+      "wheelState": "idle",
+      "motionFrames": 0,
+      "scrollTop": 0
+    }
+  },
+  "probe": {
+    "states": [
+      "opening",
+      "open",
+      "closing",
+      "closed",
+      "open",
+      "closed",
+      "open",
+      "closed"
+    ],
+    "created": [
+      {
+        "target": "",
+        "duration": 360
+      },
+      {
+        "target": "library-controls",
+        "duration": 360
+      },
+      {
+        "target": "",
+        "duration": 440
+      },
+      {
+        "target": "preview",
+        "duration": 220
+      },
+      {
+        "target": "document-heading",
+        "duration": 220
+      },
+      {
+        "target": "",
+        "duration": 200
+      },
+      {
+        "target": "library-controls",
+        "duration": 200
+      },
+      {
+        "target": "",
+        "duration": 200
+      }
+    ],
+    "axis": [
+      {
+        "state": "opening",
+        "x": 28.5,
+        "y": 0,
+        "tickX": 28.5,
+        "tickY": 342.15625
+      },
+      {
+        "state": "opening",
+        "x": 28.5,
+        "y": 0,
+        "tickX": 28.5,
+        "tickY": 342.15625
+      },
+      {
+        "state": "opening",
+        "x": 28.5,
+        "y": 0,
+        "tickX": 28.5,
+        "tickY": 342.15625
+      },
+      {
+        "state": "opening",
+        "x": 28.5,
+        "y": 0,
+        "tickX": 28.5,
+        "tickY": 342.15625
+      },
+      {
+        "state": "opening",
+        "x": 28.5,
+        "y": 0,
+        "tickX": 28.5,
+        "tickY": 342.15625
+      },
+      {
+        "state": "opening",
+        "x": 28.5,
+        "y": 0,
+        "tickX": 28.5,
+        "tickY": 342.15625
+      },
+      {
+        "state": "opening",
+        "x": 28.5,
+        "y": 0,
+        "tickX": 28.5,
+        "tickY": 342.15625
+      },
+      {
+        "state": "opening",
+        "x": 28.5,
+        "y": 0,
+        "tickX": 28.5,
+        "tickY": 342.15625
+      },
+      {
+        "state": "opening",
+        "x": 28.5,
+        "y": 0,
+        "tickX": 28.5,
+        "tickY": 342.15625
+      },
+      {
+        "state": "opening",
+        "x": 28.5,
+        "y": 0,
+        "tickX": 28.5,
+        "tickY": 342.15625
+      },
+      {
+        "state": "opening",
+        "x": 28.5,
+        "y": 0,
+        "tickX": 28.5,
+        "tickY": 342.15625
+      },
+      {
+        "state": "opening",
+        "x": 28.5,
+        "y": 0,
+        "tickX": 28.5,
+        "tickY": 342.15625
+      },
+      {
+        "state": "opening",
+        "x": 28.5,
+        "y": 0,
+        "tickX": 28.5,
+        "tickY": 342.15625
+      },
+      {
+        "state": "opening",
+        "x": 28.5,
+        "y": 0,
+        "tickX": 28.5,
+        "tickY": 342.15625
+      },
+      {
+        "state": "opening",
+        "x": 28.5,
+        "y": 0,
+        "tickX": 28.5,
+        "tickY": 342.15625
+      },
+      {
+        "state": "opening",
+        "x": 28.5,
+        "y": 0,
+        "tickX": 28.5,
+        "tickY": 342.15625
+      },
+      {
+        "state": "opening",
+        "x": 28.5,
+        "y": 0,
+        "tickX": 28.5,
+        "tickY": 342.15625
+      },
+      {
+        "state": "opening",
+        "x": 28.5,
+        "y": 0,
+        "tickX": 28.5,
+        "tickY": 342.15625
+      },
+      {
+        "state": "opening",
+        "x": 28.5,
+        "y": 0,
+        "tickX": 28.5,
+        "tickY": 342.15625
+      },
+      {
+        "state": "opening",
+        "x": 28.5,
+        "y": 0,
+        "tickX": 28.5,
+        "tickY": 342.15625
+      },
+      {
+        "state": "opening",
+        "x": 28.5,
+        "y": 0,
+        "tickX": 28.5,
+        "tickY": 342.15625
+      },
+      {
+        "state": "opening",
+        "x": 28.5,
+        "y": 0,
+        "tickX": 28.5,
+        "tickY": 342.15625
+      },
+      {
+        "state": "opening",
+        "x": 28.5,
+        "y": 0,
+        "tickX": 28.5,
+        "tickY": 342.15625
+      },
+      {
+        "state": "opening",
+        "x": 28.5,
+        "y": 0,
+        "tickX": 28.5,
+        "tickY": 342.15625
+      },
+      {
+        "state": "opening",
+        "x": 28.5,
+        "y": 0,
+        "tickX": 28.5,
+        "tickY": 342.15625
+      },
+      {
+        "state": "opening",
+        "x": 28.5,
+        "y": 0,
+        "tickX": 28.5,
+        "tickY": 342.15625
+      },
+      {
+        "state": "opening",
+        "x": 28.5,
+        "y": 0,
+        "tickX": 28.5,
+        "tickY": 342.15625
+      },
+      {
+        "state": "opening",
+        "x": 28.5,
+        "y": 0,
+        "tickX": 28.5,
+        "tickY": 342.15625
+      },
+      {
+        "state": "opening",
+        "x": 28.5,
+        "y": 0,
+        "tickX": 28.5,
+        "tickY": 342.15625
+      },
+      {
+        "state": "opening",
+        "x": 28.5,
+        "y": 0,
+        "tickX": 28.5,
+        "tickY": 342.15625
+      },
+      {
+        "state": "opening",
+        "x": 28.5,
+        "y": 0,
+        "tickX": 28.5,
+        "tickY": 342.15625
+      },
+      {
+        "state": "opening",
+        "x": 28.5,
+        "y": 0,
+        "tickX": 28.5,
+        "tickY": 342.15625
+      },
+      {
+        "state": "opening",
+        "x": 28.5,
+        "y": 0,
+        "tickX": 28.5,
+        "tickY": 342.15625
+      },
+      {
+        "state": "opening",
+        "x": 28.5,
+        "y": 0,
+        "tickX": 28.5,
+        "tickY": 342.15625
+      },
+      {
+        "state": "opening",
+        "x": 28.5,
+        "y": 0,
+        "tickX": 28.5,
+        "tickY": 342.15625
+      },
+      {
+        "state": "opening",
+        "x": 28.5,
+        "y": 0,
+        "tickX": 28.5,
+        "tickY": 342.15625
+      },
+      {
+        "state": "opening",
+        "x": 28.5,
+        "y": 0,
+        "tickX": 28.5,
+        "tickY": 342.15625
+      },
+      {
+        "state": "opening",
+        "x": 28.5,
+        "y": 0,
+        "tickX": 28.5,
+        "tickY": 342.15625
+      },
+      {
+        "state": "opening",
+        "x": 28.5,
+        "y": 0,
+        "tickX": 28.5,
+        "tickY": 342.15625
+      },
+      {
+        "state": "opening",
+        "x": 28.5,
+        "y": 0,
+        "tickX": 28.5,
+        "tickY": 342.15625
+      },
+      {
+        "state": "opening",
+        "x": 28.5,
+        "y": 0,
+        "tickX": 28.5,
+        "tickY": 342.15625
+      },
+      {
+        "state": "opening",
+        "x": 28.5,
+        "y": 0,
+        "tickX": 28.5,
+        "tickY": 342.15625
+      },
+      {
+        "state": "opening",
+        "x": 28.5,
+        "y": 0,
+        "tickX": 28.5,
+        "tickY": 342.15625
+      },
+      {
+        "state": "opening",
+        "x": 28.5,
+        "y": 0,
+        "tickX": 28.5,
+        "tickY": 342.15625
+      },
+      {
+        "state": "opening",
+        "x": 28.5,
+        "y": 0,
+        "tickX": 28.5,
+        "tickY": 342.15625
+      },
+      {
+        "state": "opening",
+        "x": 28.5,
+        "y": 0,
+        "tickX": 28.5,
+        "tickY": 342.15625
+      },
+      {
+        "state": "opening",
+        "x": 28.5,
+        "y": 0,
+        "tickX": 28.5,
+        "tickY": 342.15625
+      },
+      {
+        "state": "opening",
+        "x": 28.5,
+        "y": 0,
+        "tickX": 28.5,
+        "tickY": 342.15625
+      },
+      {
+        "state": "opening",
+        "x": 28.5,
+        "y": 0,
+        "tickX": 28.5,
+        "tickY": 342.15625
+      },
+      {
+        "state": "opening",
+        "x": 28.5,
+        "y": 0,
+        "tickX": 28.5,
+        "tickY": 342.15625
+      },
+      {
+        "state": "opening",
+        "x": 28.5,
+        "y": 0,
+        "tickX": 28.5,
+        "tickY": 342.15625
+      },
+      {
+        "state": "opening",
+        "x": 28.5,
+        "y": 0,
+        "tickX": 28.5,
+        "tickY": 342.15625
+      },
+      {
+        "state": "opening",
+        "x": 28.5,
+        "y": 0,
+        "tickX": 28.5,
+        "tickY": 342.15625
+      },
+      {
+        "state": "opening",
+        "x": 28.5,
+        "y": 0,
+        "tickX": 28.5,
+        "tickY": 342.15625
+      },
+      {
+        "state": "opening",
+        "x": 28.5,
+        "y": 0,
+        "tickX": 28.5,
+        "tickY": 342.15625
+      },
+      {
+        "state": "opening",
+        "x": 28.5,
+        "y": 0,
+        "tickX": 28.5,
+        "tickY": 342.15625
+      },
+      {
+        "state": "opening",
+        "x": 28.5,
+        "y": 0,
+        "tickX": 28.5,
+        "tickY": 342.15625
+      },
+      {
+        "state": "opening",
+        "x": 28.5,
+        "y": 0,
+        "tickX": 28.5,
+        "tickY": 342.15625
+      },
+      {
+        "state": "opening",
+        "x": 28.5,
+        "y": 0,
+        "tickX": 28.5,
+        "tickY": 342.15625
+      },
+      {
+        "state": "opening",
+        "x": 28.5,
+        "y": 0,
+        "tickX": 28.5,
+        "tickY": 342.15625
+      },
+      {
+        "state": "opening",
+        "x": 28.5,
+        "y": 0,
+        "tickX": 28.5,
+        "tickY": 342.15625
+      },
+      {
+        "state": "opening",
+        "x": 28.5,
+        "y": 0,
+        "tickX": 28.5,
+        "tickY": 342.15625
+      },
+      {
+        "state": "opening",
+        "x": 28.5,
+        "y": 0,
+        "tickX": 28.5,
+        "tickY": 342.15625
+      },
+      {
+        "state": "opening",
+        "x": 28.5,
+        "y": 0,
+        "tickX": 28.5,
+        "tickY": 342.15625
+      },
+      {
+        "state": "opening",
+        "x": 28.5,
+        "y": 0,
+        "tickX": 28.5,
+        "tickY": 342.15625
+      },
+      {
+        "state": "opening",
+        "x": 28.5,
+        "y": 0,
+        "tickX": 28.5,
+        "tickY": 342.15625
+      },
+      {
+        "state": "opening",
+        "x": 28.5,
+        "y": 0,
+        "tickX": 28.5,
+        "tickY": 342.15625
+      },
+      {
+        "state": "opening",
+        "x": 28.5,
+        "y": 0,
+        "tickX": 28.5,
+        "tickY": 342.15625
+      },
+      {
+        "state": "opening",
+        "x": 28.5,
+        "y": 0,
+        "tickX": 28.5,
+        "tickY": 342.15625
+      },
+      {
+        "state": "opening",
+        "x": 28.5,
+        "y": 0,
+        "tickX": 28.5,
+        "tickY": 342.15625
+      },
+      {
+        "state": "opening",
+        "x": 28.5,
+        "y": 0,
+        "tickX": 28.5,
+        "tickY": 342.15625
+      },
+      {
+        "state": "open",
+        "x": 28.5,
+        "y": 0,
+        "tickX": 28.5,
+        "tickY": 342.15625
+      }
+    ]
+  },
+  "errors": []
+}

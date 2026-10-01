@@ -7,6 +7,7 @@ import { Repository } from "../desktop/repository.mjs";
 const temporary = await fs.mkdtemp(path.join(os.tmpdir(), "rhine-repository-"));
 const root = path.join(temporary, "RhineLabData");
 let repository = new Repository(root);
+let listingRepo;
 const input = {
   title: '第一篇 : "引号"',
   category: "测试",
@@ -331,6 +332,149 @@ try {
     (await repository.list()).issues.some((issue) => issue.code === "SYMLINK"),
   );
 
+  // Array and editor refresh together: one disk scan, independent results.
+  const listingRoot = path.join(temporary, "concurrent-list");
+  listingRepo = new Repository(listingRoot);
+  await listingRepo.init();
+  const listingDoc = await listingRepo.create({
+    ...input,
+    title: "Concurrent listing",
+  });
+  const scanListing = listingRepo.scan.bind(listingRepo);
+  let scans = 0,
+    entered,
+    release;
+  let ready = new Promise((resolve) => (entered = resolve));
+  let gate = new Promise((resolve) => (release = resolve));
+  listingRepo.scan = async () => {
+    scans++;
+    const result = await scanListing();
+    entered();
+    await gate;
+    return result;
+  };
+  const requests = [listingRepo.list(), listingRepo.list(), listingRepo.list()];
+  await ready;
+  assert.equal(scans, 1, "simultaneous refreshes share one disk scan");
+  release();
+  const snapshots = await Promise.all(requests);
+  assert.deepEqual(snapshots[0], snapshots[1]);
+  assert.notEqual(snapshots[0], snapshots[1]);
+  snapshots[0].documents[0].body = "caller-local change";
+  assert.equal(
+    snapshots[1].documents[0].body,
+    input.body,
+    "shared scans keep caller results isolated",
+  );
+  listingRepo.scan = scanListing;
+
+  const listingFile = path.join(
+    listingRoot,
+    "documents",
+    listingDoc.id + ".md",
+  );
+  const listingStat = await fs.stat(listingFile);
+  const listingRaw = await fs.readFile(listingFile, "utf8");
+  await fs.writeFile(listingFile, listingRaw.replace("Heading", "Changed"));
+  await fs.utimes(listingFile, listingStat.atime, listingStat.mtime);
+  let listed = (await listingRepo.list()).documents[0];
+  assert.match(
+    listed.body,
+    /Changed/,
+    "a completed scan never caches external file content",
+  );
+  assert.notEqual(
+    listed.revision,
+    listingDoc.revision,
+    "same-size same-mtime edits get fresh content revisions",
+  );
+
+  scans = 0;
+  listingRepo.scan = async () => {
+    scans++;
+    throw Object.assign(new Error("listing unavailable"), { code: "EIO" });
+  };
+  const failedLists = await Promise.allSettled([
+    listingRepo.list(),
+    listingRepo.list(),
+  ]);
+  assert.equal(scans, 1);
+  assert.ok(
+    failedLists.every(
+      (result) => result.status === "rejected" && result.reason.code === "EIO",
+    ),
+  );
+  listingRepo.scan = scanListing;
+  assert.match(
+    (await listingRepo.list()).documents[0].body,
+    /Changed/,
+    "a rejected scan does not poison later reads",
+  );
+
+  // A pending pre-save scan must not be reused by the save or its next refresh.
+  scans = 0;
+  ready = new Promise((resolve) => (entered = resolve));
+  gate = new Promise((resolve) => (release = resolve));
+  listingRepo.scan = async () => {
+    const firstScan = ++scans === 1;
+    const result = await scanListing();
+    if (firstScan) {
+      entered();
+      await gate;
+    }
+    return result;
+  };
+  const beforeSave = listingRepo.list();
+  await ready;
+  await listingRepo.save({ ...listed, body: "Saved after pending scan" });
+  assert.equal(
+    (await listingRepo.list()).documents[0].body,
+    "Saved after pending scan",
+    "write transactions separate old and new scan results",
+  );
+  release();
+  assert.match((await beforeSave).documents[0].body, /Changed/);
+  listingRepo.scan = scanListing;
+  // Watch events split a still-running snapshot from the next disk refresh.
+  scans = 0;
+  ready = new Promise((resolve) => (entered = resolve));
+  gate = new Promise((resolve) => (release = resolve));
+  listingRepo.scan = async () => {
+    const firstScan = ++scans === 1;
+    const result = await scanListing();
+    if (firstScan) {
+      entered();
+      await gate;
+    }
+    return result;
+  };
+  const beforeExternal = listingRepo.list();
+  await ready;
+  const changedOnDisk = new Promise((resolve, reject) => {
+    const timeout = setTimeout(
+      () => reject(new Error("pending-list watcher timed out")),
+      5000,
+    );
+    listingRepo.watch(() => {
+      clearTimeout(timeout);
+      resolve();
+    });
+  });
+  await fs.appendFile(listingFile, "\nExternal edit during scan");
+  await changedOnDisk;
+  assert.match(
+    (await listingRepo.list()).documents[0].body,
+    /External edit during scan/,
+    "watch notification cuts off an unfinished old snapshot",
+  );
+  release();
+  assert.equal(
+    (await beforeExternal).documents[0].body,
+    "Saved after pending scan",
+  );
+  listingRepo.scan = scanListing;
+  listingRepo.close();
+
   const samples = JSON.parse(
     await fs.readFile(new URL("../content/archives.json", import.meta.url)),
   ).records;
@@ -384,9 +528,10 @@ try {
     "prose sources are not invalid Markdown URLs",
   );
   console.log(
-    "Desktop repository: persistence, raw Markdown, conflicts, atomic failures, permissions/read-only probes, backups, journaled trash recovery, external indexing, duplicate IDs/titles, IPC argument validation, bad metadata, traversal, symlinks, watcher and complete 40-sample migration passed.",
+    "Desktop repository: persistence, raw Markdown, conflicts, atomic failures, permissions/read-only probes, backups, journaled trash recovery, external indexing, duplicate IDs/titles, IPC argument validation, bad metadata, traversal, symlinks, watcher, concurrent refresh sharing, fresh external revisions, write boundaries and complete 40-sample migration passed.",
   );
 } finally {
+  listingRepo?.close();
   repository.close();
   await fs.rm(temporary, { recursive: true, force: true });
 }

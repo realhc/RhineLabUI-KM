@@ -1,0 +1,26 @@
+{
+  "version": "1.1.2",
+  "deliveredAt": "2026-10-01T14:37:19.255Z",
+  "executable": "release/packages/RhineLab-win32-x64/RhineLab.exe",
+  "archive": {
+    "path": "release/packages/RhineLab-win32-x64/resources/app.asar",
+    "sha256": "a71e95bfc12420b92195d0c9b54ef19b779939a1db70f4980d078e977c187dde"
+  },
+  "zip": {
+    "path": "release/packages/make/zip/win32/x64/RhineLab-win32-x64-1.1.2.zip",
+    "sha256": "5301d6a4a24fa3f8496b08904bb2853f594e92532d2650aed964f3348af3dc2f"
+  },
+  "personalData": {
+    "files": 52,
+    "unchanged": true
+  },
+  "webSource": {
+    "files": 8,
+    "unchanged": true
+  },
+  "sourceSync": {
+    "files": 23,
+    "verified": true
+  },
+  "runtime": "Existing Electron runtime with rebuilt app.asar; unsigned portable test build"
+}

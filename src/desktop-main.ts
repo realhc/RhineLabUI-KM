@@ -1,6 +1,6 @@
 // Desktop adaptation of the unchanged website entry. Shared scene, styles and animation modules remain authoritative.
 import { createRollingClock } from "./rolling-clock";
-import { InspectionOverlay } from "./inspection-overlay";
+import { DesktopInspectionOverlay as InspectionOverlay } from "./desktop-inspection";
 import { DocumentDecryption } from "./document-decryption";
 import "./document-decryption.css";
 import "./decryption.css";
@@ -16,7 +16,17 @@ import "./responsive.css";
 import { viewportLayout, openingLayout } from "./viewport-layout";
 import { assetUrl } from "./asset-url";
 import { desktopDocuments, desktopCategories, desktopNextLane, setDesktopDocuments, exhibitDocument, documentForRecord, displayCode } from "./desktop-data";
-import { openLibrary } from "./desktop";
+// Load the rich editor only when requested; scene startup does not parse it or its CSS.
+let libraryModule: Promise<typeof import('./desktop')> | undefined;
+async function openLibrary(id?: string, view: 'all' | 'saved' | 'trash' = 'all') {
+  try {
+    libraryModule ??= import('./desktop');
+    await (await libraryModule).openLibrary(id, view);
+  } catch (error) {
+    libraryModule = undefined;
+    notify('知识库暂时无法打开，请重试。' + String(error));
+  }
+}
 import { renderMarkdown } from "./desktop-markdown";
 let libraryVisible = false;
 import { createRollingNumber, createRollingText } from "@kitlangton/rolling-number";
@@ -308,6 +318,78 @@ let threeState: "on" | "closing" | "off" | "loading" = "on";
 let resumeCell: { lane: number; row: number } | undefined;
 let resumeSelection = -1;
 let viewer: ModelViewer | undefined;
+let graphicsLost = false, recoveringGraphics = false, graphicsRecoveries = 0, frameErrors = 0, consecutiveFrameErrors = 0;
+let startupResourcesReady = false;
+let graphicsTimer: ReturnType<typeof setTimeout> | undefined;
+const graphicsStatus = document.createElement('div');
+graphicsStatus.className = 'graphics-status';
+graphicsStatus.setAttribute('role', 'status');
+graphicsStatus.hidden = true;
+document.body.append(graphicsStatus);
+function showGraphicsStatus(message: string, retry = false) {
+  graphicsStatus.replaceChildren(document.createTextNode(message));
+  if (retry) {
+    const button = document.createElement('button');
+    button.textContent = '重新载入阵列';
+    button.onclick = () => void recoverGraphics();
+    graphicsStatus.append(button);
+  }
+  graphicsStatus.hidden = false;
+}
+function watchGraphics(current: ArchiveScene) {
+  const canvas = current.renderer.domElement;
+  canvas.addEventListener('webglcontextlost', event => {
+    event.preventDefault();
+    if (scene !== current) return;
+    graphicsLost = true;
+    showGraphicsStatus('图形连接中断，正在恢复阵列…');
+    clearTimeout(graphicsTimer);
+    graphicsTimer = setTimeout(() => void recoverGraphics(), 2000);
+  });
+  canvas.addEventListener('webglcontextrestored', () => {
+    if (scene !== current) return;
+    clearTimeout(graphicsTimer);
+    graphicsLost = false;
+    current.resize();
+    graphicsStatus.hidden = true;
+  });
+}
+async function recoverGraphics() {
+  // An initial GLTF request cannot be cancelled by disposing its scene. Let it
+  // settle before replacing that scene, or a stale load could finish after disposal.
+  if (recoveringGraphics || !startupResourcesReady) return;
+  recoveringGraphics = true;
+  clearTimeout(graphicsTimer);
+  showGraphicsStatus('正在重新载入三维阵列…');
+  const previous = scene;
+  const cell = previous?.getStats().selectedCell;
+  const previousSelection = selected;
+  scene = undefined;
+  graphicsLost = false;
+  try {
+    viewer?.dispose(); viewer = undefined;
+    previous?.dispose();
+    const next = new ArchiveScene($('#three-scene'));
+    scene = next;
+    watchGraphics(next);
+    next.setTheme(prefs.colorTheme === 'dark', true);
+    next.setMotion(prefs.motion);
+    await next.load();
+    next.setQuality(effectiveRenderQuality());
+    next.setSuperPerformance(superPerformanceEnabled());
+    next.setMode(mode === 'boot' ? 'hidden' : mode);
+    bindScene(next, selected === previousSelection ? cell : undefined);
+    graphicsRecoveries++;
+    consecutiveFrameErrors = 0;
+    graphicsStatus.hidden = true;
+  } catch (error) {
+    console.error('Archive recovery failed', error);
+    scene?.dispose(); scene = undefined;
+    showGraphicsStatus('阵列暂时无法载入，知识库仍可使用。', true);
+  } finally {
+    recoveringGraphics = false;
+  }
+}
 const accessLog: { id: string; time: string }[] = [];
 const columnMemory = archiveColumns.map((_, lane) => columnFiles(lane)[0]);
 function recordAccess() {
@@ -326,6 +408,7 @@ function superPerformanceEnabled() { return isWallpaper ? wallpaperHost()?.prope
 function effectiveRenderQuality() { return superPerformanceEnabled() ? superPerformanceQuality : prefs.rendering; }
 function savePrefs() {
   saveAudioPrefs();
+  window.dispatchEvent(new Event("rhine-motion-preferences"));
   if (!motionActive("rollingText")) rollingTitles.forEach(title => title.finish());
   if (!motionActive("rollingNumbers")) [fileCounter, columnCounter, selectedCode, hoverCode].forEach(counter => counter.finish());
   if (!motionActive("surfaceTransitions")) {
@@ -1066,8 +1149,10 @@ let lastTime = 0,
   frameStart = performance.now(),
   fps = 0;
 function frame(ms: number) {
-  if (!wallpaperFrame(ms)) { requestAnimationFrame(frame); return; }
-  if (document.hidden) { requestAnimationFrame(frame); return; }
+  // Schedule before work: a transient render/DOM error must never permanently stop the client.
+  requestAnimationFrame(frame);
+  if (!wallpaperFrame(ms) || document.hidden) return;
+  try {
   workbench?.tick();
   const time = ms / 1000;
   const theme = scene?.themeAmount ?? (prefs.colorTheme === "dark" ? 1 : 0);
@@ -1080,7 +1165,7 @@ function frame(ms: number) {
       : undefined;
   wallpaperEffects?.update(time, motionIsReduced(), motionActive("pointerParallax"));
   // The calibrated 2D opening fully covers the scene until array entry.
-  if (!viewer?.isOpen && (!cinema || cinema.time >= 21.9)) scene?.update(time, cinema);
+  if (!graphicsLost && !recoveringGraphics && !viewer?.isOpen && (!cinema || cinema.time >= 21.9)) scene?.update(time, cinema);
   viewer?.update(time);
   if (threeState === "closing" && scene?.presentationHidden) releaseThree();
   playground?.position();
@@ -1095,7 +1180,9 @@ function frame(ms: number) {
       pendingDetailFocus = false;
     }
   }
-  $("#stage").style.setProperty("--detail-shade", String(mode === "boot" ? 0 : scene?.detailVisibility ?? 0));
+  const stageStyle = $("#stage").style;
+  const detailShade = String(mode === "boot" ? 0 : scene?.detailVisibility ?? 0);
+  if (stageStyle.getPropertyValue('--detail-shade') !== detailShade) stageStyle.setProperty('--detail-shade', detailShade);
   const currentScene = scene;
   if (currentScene) inspectionOverlay.render(currentScene.decryptionFrame,
     (x, y) => currentScene.projectCard(x, y), Boolean(cinema), motionActive("modelDecryption"));
@@ -1111,7 +1198,13 @@ function frame(ms: number) {
     $("#three-scene").dataset.fps = String(Math.round(fps));
     $("#three-scene").dataset.renderStats = JSON.stringify(scene?.getStats() ?? { loaded: false, drawCalls: 0, triangles: 0 });
   }
-  requestAnimationFrame(frame);
+  consecutiveFrameErrors = 0;
+  } catch (error) {
+    frameErrors++;
+    consecutiveFrameErrors++;
+    if (consecutiveFrameErrors === 1) console.error('Archive frame interrupted', error);
+    if (consecutiveFrameErrors === 3) void recoverGraphics();
+  }
 }
 function bindScene(scene: ArchiveScene, cell?: { lane: number; row: number }) {
     scene.select(selected, cell ? { cell } : undefined);
@@ -1213,6 +1306,7 @@ async function start() {
     if (isWallpaper) await window.rhineWallpaperPropertiesReady;
     if (!isWallpaper || wallpaperHost()?.properties.load3donstartup?.value !== false) {
       scene = new ArchiveScene($("#three-scene"));
+      watchGraphics(scene);
       scene.setTheme(prefs.colorTheme === "dark", true);
       scene.setArchiveCoverage(wallpaperHost()?.properties.archivecoverage?.value === "extra");
     } else {
@@ -1229,6 +1323,9 @@ async function start() {
       document.fonts.load("600 20px MiSans", "SYNTHESIZE INFORMATION ANALYSIS OS"),
       document.fonts.load("700 20px MiSans", "RHINE LAB WELCOME TO INTERNAL DATABASE"),
     ]);
+    startupResourcesReady = true;
+    if (graphicsLost) await recoverGraphics();
+    if (!scene) throw new Error('三维场景恢复失败');
     if (scene) bindScene(scene);
     savePrefs();
     ready = true;
@@ -1244,7 +1341,8 @@ async function start() {
   } catch (error) {
     console.error(error);
     $("#loading").innerHTML =
-      '<div class="error-state"><strong>CONNECTION INTERRUPTED</strong><p>三维档案资源未能载入。请确认浏览器已启用硬件加速，然后重新连接。</p><button onclick="location.reload()">RECONNECT →</button></div>';
+      '<div class="error-state"><strong>CONNECTION INTERRUPTED</strong><p>三维档案资源未能载入。请重新连接。</p><button id="startup-retry">RECONNECT →</button></div>';
+    $('#startup-retry').onclick = () => location.reload();
   }
 }
 function completeStartup(silent: boolean) {
@@ -1388,6 +1486,7 @@ Object.assign(window, {
     stats: () => ({
       ...scene?.getStats(),
       threeState,
+      renderHealth: { graphicsLost, recoveringGraphics, graphicsRecoveries, frameErrors, inspectionSkippedFrames: inspectionOverlay.skippedFrames },
       fps: Math.round(fps),
       mode,
       ready,
