@@ -1,30 +1,9 @@
 import assert from "node:assert/strict";
-import { readFile } from "node:fs/promises";
 import { test } from "node:test";
-import {
-  loadContent,
-  validateContent,
-  archiveText,
-} from "./archive-content.mjs";
+import { loadContent, validateContent } from "./archive-content.mjs";
 import { escapeHtml } from "../src/html.ts";
 
 const content = await loadContent();
-test("all forty downloads match the shared content, including the UTF-8 BOM", async () => {
-  for (const record of content.records) {
-    assert.equal(
-      (
-        await readFile(
-          new URL(
-            `../public/archives/RHINE-LAB-${record.id}.txt`,
-            import.meta.url,
-          ),
-          "utf8",
-        )
-      ).replace(/\r\n/g, "\n"),
-      archiveText(record),
-    );
-  }
-});
 
 const invalidCases = [
   [
@@ -145,7 +124,7 @@ test("accepts independent filter and column order", () => {
   edited.categories.reverse();
   assert.equal(validateContent(edited), edited);
 });
-test("plain-text punctuation stays literal in HTML and downloadable text", () => {
+test("seed punctuation is safely escaped for interface text", () => {
   const title = `<玻璃> & "实验" 'A'`;
   const edited = structuredClone(content);
   edited.records[0].title = title;
@@ -154,5 +133,4 @@ test("plain-text punctuation stays literal in HTML and downloadable text", () =>
     escapeHtml(title),
     "&lt;玻璃&gt; &amp; &quot;实验&quot; &#39;A&#39;",
   );
-  assert.ok(archiveText(edited.records[0]).includes(title));
 });

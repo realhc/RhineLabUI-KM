@@ -30,7 +30,7 @@ protocol.registerSchemesAsPrivileged([
     },
   },
 ]);
-app.setAppUserModelId("cc.lubeiluchen.rhinelab.knowledge");
+app.setAppUserModelId("io.github.realhc.rhinelab");
 const base = app.isPackaged ? dirname(process.execPath) : app.getAppPath();
 const data = join(base, "RhineLabData");
 const development =

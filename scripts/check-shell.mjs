@@ -15,7 +15,6 @@ async function load(path) {
   s.updateMatrixWorld(true);
   return s;
 }
-// Subsequent ring changes are covered by check-internal-optics.mjs.
 const after = await load("../public/assets/archive-assembly.glb");
 let patch,
   metal,

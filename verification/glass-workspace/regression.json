@@ -246,8 +246,7 @@
         "soundVolume": 0.55,
         "musicVolume": 0.5
       }
-    },
-    "wallpaper": null
+    }
   },
   "restartPersistence": true,
   "smallWindow": true,

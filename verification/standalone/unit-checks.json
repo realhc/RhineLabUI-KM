@@ -1,0 +1,65 @@
+{
+  "passed": true,
+  "results": [
+    {
+      "script": "check-archive-drag.mjs",
+      "passed": true,
+      "output": "Free projection, direction changes, jitter, reversal and reduced motion passed.\n{\"fastRest\":10,\"slowRest\":2,\"frameRateIndependent\":true}\nTwo-dimensional coasting and final grid snap passed."
+    },
+    {
+      "script": "check-archive-visibility.mjs",
+      "passed": true,
+      "output": "┌─────────┬───────┬────────┬────────┬───────┬────────────┬───────┐\n│ (index) │ width │ height │ detail │ drawn │ candidates │ extra │\n├─────────┼───────┼────────┼────────┼───────┼────────────┼───────┤\n│ 0       │ 1920  │ 1080   │ false  │ 317   │ 454        │ 441   │\n│ 1       │ 1920  │ 1080   │ true   │ 308   │ 425        │ 387   │\n│ 2       │ 2560  │ 1080   │ false  │ 399   │ 571        │ 558   │\n│ 3       │ 2560  │ 1080   │ true   │ 384   │ 525        │ 474   │\n│ 4       │ 3840  │ 1080   │ false  │ 559   │ 806        │ 797   │\n│ 5       │ 3840  │ 1080   │ true   │ 528   │ 722        │ 679   │\n│ 6       │ 1400  │ 1050   │ false  │ 255   │ 367        │ 350   │\n│ 7       │ 1400  │ 1050   │ true   │ 252   │ 352        │ 312   │\n│ 8       │ 1080  │ 1920   │ false  │ 240   │ 315        │ 303   │\n│ 9       │ 1080  │ 1920   │ true   │ 160   │ 228        │ 187   │\n└─────────┴───────┴────────┴────────┴───────┴────────────┴───────┘\nProjected coverage, extreme heights, unique picking cells, overscan and track translation passed."
+    },
+    {
+      "script": "check-assembly.mjs",
+      "passed": true,
+      "output": "{\n  \"parts\": {\n    \"cover\": 9,\n    \"carrier\": 2,\n    \"substrate\": 3,\n    \"optical-core\": 3,\n    \"optical-lenses\": 3,\n    \"fasteners\": 2\n  },\n  \"uniqueSurfaceVertices\": 41971,\n  \"vertexError\": 2.6656007498500226e-7,\n  \"modelHeight\": 3.700000047683716,\n  \"reassembly\": 9.70376168294784e-7,\n  \"checks\": \"passed\"\n}"
+    },
+    {
+      "script": "check-motion-preferences.mjs",
+      "passed": true,
+      "output": "Motion preferences: 12 initialization cases and 6 retired-scroll migration cases passed."
+    },
+    {
+      "script": "check-motion.mjs",
+      "passed": true,
+      "output": "{\n  \"forwardPeaks\": [\n    16,\n    27\n  ],\n  \"returnPeaks\": [\n    31,\n    20\n  ],\n  \"maxFrameDelta\": 0.632975553636826,\n  \"checks\": \"passed\"\n}"
+    },
+    {
+      "script": "check-quality.mjs",
+      "passed": true,
+      "output": "Quality checks passed: migration, invalid storage, presets, supersampling and 48 device-limit combinations."
+    },
+    {
+      "script": "check-render-updates.mjs",
+      "passed": true,
+      "output": "GPU value comparison, pending buffer ranges, texture changes, removed objects and explicit invalidation passed."
+    },
+    {
+      "script": "check-shell.mjs",
+      "passed": true,
+      "output": "{\n  \"passed\": true,\n  \"screwRegions\": 2,\n  \"patchSize\": [\n    0.25,\n    0.22390317916870117,\n    0.0040000081062316895\n  ],\n  \"engravingDepth\": 0.1679999977350235,\n  \"reveal\": \"fully frosted → top to bottom → fully clear\"\n}"
+    },
+    {
+      "script": "check-theme.mjs",
+      "passed": true,
+      "output": "Theme cascade, reversal continuity, endpoints, reduced motion and bounded values passed."
+    },
+    {
+      "script": "check-viewport.mjs",
+      "passed": true,
+      "output": "Client viewport, opening framing and render resolution checks passed."
+    },
+    {
+      "script": "check-appearance.mjs",
+      "passed": true,
+      "output": "Appearance interpolation, independent returning materials, shader uniform and array handoff: passed"
+    },
+    {
+      "script": "check-decryption.mjs",
+      "passed": true,
+      "output": "{\n  \"passed\": true,\n  \"interiorMeshes\": 6,\n  \"interiorDepth\": [\n    -0.03400000184774399,\n    0.15000000596046448\n  ],\n  \"depthStepBefore\": 0.0030888750010058283,\n  \"depthStepAfter\": 0.00006076813106346912\n}"
+    }
+  ]
+}

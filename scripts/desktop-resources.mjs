@@ -2,25 +2,12 @@ import { createHash } from "node:crypto";
 import { lstat, readFile, realpath, readdir, rm } from "node:fs/promises";
 import { dirname, isAbsolute, relative, resolve, sep } from "node:path";
 
-// This policy applies only to Vite's generated desktop site. Shared web sources
-// and portable user data are never candidates for removal.
+// This policy applies only to generated desktop resources.
+// Project sources and portable user data are never candidates for removal.
 export const desktopUnusedPaths = [
   "fonts/novecento",
-  "audio/typing-preview.wav",
-  "audio/typing-source.json",
-  "audio/observatory-preview.mp3",
-  "sw.js",
-  "pwa-build.json",
-  "manifest.webmanifest",
-  "update.html",
-  "update.js",
-  "_headers",
-  "_redirects",
-  "archives",
   "icons/app-icon.svg",
   "icons/icon-192.png",
-  "icons/icon-maskable-512.png",
-  "icons/apple-touch-icon.png",
 ];
 export const desktopModelNames = ["archive-cassette", "archive-assembly"];
 const digest = (bytes) => createHash("sha256").update(bytes).digest("hex");
@@ -117,7 +104,7 @@ export async function inspectDesktopResources(project = process.cwd()) {
     if (
       entries.some(({ path }) => path === name || path.startsWith(name + "/"))
     )
-      throw new Error("Unused web resource remains in desktop output: " + name);
+      throw new Error("Unused resource remains in desktop output: " + name);
   }
   for (const name of [
     "desktop.html",
@@ -131,6 +118,7 @@ export async function inspectDesktopResources(project = process.cwd()) {
     "audio/pulse.ogg",
     "audio/README.md",
     "audio/score.json",
+    "audio/typing-source.json",
     "LICENSE",
     "DESKTOP-LICENSES.md",
     "THIRD-PARTY-NOTICES.txt",

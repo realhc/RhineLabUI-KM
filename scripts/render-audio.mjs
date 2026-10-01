@@ -260,7 +260,7 @@ if (process.argv[2])
     "libmp3lame",
     "-b:a",
     "192k",
-    path.join(folder, "observatory-preview.mp3"),
+    ".tools/audio-render/observatory-preview.mp3",
   ]);
 fs.writeFileSync(
   path.join(folder, "score.json"),

@@ -1,4 +1,4 @@
-import { archiveColumns, columnFiles, fileLocation } from "./data.ts";
+import { archiveColumns, columnFiles, fileLocation } from "./desktop-data.ts";
 
 export type ArchiveCell = { lane: number; row: number };
 export type ArchiveNavigation =

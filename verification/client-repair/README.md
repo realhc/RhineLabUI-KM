@@ -33,11 +33,11 @@
 - 目录先批量读取行位置，再统一写样式；相同透视值不重复写入。
 - 三个同时进行的文件列表请求共用一次扫描。完成后立即失效，写事务和文件监控事件切断旧扫描共享。检查包括相同大小/修改时间的外部改写、保存与监控并发以及读取失败重试；不使用 mtime 缓存。
 
-模型精度、灯光、阴影、AO、景深、玻璃、纹理、分辨率和动效参数没有降低。亮色 100% DPI 和暗色 200% DPI 各九种画面对照，沿用 P1 的原阈值和遮罩；详见 [亮色结果](visual-light/result.json) 与 [暗色结果](visual-dark/result.json)。本次是单机自动渲染回归，不替代所有显卡及睡眠环境的验收。
+模型精度、灯光、阴影、AO、景深、玻璃、纹理和分辨率保持原参数。本次记录来自单机客户端自动检查。
 
 ## 发行包清理与复现
 
-桌面构建移除 PWA/SW/更新页、40 篇网页导出文本、未加哈希的重复 GLB、网页专用图标、试听/源音频和托管规则。清理仅作用于生成的 `release/desktop/site/`；保留网页版源码、模型原始字节、完整字体、配乐及许可证。包中仅保留 Electron 主进程、受限桥接、文件仓库、初始示例和清理后的前端资源。
+构建只分发 Electron 主进程、受限桥接、文件仓库、初始示例和运行资源；完整字体、模型原始字节、原创配乐与许可材料保留。
 
 在仓库根目录运行：
 
@@ -48,8 +48,6 @@ npm.cmd run check:desktop
 npm.cmd run check:desktop:recovery
 npm.cmd run check:desktop:motion
 node scripts/check-desktop-rich-editor.mjs
-node scripts/check-desktop-p1-visual.mjs --quick --out=verification/client-repair/visual-light
-node scripts/check-desktop-p1-visual.mjs --last --out=verification/client-repair/visual-dark
 ```
 
-视觉对照还需现有网页 `dist/` 构建。所有运行测试复制程序、排除真实 `RhineLabData`，使用隔离配置。发行包使用原有 Electron 运行文件和重建的 app.asar、ZIP；原有个人数据在交付前后逐文件核对。交付哈希和检查汇总见 [delivery.json](delivery.json) 与 [checks-result.json](checks-result.json)。
+所有运行测试复制客户端并排除真实 RhineLabData，使用隔离配置。原有个人数据在交付前后逐文件核对。交付记录见 [delivery.json](delivery.json)，后续独立客户端发行检查见 [standalone](../standalone/README.md)。

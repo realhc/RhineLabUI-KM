@@ -3,7 +3,7 @@ import {cp,mkdir,writeFile} from 'node:fs/promises';
 import {resolve,join} from 'node:path';
 import assert from 'node:assert/strict';
 const out=resolve('verification/directory-wheel');await mkdir(out,{recursive:true});
-const run=resolve('release/directory-test',Date.now().toString()),portable=join(run,'portable');await mkdir(run,{recursive:true});await cp(resolve('release/packages/RhineLab-win32-x64'),portable,{recursive:true});
+const run=resolve('release/directory-test',Date.now().toString()),portable=join(run,'portable');await mkdir(run,{recursive:true});await cp(resolve('release/packages/RhineLab-win32-x64'),portable,{recursive:true,filter:source=>!source.split(/[\\/]/).includes('RhineLabData')});
 const app=await electron.launch({executablePath:join(portable,'RhineLab.exe'),args:['--user-data-dir='+join(run,'profile')],timeout:60000});
 try {
  const page=await app.firstWindow(),errors=[];page.on('pageerror',e=>errors.push(e.message));

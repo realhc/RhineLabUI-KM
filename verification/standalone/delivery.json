@@ -1,0 +1,13 @@
+{
+  "version": "1.2.0",
+  "portable": "release/packages/RhineLab-win32-x64",
+  "zip": "release/packages/make/zip/win32/x64/RhineLab-win32-x64-1.2.0.zip",
+  "zipBytes": 188538118,
+  "zipSha256": "46746fe72b29d59fb4ad1facb51c01044ddc987b273a1f3b2e92302870c1120f",
+  "personalData": {
+    "files": 71,
+    "unchanged": true
+  },
+  "appAsarSha256": "e36e24062e418a9f6163d819700dee4096835861207029a1d3921be1281fb7ba",
+  "maintainerAppId": "io.github.realhc.rhinelab"
+}

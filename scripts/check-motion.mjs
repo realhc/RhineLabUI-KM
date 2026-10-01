@@ -9,7 +9,7 @@ import {
   damp,
   idleWave,
 } from "../src/motion.ts";
-import { selectionWave as historicalWave } from "../reference/baseline-motion.ts";
+import { selectionWave as historicalWave } from "./fixtures/archive-motion-baseline.ts";
 
 // The selected production motion is the original signed wave, including troughs.
 let baselineTrough = false;

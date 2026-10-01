@@ -68,5 +68,5 @@ await writeFile(
   JSON.stringify({ ...resources, removed }, null, 2) + "\n",
 );
 console.log(
-  `Desktop resources ready: ${resources.files} files, ${(resources.bytes / 1048576).toFixed(1)} MiB; removed ${removed.length} unused web files (${(removed.reduce((sum, item) => sum + item.bytes, 0) / 1048576).toFixed(1)} MiB).`,
+  `Desktop resources ready: ${resources.files} files, ${(resources.bytes / 1048576).toFixed(1)} MiB; removed ${removed.length} unused build resources (${(removed.reduce((sum, item) => sum + item.bytes, 0) / 1048576).toFixed(1)} MiB).`,
 );

@@ -12,7 +12,7 @@ export class RenderState {
   }
   floats(...values: (number | undefined)[]) {
     // Match GPU float uniforms. IDs and monotonically increasing versions use
-    // add() so long-running wallpapers never lose counter precision.
+    // add() so long-running sessions never lose counter precision.
     this.add(...values.map(value => value === undefined ? undefined : Math.fround(value)));
   }
   end() {

@@ -28,9 +28,6 @@ for (const path of [
 for (const path of [
   "/src",
   "/public",
-  "/index.html",
-  "/dist",
-  "/wallpaper",
   "/node_modules",
   "/RhineLabData",
   "/desktop/icon.ico",

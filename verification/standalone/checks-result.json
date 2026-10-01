@@ -1,0 +1,42 @@
+{
+  "version": "1.2.0",
+  "passed": true,
+  "checks": {
+    "typecheck": true,
+    "content": true,
+    "repository": true,
+    "categories": true,
+    "exhibit": true,
+    "modelAndMotionUnits": 12,
+    "nativeMotion": true,
+    "richEditor": true,
+    "workflow": true,
+    "recovery": true,
+    "visualPairs": 18,
+    "readmeImages": 5,
+    "package": true
+  },
+  "visualLimits": {
+    "meanChannelDifference": 2,
+    "changedPixelPercent": 0.2,
+    "changedChannelThreshold": 16
+  },
+  "maximumMeanChannelDifference": 0.5322283950617284,
+  "maximumChangedPixelPercent": 0.05501543209876543,
+  "models": [
+    "dda42b9b3b471d11c69820a64084d254a64b27761287ab0e35dd8387ec0a0bed",
+    "d411170676f55a327c286e67e462f98b446667811c725318bab85657eaee06ec"
+  ],
+  "forkNetworkDetached": true,
+  "appId": "io.github.realhc.rhinelab",
+  "personalData": {
+    "files": 71,
+    "unchanged": true
+  },
+  "zip": {
+    "path": "release/packages/make/zip/win32/x64/RhineLab-win32-x64-1.2.0.zip",
+    "bytes": 188538118,
+    "sha256": "46746fe72b29d59fb4ad1facb51c01044ddc987b273a1f3b2e92302870c1120f",
+    "entries": 76
+  }
+}

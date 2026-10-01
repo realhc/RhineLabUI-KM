@@ -39,7 +39,7 @@ async function enter() {
   await p.evaluate(() => window.rhineReview.archive());
   await p.waitForTimeout(1200);
   await p.locator("[data-action=search]").click();
-  await poll(() => document.querySelector("#library-overlay").open);
+  await poll(() => document.querySelector("#library-overlay")?.open);
 }
 async function select(title) {
   await p.locator("#search").fill(title);

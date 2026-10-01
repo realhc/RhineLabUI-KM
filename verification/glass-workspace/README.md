@@ -1,7 +1,7 @@
-# Full-screen library glass workspace — 2026-09-30
+# 全屏知识库玻璃工作区验收
 
-The desktop library opens over the original array with a full-screen translucent blurred backdrop, then displays three separate regions: a transparent directory on the left, document controls at the upper right and the largest content region below. The directory spine spans the entire client height and has no panel background. Existing control and document nodes are regrouped; storage, scene and webpage code are unchanged.
+2026-09-30 的实际客户端记录。知识库使用全屏模糊玻璃背景，上层保持三个独立区域：透明左侧目录、右上操作区和右下正文。目录主轴贯穿客户端，没有面板底色。
 
-Validation: TypeScript, Vite desktop build and Electron packaging passed. Existing directory interaction and desktop alignment suites passed drag/wheel, selection, sorting, dirty protection, save/search/trash and restart persistence. glass-layout.json verifies full-screen bounds, a transparent directory, full-height spine, separated controls/content and a blurred translucent backdrop. Light and dark 1000×680 screenshots were visually inspected. The backdrop retains the explicitly requested glass appearance even when the host reports reduced transparency; reduced motion still disables the entrance animation.
+[glass-layout.json](glass-layout.json) 检查全屏边界、透明目录、主轴高度、分离区域与玻璃背景；[directory-interactions.json](directory-interactions.json) 保存目录交互结果。浅色和暗色 1000×680 截图来自实际客户端。
 
-Delivered app.asar matches the tested package. The existing version 1.1.1 Electron launcher is retained. Restart the client to load the new layout. User data hashes verified unchanged.
+测试只操作隔离副本，交付前后个人数据保持完整。

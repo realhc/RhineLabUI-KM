@@ -3,8 +3,8 @@ import { track } from "./boot-tracks";
 // Source frames 543–568. Angles are unwrapped: the left arc turns clockwise,
 // the right arc counterclockwise. Each grows while its angular speed decays.
 // Columns: frame, left x/y, right x/y, radius, left/right start, left/right sweep.
-// Early short strokes are manually fitted; longer arcs are measured by
-// reference/measure-scan-detail.py. Centers also settle towards y=539.5.
+// Early short strokes are manually fitted; longer arcs use measured trajectories.
+// Centers also settle towards y=539.5.
 const sides = [
   [543, 827.5, 561, 1091, 518, 38.7, 260, 250, 0, 0],
   [544, 827.5, 561, 1091, 518, 38.7, 260, 250, 3, 3],

@@ -1,0 +1,68 @@
+{
+  "capturedAt": "2026-10-01T20:18:28.872Z",
+  "version": "1.2.0",
+  "viewport": {
+    "width": 1920,
+    "height": 1080,
+    "deviceScaleFactor": 1
+  },
+  "source": "packaged Electron desktop client",
+  "method": "BrowserWindow.capturePage / NativeImage.toJPEG(92)",
+  "fixtures": [
+    {
+      "title": "研究手记 · 从一条记录开始",
+      "category": "工程研究",
+      "body": "# 研究手记\n把想法写下来，让每一条记录都有自己的位置。\n\n## 记录与整理\n左侧的大刻度是分类，小刻度是文档。拖动整条文档就能归类；记录始终保存在本地 **Markdown 文件** 中。\n\n> 先记录，再整理。关闭窗口时，未保存的内容会提醒你处理。\n\n## 轻松表达\n选中文字后，可以设置标题、**粗体**、*斜体*、下划线与链接，也可以插入表格和公式。\n\n| 记录类型 | 用途 | 状态 |\n| --- | --- | --- |\n| 研究笔记 | 整理想法与问题 | 持续更新 |\n| 阅读摘录 | 留下重要观点 | 已归档 |\n\n行内公式：$E = mc^2$。\n\n```typescript\nconst note = { title: '研究手记', saved: true };\n```",
+      "scope": "disposable portable copy only"
+    }
+  ],
+  "captures": [
+    {
+      "file": "array.jpg",
+      "description": "完整浅色三维档案阵列，默认画质与完整动效",
+      "size": {
+        "width": 1920,
+        "height": 1080
+      },
+      "bytes": 261646
+    },
+    {
+      "file": "library.jpg",
+      "description": "浅色知识库：贯穿刻度目录、透明工具区与可视化编辑正文",
+      "size": {
+        "width": 1920,
+        "height": 1080
+      },
+      "bytes": 154228
+    },
+    {
+      "file": "library-dark.jpg",
+      "description": "暗色知识库，同一文档与工具区",
+      "size": {
+        "width": 1920,
+        "height": 1080
+      },
+      "bytes": 163623
+    },
+    {
+      "file": "settings.jpg",
+      "description": "终端偏好：配色、声音、动态效果与画质设置",
+      "size": {
+        "width": 1920,
+        "height": 1080
+      },
+      "bytes": 125044
+    },
+    {
+      "file": "viewer.jpg",
+      "description": "360° 模型查看器：清晰表面与完整拆解结构",
+      "size": {
+        "width": 1920,
+        "height": 1080
+      },
+      "bytes": 128468
+    }
+  ],
+  "errors": [],
+  "remoteRequests": []
+}

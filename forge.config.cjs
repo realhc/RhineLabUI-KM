@@ -1,10 +1,31 @@
+const { copyFile } = require("node:fs/promises");
+const { join } = require("node:path");
+
 module.exports = {
   packagerConfig: {
     name: "RhineLab",
     executableName: "RhineLab",
-    appBundleId: "cc.lubeiluchen.rhinelab.knowledge",
+    appBundleId: "io.github.realhc.rhinelab",
     asar: true,
     prune: true,
+    afterComplete: [
+      (buildPath, _electronVersion, _platform, _arch, done) => {
+        Promise.all([
+          copyFile(
+            join(__dirname, "LICENSE"),
+            join(buildPath, "RhineLab-LICENSE.txt"),
+          ),
+          copyFile(
+            join(__dirname, "release/desktop/site/THIRD-PARTY-NOTICES.txt"),
+            join(buildPath, "THIRD-PARTY-NOTICES.txt"),
+          ),
+          copyFile(
+            join(__dirname, "release/desktop/site/DESKTOP-LICENSES.md"),
+            join(buildPath, "DESKTOP-LICENSES.md"),
+          ),
+        ]).then(() => done(), done);
+      },
+    ],
     electronZipDir: process.env.RHINE_ELECTRON_ZIP_DIR,
     icon: "desktop/icon.ico",
     ignore: (path) => {

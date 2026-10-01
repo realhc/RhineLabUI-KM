@@ -1,0 +1,214 @@
+{
+  "viewport": {
+    "width": 1440,
+    "height": 900
+  },
+  "previousVersion": "1.1.2",
+  "currentVersion": "1.2.0",
+  "thresholds": {
+    "meanChannelDifference": 2,
+    "changedPixelPercent": 0.2,
+    "changedChannelThreshold": 16
+  },
+  "comparisons": [
+    {
+      "theme": "light",
+      "state": "boot4",
+      "matchingGeometry": true,
+      "size": {
+        "width": 1440,
+        "height": 900
+      },
+      "meanChannelDifference": 0,
+      "changedPixelPercent": 0
+    },
+    {
+      "theme": "light",
+      "state": "boot14",
+      "matchingGeometry": true,
+      "size": {
+        "width": 1440,
+        "height": 900
+      },
+      "meanChannelDifference": 0,
+      "changedPixelPercent": 0
+    },
+    {
+      "theme": "light",
+      "state": "boot24",
+      "matchingGeometry": true,
+      "size": {
+        "width": 1440,
+        "height": 900
+      },
+      "meanChannelDifference": 0.32790689300411524,
+      "changedPixelPercent": 0
+    },
+    {
+      "theme": "light",
+      "state": "boot32",
+      "matchingGeometry": true,
+      "size": {
+        "width": 1440,
+        "height": 900
+      },
+      "meanChannelDifference": 0.020477623456790123,
+      "changedPixelPercent": 0
+    },
+    {
+      "theme": "light",
+      "state": "archive",
+      "matchingGeometry": true,
+      "size": {
+        "width": 1440,
+        "height": 900
+      },
+      "meanChannelDifference": 0.5322283950617284,
+      "changedPixelPercent": 0.0433641975308642
+    },
+    {
+      "theme": "light",
+      "state": "detail",
+      "matchingGeometry": true,
+      "size": {
+        "width": 1440,
+        "height": 900
+      },
+      "meanChannelDifference": 0.18167309670781892,
+      "changedPixelPercent": 0.042361111111111106
+    },
+    {
+      "theme": "light",
+      "state": "viewer-clear",
+      "matchingGeometry": true,
+      "size": {
+        "width": 1440,
+        "height": 900
+      },
+      "meanChannelDifference": 2.57201646090535e-7,
+      "changedPixelPercent": 0
+    },
+    {
+      "theme": "light",
+      "state": "viewer-frosted",
+      "matchingGeometry": true,
+      "size": {
+        "width": 1440,
+        "height": 900
+      },
+      "meanChannelDifference": 0,
+      "changedPixelPercent": 0
+    },
+    {
+      "theme": "light",
+      "state": "viewer-exploded",
+      "matchingGeometry": true,
+      "size": {
+        "width": 1440,
+        "height": 900
+      },
+      "meanChannelDifference": 7.716049382716049e-7,
+      "changedPixelPercent": 0
+    },
+    {
+      "theme": "dark",
+      "state": "boot4",
+      "matchingGeometry": true,
+      "size": {
+        "width": 1440,
+        "height": 900
+      },
+      "meanChannelDifference": 0,
+      "changedPixelPercent": 0
+    },
+    {
+      "theme": "dark",
+      "state": "boot14",
+      "matchingGeometry": true,
+      "size": {
+        "width": 1440,
+        "height": 900
+      },
+      "meanChannelDifference": 0,
+      "changedPixelPercent": 0
+    },
+    {
+      "theme": "dark",
+      "state": "boot24",
+      "matchingGeometry": true,
+      "size": {
+        "width": 1440,
+        "height": 900
+      },
+      "meanChannelDifference": 0.23280221193415637,
+      "changedPixelPercent": 0
+    },
+    {
+      "theme": "dark",
+      "state": "boot32",
+      "matchingGeometry": true,
+      "size": {
+        "width": 1440,
+        "height": 900
+      },
+      "meanChannelDifference": 0.01777417695473251,
+      "changedPixelPercent": 0
+    },
+    {
+      "theme": "dark",
+      "state": "archive",
+      "matchingGeometry": true,
+      "size": {
+        "width": 1440,
+        "height": 900
+      },
+      "meanChannelDifference": 0.41553935185185187,
+      "changedPixelPercent": 0.05501543209876543
+    },
+    {
+      "theme": "dark",
+      "state": "detail",
+      "matchingGeometry": true,
+      "size": {
+        "width": 1440,
+        "height": 900
+      },
+      "meanChannelDifference": 0.21344161522633745,
+      "changedPixelPercent": 0.05493827160493827
+    },
+    {
+      "theme": "dark",
+      "state": "viewer-clear",
+      "matchingGeometry": true,
+      "size": {
+        "width": 1440,
+        "height": 900
+      },
+      "meanChannelDifference": 5.1440329218107e-7,
+      "changedPixelPercent": 0
+    },
+    {
+      "theme": "dark",
+      "state": "viewer-frosted",
+      "matchingGeometry": true,
+      "size": {
+        "width": 1440,
+        "height": 900
+      },
+      "meanChannelDifference": 0,
+      "changedPixelPercent": 0
+    },
+    {
+      "theme": "dark",
+      "state": "viewer-exploded",
+      "matchingGeometry": true,
+      "size": {
+        "width": 1440,
+        "height": 900
+      },
+      "meanChannelDifference": 0,
+      "changedPixelPercent": 0
+    }
+  ],
+  "faults": []
+}

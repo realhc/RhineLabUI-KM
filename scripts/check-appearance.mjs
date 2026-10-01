@@ -93,7 +93,7 @@ const shader = {
 };
 body.material.onBeforeCompile(shader, null);
 assert.equal(shader.uniforms.archiveQuality, body.userData.appearance);
-assert.ok(shader.fragmentShader.includes("roughnessFactor = mix(0.28"));
+assert.ok(shader.fragmentShader.includes("roughnessFactor = mix(mix(0.28, 0.42, archiveQuality), 0.025"));
 appearance.dispose(returning);
 assert.ok(body.material.color.r > 0);
 console.log(

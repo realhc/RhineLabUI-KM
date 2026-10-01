@@ -1,61 +1,35 @@
-# README 演示素材
+# 客户端截图
 
-2026-09-09 从当前应用重新采集，运行版本为 `e0cb75ffcc1bf7d1fb5e2458b3c35fa0f6f336da`。使用独立的 Chrome 浏览器上下文、GPU 硬件加速与默认「原始」画质，不读取日常浏览器的收藏和偏好。素材仅用于文档展示，不参与应用运行。
+本目录的项目预览来自 **Rhine Lab Desktop 1.2.0 的实际 Windows 客户端**。采集脚本启动发行包的隔离副本，并通过 Electron 的 `BrowserWindow.capturePage()` 保存画面；没有使用原项目截图、远程页面或合成界面。
 
-## 静态截图
+## 图片内容
 
-全部截图为 1600 × 900 JPEG，质量参数 93。保留真实界面与模型，没有叠加宣传文字或替换背景。
-
-| 文件 | 展示内容 |
+| 文件 | 画面 |
 | --- | --- |
-| `archive.jpg` | 新版循环阵列与档案导航 |
-| `detail.jpg` | 解密完成后的双环内构与档案概述 |
-| `research.jpg` | 研究记录页签 |
-| `viewer-clear.jpg` | 独立查看器，清晰玻璃 |
-| `viewer-frosted.jpg` | 相同视角下的磨砂玻璃 |
-| `assembly.jpg` | 六组结构拆解 |
-| `search.jpg` | 搜索「莱茵」后的档案索引 |
-| `settings.jpg` | 音效、音乐、减少动态效果与画质设置 |
-| `boot.jpg` | 白底开场中的 Logo 与身份接入 |
+| `array.jpg` | 浅色三维档案阵列，保持默认画质与完整动效 |
+| `library.jpg` | 浅色知识库的刻度目录、透明工具区与可视化编辑正文 |
+| `library-dark.jpg` | 暗色知识库，同一篇演示文档 |
+| `viewer.jpg` | 360° 模型查看器，清晰表面与拆解结构 |
+| `settings.jpg` | 客户端的配色、声音、动态效果与画质设置 |
 
-## 动图
+默认采集尺寸为 **1920 × 1080，DPR 1**，图片使用 JPEG 质量 92。版本号、尺寸、采集时间、各图片大小及运行错误记录保存在 [`capture-notes.json`](capture-notes.json)。
 
-通过 Chrome DevTools Protocol 录制运行页面，按捕获时间戳保留真实节奏，再用 FFmpeg 缩放、降帧和量化。GIF 使用 96 色调色板与 Bayer 抖动，无声音，不代表应用实时帧率。浏览器仅在合成帧变化时输出录制帧，静止画面依照原时间保持。
+## 重现采集
 
-| 文件 | 内容 | 大约时长 | 尺寸 / 帧率 |
-| --- | --- | --- | --- |
-| `decryption.gif` | 抽取、对角解密线、玻璃与正文同步揭示 | 7.9 秒 | 960 × 540 / 12 fps |
-| `glass-motion.gif` | 清晰 → 磨砂 → 清晰 | 4.2 秒 | 800 × 450 / 12 fps |
-| `assembly-motion.gif` | 拆解、旋转、视角复位与重组 | 8.0 秒 | 800 × 450 / 12 fps |
-| `browse.gif` | 连续选档、切列和文字滚动 | 6.8 秒 | 640 × 360 / 8 fps |
-| `boot-motion.gif` | 白底输入、Logo、权限扫描与欢迎转场 | 20.4 秒 | 800 × 450 / 12 fps |
-
-README 直接展示解密动图，其余动图放在可展开区域。采集时间、源码版本与原始帧间隔记录见 [`capture.json`](capture.json)；GIF 编码的帧时长取整可能使成片时长略有差异。
-
-## 重新采集
-
-采集脚本为 [`scripts/capture-readme.mjs`](../../scripts/capture-readme.mjs)。需要 Chrome、Playwright 与 FFmpeg；它们是文档制作工具，普通应用运行不需要安装。脚本会覆盖本目录同名素材，并将中间 JPEG 帧保存在被 Git 忽略的 `.tools/readme-capture/`。
-
-先启动应用：
+在项目根目录安装依赖并完成桌面发行包构建后运行：
 
 ```sh
-npm ci
-npm run dev -- --port 5186
+node scripts/capture-desktop-readme.mjs --expected-version=1.2.0
 ```
 
-再从仓库根目录执行脚本。已能通过 Node 导入 Playwright、且 FFmpeg 在 PATH 中时：
+输入默认为 `release/packages/RhineLab-win32-x64`，输出为 `docs/media`。可通过 `--size=1440x900`、`--package=...`、`--out=...` 指定采集尺寸、发行包与输出位置。脚本先核对发行包版本和实际运行版本，拒绝拍摄过期版本。
 
-```sh
-node scripts/capture-readme.mjs
-```
+采集期间请让测试客户端保持在前台，避免同时运行其他桌面界面验证。
 
-也可以指定现有工具的位置，例如 PowerShell：
+## 数据与演示内容
 
-```powershell
-$env:PLAYWRIGHT_MODULE = 'C:/tools/node_modules/playwright/index.mjs'
-$env:FFMPEG = 'C:/tools/ffmpeg.exe'
-$env:CAPTURE_URL = 'http://127.0.0.1:5186'
-node scripts/capture-readme.mjs
-```
+脚本将程序复制到 `release/readme-capture/<运行编号>/portable`，明确排除原目录的 `RhineLabData`，同时使用独立的客户端配置目录。因此不会读取或修改个人知识库、收藏或设置。
 
-其中工具路径需要替换为本机的实际位置。Windows 录制显式使用 D3D11；其他平台使用 Chrome 可用的 GPU 后端。录制后应查看截图、GIF 的起止帧及中间过渡，确认资源加载完整、没有遮挡或异常，检查 README 图片链接，并更新此处的版本与时长。
+隔离副本中创建一篇“研究手记 · 从一条记录开始”演示文档，展示标题、强调、引用、表格、LaTeX 公式与代码块。全文与所属分类写入 `capture-notes.json`，便于重现正文画面。演示文档仅存在于测试副本，截图不会包含个人文档。
+
+脚本检查三维阵列已渲染、表格和公式已显示、模型已载入并拆解，并要求采集过程中无运行错误与远程资源请求。截图用于说明产品当前的实际界面，不能代替完整功能回归。

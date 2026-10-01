@@ -1,4 +1,4 @@
-// Reference-space measurements (1920×1080, 25 fps). See reference/measure-boot.py.
+// Opening measurements in 1920×1080 coordinates at 25 fps.
 // Monotone cubic interpolation preserves measured speeds between source frames;
 // unlike easing each interval separately, it does not stop at every keyframe.
 type Key = readonly [number, number];

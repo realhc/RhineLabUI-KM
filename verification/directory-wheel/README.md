@@ -1,9 +1,5 @@
-# Archive directory wheel — 2026-09-30
+# 刻度目录验收
 
-Only the desktop library's left document directory changed. The editor, header, scene, web page, storage and document operations retain their existing implementation.
+2026-09-30 的实际客户端记录：贯穿的主轴两端细、中央粗；文档刻度按垂直位置呈透视变化。滚轮或空白拖动浏览，点击选中，键盘控制目录焦点。后续版本已扩展为整条文档拖放与动量衰减。
 
-The fixed spine tapers at both ends and widens at its center. Document ticks and labels change scale with vertical position. Scroll or drag to browse, click to select; use the dedicated ⋮⋮ handle to reorder in manual mode. Arrow keys, Home/End and Page Up/Down move focus.
-
-Validation: TypeScript, desktop build and Electron package passed. Run node scripts/check-desktop-directory.mjs from a clean packaged build (without RhineLabData) to reproduce wheel, drag, click, dirty-guard, keyboard single-step, persisted-order isolation, reorder-handle and empty-search checks. Light and dark/small-window screenshots were inspected. Existing scripts/check-desktop-alignment.mjs passed original scene geometry, CRUD/search, trash restore, offline operation and restart persistence (regression.json).
-
-Delivery: resources/app.asar and all runtime assets at E:\CodexSandbox\Projects\RhineLabUI-main\release\packages\RhineLab-win32-x64 match the tested package. The running version 1.1.1 Electron launcher was retained because Windows locks it; restart the client to load the new resources. User data was preserved.
+结果见 [result.json](result.json)；浅色、暗色小窗口截图保留。可在隔离的便携包中运行 scripts/check-desktop-directory.mjs，检查滚轮、拖动、点击、草稿保护、键盘与排序。

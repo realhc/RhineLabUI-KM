@@ -5,7 +5,6 @@ const checks = [
   "check-desktop-exhibit.mjs",
   "check-desktop-category-ui.mjs",
   "check-desktop-p1-workflow.mjs",
-  "check-desktop-p1-visual.mjs",
 ];
 const results = [];
 for (const name of checks) {

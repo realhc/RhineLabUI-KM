@@ -50,8 +50,9 @@ const stages = bounds.slice(0, -1).map((start, i) => {
     rmsDb: +(10 * Math.log10(sum / data.length)).toFixed(2),
   };
 });
+fs.mkdirSync(".tools/audio-render", { recursive: true });
 fs.writeFileSync(
-  "reference/audio-analysis.json",
+  ".tools/audio-render/source-analysis.json",
   JSON.stringify(
     {
       video,

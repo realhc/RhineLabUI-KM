@@ -6,7 +6,7 @@ import { SharedDepthAO, SharedDepthBokeh } from "./shared-depth";
 import { disposeThreeTree } from "./three-resources";
 import { ThemeWave } from "./theme-motion";
 import { themeMaterial, themeEnvironment } from "./theme-material";
-import { RhythmMotion, rhythmDisplacement, quietBands, type MusicBands, type RhythmStyle } from "./archive-play-motion";
+import { RhythmMotion, rhythmDisplacement, quietBands, type MusicBands, type RhythmStyle } from "./archive-rhythm";
 import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
 import { createArchiveLighting, type LightingLook } from "./archive-lighting";
 import { EffectComposer } from "three/addons/postprocessing/EffectComposer.js";
@@ -19,7 +19,7 @@ import { applyTextureQuality, resizeQuality } from "./quality-renderer";
 import { CardAppearance } from "./appearance";
 import { configureInternalOptics } from "./internal-optics";
 import { DecryptionController } from "./decryption";
-import { fileAtSlot, fileLocation } from "./data";
+import { fileAtSlot, fileLocation, archiveColumns as desktopColumnNames, columnFiles as desktopColumnFiles } from "./desktop-data";
 import {
   cellKey,
   sameCell,
@@ -665,11 +665,11 @@ export class ArchiveScene {
     const shift = {
       lane:
         Math.abs(this.selectedCell.lane) > 2048
-          ? Math.round((this.selectedCell.lane - 2) / 5) * 5
+          ? Math.round((this.selectedCell.lane - 2) / desktopColumnNames.length) * desktopColumnNames.length
           : 0,
       row:
         Math.abs(this.selectedCell.row) > 2048
-          ? Math.floor((this.selectedCell.row - 12) / 8) * 8
+          ? Math.floor((this.selectedCell.row - 12) / desktopColumnFiles(((this.selectedCell.lane % desktopColumnNames.length)+desktopColumnNames.length)%desktopColumnNames.length).length) * desktopColumnFiles(((this.selectedCell.lane % desktopColumnNames.length)+desktopColumnNames.length)%desktopColumnNames.length).length
           : 0,
     };
     if (!shift.lane && !shift.row) return;

@@ -1,11 +1,5 @@
-# Knowledge library UI verification — 2026-09-30
+# 知识库 UI 验收
 
-Reference: E:\CodexSandbox\Projects\RhineLabUI-desktop-p0-v2
+2026-09-30 的实际客户端记录。玻璃表面、控件、文档阅读区、暗色主题与响应式尺寸经过构建和客户端验收；后续版本在此基础上采用透明的全屏三区布局。
 
-Target: E:\CodexSandbox\Projects\RhineLabUI-main
-
-Only runtime change: src/desktop.css. Ported library glass surfaces, rounded controls, segmented navigation, document cards, editor panes, dark theme and responsive styling. Excluded all reference layout-editor selectors and all reference TypeScript/data changes. Webpage source remains unchanged.
-
-Validation: TypeScript, desktop Vite build, Electron packaging and scripts/check-desktop-alignment.mjs passed. Actual light editor and dark small-window screenshots inspected. Original scene/layout alignment, create/save/read, full-text search, unsaved-change handling, trash restore, keyboard isolation, offline operation and restart persistence passed; see result.json.
-
-Delivery: release/packages/RhineLab-win32-x64/RhineLab.exe refreshed. Existing RhineLabData file hashes verified unchanged during delivery.
+实际编辑和小窗口截图随目录保留。[result.json](result.json) 包括模型场景、保存读取、搜索、草稿保护、回收恢复、键盘隔离、离线和重启检查。当前构建以专门的富文本、分类、工作流、恢复与动效检查为准。

@@ -1,5 +1,5 @@
 {
-  "checkedAt": "2026-10-01T14:31:27.224Z",
+  "checkedAt": "2026-10-01T19:28:55.767Z",
   "checks": {
     "finiteOpeningAndFixedAxis": true,
     "selectionOnlyContentAnimation": true,
@@ -69,6 +69,13 @@
       }
     ],
     "axis": [
+      {
+        "state": "opening",
+        "x": 28.5,
+        "y": 0,
+        "tickX": 28.5,
+        "tickY": 342.15625
+      },
       {
         "state": "opening",
         "x": 28.5,

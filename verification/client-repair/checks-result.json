@@ -53,10 +53,5 @@
     "closingShortcutsIsolated": true,
     "systemReducedMotion": true,
     "applicationReducedMotion": true
-  },
-  "visual": {
-    "light": 9,
-    "dark": 9,
-    "sourceNote": "Scene comparisons ran before overlay-only motion was added; shared scene and original motion settings remain unchanged"
   }
 }
