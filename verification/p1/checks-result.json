@@ -1,0 +1,20 @@
+{
+  "date": "2026-10-01",
+  "invocation": "Individual scripts against the delivered application archive",
+  "passed": [
+    "TypeScript tsc",
+    "Vite desktop build",
+    "Vite web build and PWA generation",
+    "check-desktop-repository.mjs",
+    "check-desktop-categories.mjs",
+    "check-desktop-exhibit.mjs",
+    "check-desktop-category-ui.mjs",
+    "check-desktop-rich-editor.mjs",
+    "check-desktop-p1-workflow.mjs",
+    "check-desktop-p1-visual.mjs"
+  ],
+  "visualPairs": 54,
+  "maxMeanChannelDifference": 0.47885871886775494,
+  "maxChangedPixelPercent": 0.0005891095524955522,
+  "pageErrors": []
+}

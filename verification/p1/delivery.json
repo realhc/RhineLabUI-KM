@@ -1,0 +1,10 @@
+{
+  "hashes": {
+    "release/packages/RhineLab-win32-x64/resources/app.asar": "6dbf650a2e41cdd26c18b04ffb1690dada55adb5a6fdcefb8f0c38a807663bc2",
+    "release/packages/make/zip/win32/x64/RhineLab-win32-x64-1.1.1.zip": "5d7d4bd80a303f3a159453531275e61c8dfcb079b0fa48ca7de6f2213462b372",
+    "release/packages/make/SHA256SUMS.txt": "cfb6135fa13979cde0122995a0a20449895c82fad56cfab69b57860e15c37983"
+  },
+  "userDataFilesPreserved": 52,
+  "userDataHashesUnchanged": true,
+  "updatedRuntime": "Existing Electron runtime; regenerated app.asar and ZIP"
+}

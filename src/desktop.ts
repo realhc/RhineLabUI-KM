@@ -306,6 +306,14 @@ async function save(): Promise<boolean> {
     saving = false;
     error(err);
     await refresh().catch(() => {});
+    // Recheck disk after a failed save: watcher notifications may still be queued,
+    // and contextBridge does not preserve custom properties on rejected Errors.
+    const latest = await api.list().catch(() => null);
+    const current = latest?.documents.find(d => d.id === payload.id);
+    if (latest && (!current || current.revision !== payload.revision)) {
+      conflict = true;
+      return await save();
+    }
     return false;
   } finally {
     saving = false;

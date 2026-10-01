@@ -1,0 +1,11 @@
+{
+  "src/main.ts": "6f53e77bf08b3410cd4391e729308368d3d87c7061a88ad972bdea26abbfacf0",
+  "src/scene.ts": "b0a89e6b9767048cbd7541debf2aef8fad2a8c819596fe1474f4c2cf0d465e03",
+  "src/boot.ts": "f2ce837b08789c6ec02472e9e3987175adf9b92f50365b9e1933b83ae8758792",
+  "src/model-viewer.ts": "332ad656c12d06c5a60b17e4fbad2ee152e197d28a3a895f7c5f82143745cd32",
+  "src/style.css": "5838be712b1f34eb4e7ca4cfc30e1a43257d8bb1b1bcbf8c914beac19e893109",
+  "src/responsive.css": "007daa2bf2da7993dcc3c23ea423371cd44a8a4a06e7d5326b2093a448d167cf",
+  "src/desktop.ts": "7a24eb0bf95fa32087717cc4a209bac22ac3026a35066d47fc5d8b2e899d6205",
+  "src/desktop-rich-editor.ts": "3e0325ce5f7c9b73a7cdbd25768c401ae5f469e69eac843599ca0288bf019b96",
+  "desktop/main.mjs": "773b4e4fc54f2098c8c7e9a900e39ece46241efa06563d9bdb5bd52f2faa232e"
+}

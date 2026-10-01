@@ -9,6 +9,7 @@ await mkdir(out, { recursive: true });
 await mkdir(run, { recursive: true });
 await cp(resolve("release/packages/RhineLab-win32-x64"), portable, {
   recursive: true,
+  filter: source => !source.split(/[\/]/).includes("RhineLabData"),
 });
 const launch = () =>
   electron.launch({

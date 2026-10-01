@@ -1,0 +1,13 @@
+{
+  "checks": {
+    "externalConflictCopyAndCancel": true,
+    "externalConflictReload": true,
+    "externalDeletionCopy": true,
+    "dirtyReorderCancelAndSave": true,
+    "keyboardIsolation": true,
+    "closeCancelThenSave": true,
+    "restartStableIdsAndOrder": true,
+    "closeDiscardDoesNotWrite": true
+  },
+  "errors": []
+}

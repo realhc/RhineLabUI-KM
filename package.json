@@ -29,7 +29,11 @@
     "build:wallpaper": "node scripts/patch-rolling-number.mjs && node scripts/export-records.mjs && tsc && vite build --mode wallpaper --outDir release/wallpaper && node scripts/build-wallpaper.mjs",
     "format": "prettier --write src scripts index.html package.json tsconfig.json",
     "preview": "vite preview --host 127.0.0.1",
-    "check:desktop:exhibit": "node --experimental-strip-types scripts/check-desktop-exhibit.mjs"
+    "check:desktop:exhibit": "node --experimental-strip-types scripts/check-desktop-exhibit.mjs",
+    "check:desktop:categories": "node scripts/check-desktop-categories.mjs",
+    "check:desktop:workflow": "node scripts/check-desktop-p1-workflow.mjs",
+    "check:desktop:visual": "node scripts/check-desktop-p1-visual.mjs",
+    "check:desktop:p1": "node scripts/check-desktop-p1.mjs"
   },
   "dependencies": {
     "@kitlangton/rolling-number": "0.4.1",
