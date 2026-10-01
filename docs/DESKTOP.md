@@ -4,7 +4,7 @@ Rhine Lab 是 Windows 便携知识库客户端。程序、字体、模型、配�
 
 ## 下载与启动
 
-从本仓库 [Releases](https://github.com/realhc/RhineLabUI/releases) 下载 Windows x64 ZIP，完整解压到当前用户可写目录，再运行 `RhineLab.exe`。只有 EXE 不能构成完整程序，`resources` 和其他运行文件也必须保留。
+从本仓库 [Releases](https://github.com/realhc/RhineLabUI-KM/releases) 下载 Windows x64 ZIP，完整解压到当前用户可写目录，再运行 `RhineLab.exe`。只有 EXE 不能构成完整程序，`resources` 和其他运行文件也必须保留。
 
 首次启动会创建 `RhineLabData` 并导入 40 篇示例档案。此后即使删空知识库，也不会再次自动导入。三维阵列始终存在；分类依次对应模型列，文档按目录顺序对应列内模型。分类数量和文档数量没有示例种子的限制。
 

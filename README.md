@@ -2,7 +2,7 @@
 
 **把莱茵生命的三维终端，变成可以阅读、编辑和整理的本地知识库。**
 
-**[下载 Windows 客户端 →](https://github.com/realhc/RhineLabUI/releases/latest)** · [使用教程](#快速开始) · [操作说明](#操作说明) · [开发指引](AGENT.md)
+**[下载 Windows 客户端 →](https://github.com/realhc/RhineLabUI-KM/releases/latest)** · [使用教程](#快速开始) · [操作说明](#操作说明) · [开发指引](AGENT.md)
 
 ![三维档案阵列](docs/media/array.jpg)
 
@@ -12,7 +12,7 @@ Rhine Lab 是一个 Windows 便携客户端。实时渲染的档案阵列、玻�
 
 ## 快速开始
 
-1. 从 [Releases](https://github.com/realhc/RhineLabUI/releases/latest) 下载 **RhineLab-win32-x64-1.2.0.zip**，完整解压到有写入权限的文件夹。
+1. 从 [Releases](https://github.com/realhc/RhineLabUI-KM/releases/latest) 下载 **RhineLab-win32-x64-1.2.0.zip**，完整解压到有写入权限的文件夹。
 2. 运行其中的 **RhineLab.exe**。保留同目录的 `resources` 等运行文件，不能只复制 EXE。
 3. 等待资源就绪，点击进入；可以点击 `ENTER SYSTEM` 跳过开场。
 4. 点击 `ARCHIVE INDEX` 打开知识库，或从档案详情进入对应文档。
@@ -117,8 +117,8 @@ RhineLab/
 开发需要 Node.js 22.12 或更新版本：
 
 ```powershell
-git clone https://github.com/realhc/RhineLabUI.git
-cd RhineLabUI
+git clone https://github.com/realhc/RhineLabUI-KM.git
+cd RhineLabUI-KM
 npm.cmd ci
 npm.cmd run dev:desktop
 ```
