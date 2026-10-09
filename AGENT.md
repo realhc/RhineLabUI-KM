@@ -22,6 +22,9 @@ Node.js 至少 22.12，Windows PowerShell 使用 npm.cmd，其他平台可用 np
 - src/desktop-rich-editor.ts：排版编辑、选区、Markdown 序列化与文档独立撤销栈。
 - src/desktop-library-motion.ts、src/desktop-directory.ts：界面生命周期与原生 scrollTop 惯性。
 - scripts/prepare-desktop.mjs、scripts/desktop-resources.mjs、forge.config.cjs：离线资源、许可及打包白名单。
+- src/desktop-search.ts：无 I/O 的中文/英文关键词索引、相关性、上下文与安全高亮；构建时生成 desktop/search.mjs，供主进程工具复用。
+- src/desktop-ai.ts、src/desktop-ai.css：按需加载的可选助手、接入和任务面板；单独 window.rhineAI 桥接，不扩展编辑器状态。
+- desktop/ai-runtime.mjs：可选模块组合与显式 IPC 分发表；desktop/ai-service.mjs、ai-tools.mjs：模型连接、工具执行、语义索引；ai-automation.mjs：持久任务与恢复；ai-http.mjs：仅本机的外部工具接口。
 
 ## 必须保持的产品行为
 
@@ -41,6 +44,10 @@ Markdown 文件是文档事实来源，localStorage 只保存偏好。按稳定 
 
 保持 contextIsolation、sandbox、受限 IPC、CSP 和导航限制。外部 HTTP/HTTPS 链接交给系统浏览器；不能为了方便加载开启任意文件访问或 Node 集成。调试入口为 window.rhineReview，实际桥接为 window.rhine。
 
+AI 是可选模块：初始化失败不得阻止客户端启动，也不得改变普通读写、搜索或场景。网络与密钥留在主进程；API Key 只能通过 safeStorage 加密持久化，状态和日志不能返回密钥。远程请求不自动跟随重定向。文档是非可信材料，不能作为工具权限、系统指令或执行代码。工具必须通过 Repository 按稳定 ID 写入，修改/软删除要求最新 revision；未保存草稿时拒绝写入。默认不给聊天助手或 HTTP 访问写权限，不能加入永久删除、任意路径或 shell 工具。
+
+任务持久化于知识库 ai/ 下。只生成新文档，保留已生成结果与运行标识用于恢复去重；关闭期间最多补跑一次，失败状态可见且不能形成无限重试。程序关闭后不执行，不引入系统计划任务。搜索索引是派生数据，内容哈希与模型配置共同决定是否更新，不把语义缓存当作 Markdown 的替代。新增工具需同步 schemas、内置 guide、docs/AI-API.md 和可运行测试。
+
 仓库不恢复独立站点入口、PWA、托管配置或壁纸宿主。Electron 开发时的 Vite 服务只服务客户端构建。保留原作者 LICENSE、字体版权和第三方声明；独立许可字体不随发行包分发。
 
 ## 验证与交付
@@ -58,6 +65,10 @@ npm.cmd run check:desktop:workflow
 npm.cmd run check:desktop:recovery
 npm.cmd run check:desktop:motion
 node scripts/check-desktop-rich-editor.mjs
+node --experimental-strip-types scripts/check-desktop-search.mjs
+node scripts/check-desktop-ai.mjs
+node scripts/check-desktop-ai-automation.mjs
+node scripts/check-desktop-ai-ui.mjs
 ```
 
 涉及场景时，与上一个发行程序在相同视口、时间、主题、画质和 DPI 下比较。不要降低视觉阈值来使失败通过。GUI 测试顺序执行，避免多个原生窗口相互遮挡。环境原生进程故障需与应用错误区分，保留实际日志；不得绕过权限或导出身份凭据。

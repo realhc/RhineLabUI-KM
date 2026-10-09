@@ -2,6 +2,7 @@ import "./desktop.css";
 import { mountDirectoryWheel } from "./desktop-directory";
 import { mountLibraryMotion } from "./desktop-library-motion";
 import { mountRichEditor, richToolbar } from "./desktop-rich-editor";
+import { createSearchIndex, highlightText, findTextRanges } from "./desktop-search";
 
 const api = window.rhine;
 const overlay = document.createElement("dialog");
@@ -34,6 +35,13 @@ let documents: RhineDocument[] = [],
   trash: RhineDocument[] = [],
   selected: RhineDocument | undefined;
 let editing = false;
+// Search is entirely local until the user explicitly requests the optional semantic path.
+const searchIndex = createSearchIndex();
+let searchHits = new Map<string, ReturnType<typeof searchIndex.search>[number]>();
+let semanticHits = new Map<string, {id:string;score:number;snippet:string;revision?:string}>();
+let searchScope = "*", searchRelevance = true, semanticVersion = 0;
+let searchSignature="";
+let aiWorkspace: ReturnType<typeof import("./desktop-ai")["mountAIWorkspace"]> | undefined;
 let dirty = false,
   saving = false,
   view = "all",
@@ -65,6 +73,19 @@ for (const selector of [".metadata", ".toolbar"])
 controls.append(documentHeading, overlay.querySelector("#format")!);
 controls.append(overlay.querySelector("footer")!);
 overlay.append(controls);
+
+// Additive controls: the unfiltered directory and existing three-region layout stay intact.
+const aiButton = document.createElement("button");
+aiButton.id = "ai-open"; aiButton.textContent = "AI"; aiButton.title = "AI 接入、知识库助手与定时文档";
+overlay.querySelector(".header-actions")!.insertBefore(aiButton, $("preferences"));
+const searchTools = document.createElement("div");
+searchTools.id = "search-tools"; searchTools.hidden = true;
+searchTools.innerHTML = '<select id="search-scope" aria-label="搜索范围"><option value="*">全部分类</option></select><button id="search-relevance" aria-pressed="true" title="切换相关性与原有排序">相关性</button><button id="search-semantic" title="使用已配置的向量模型补充语义匹配">语义补充</button><span id="search-status" role="status"></span>';
+$("search").after(searchTools);
+const searchPosition = document.createElement("div");
+searchPosition.id = "search-position"; searchPosition.hidden = true;
+searchPosition.innerHTML = '<span id="search-position-label"></span><button id="search-previous" title="上一个命中">↑</button><button id="search-next" title="下一个命中">↓</button>';
+$("panes").before(searchPosition);
 
 const libraryMotion = mountLibraryMotion(overlay);
 const directoryWheel = mountDirectoryWheel($("documents"), () => libraryMotion.enabled("dragMomentum"));
@@ -140,18 +161,20 @@ async function canLeave() {
   return false;
 }
 function visible() {
+  const signature=`${query}|${searchScope}|${view}`;
+  if(signature!==searchSignature){searchSignature=signature;semanticVersion++;semanticHits.clear();$("search-status").textContent="";}
   const source = view === "trash" ? trash : documents;
+  searchHits = new Map(searchIndex.search(query, searchScope === "*" ? {} : {categoryId:searchScope || null}).map(hit=>[hit.id,hit]));
   return source
     .filter(
       (d) =>
         (view !== "saved" || saved.has(d.id)) &&
-        (!query ||
-          `${d.title}\n${d.category}\n${d.body}`
-            .toLocaleLowerCase()
-            .includes(query)),
+        (!query || ((searchHits.has(d.id) || semanticHits.has(d.id)) && (searchScope === "*" || (d.categoryId || "") === searchScope))),
     )
     .sort((a, b) =>
-      sort === "title"
+      query && searchRelevance
+        ? ((searchHits.get(b.id)?.score || 0) + (semanticHits.get(b.id)?.score || 0) * 2) - ((searchHits.get(a.id)?.score || 0) + (semanticHits.get(a.id)?.score || 0) * 2) || a.order-b.order
+        : sort === "title"
         ? a.title.localeCompare(b.title, "zh-CN")
         : sort === "modified"
           ? b.modified.localeCompare(a.modified)
@@ -163,18 +186,28 @@ function renderList() {
   const list = visible(), el = $("documents"), scroll = el.scrollTop;
   const focused = (document.activeElement as HTMLElement)?.dataset.id;
   const previousSelection = el.querySelector<HTMLElement>(".selected")?.dataset.id;
-  const documentRow = (d:RhineDocument) => `<button role="listitem" class="document ${selected?.id===d.id?"selected":""}" draggable="${view!=="trash"}" title="拖动文档条：归类或排序" data-id="${escape(d.id)}" aria-current="${selected?.id===d.id}"><span class="directory-label"><strong>${saved.has(d.id)?"★ ":""}${escape(d.title)}</strong><small>${escape(d.modified.slice(0,10))}</small></span>${view!=="trash"?'<span class="directory-reorder" title="拖动文档条：归类或排序" aria-hidden="true">⋮⋮</span>':""}</button>`;
+  const documentRow = (d:RhineDocument) => {
+    const snippet = (searchHits.get(d.id)?.snippet || semanticHits.get(d.id)?.snippet || "").replace(/^#{1,6}\s+/gm, "").replace(/\*\*([^*]+)\*\*/g,"$1").replace(/`([^`]+)`/g,"$1");
+    return `<button role="listitem" class="document ${selected?.id===d.id?"selected":""}" draggable="${view!=="trash"}" title="拖动文档条：归类或排序" data-id="${escape(d.id)}" aria-current="${selected?.id===d.id}"><span class="directory-label"><strong>${saved.has(d.id)?"★ ":""}${query?highlightText(d.title,query):escape(d.title)}</strong><small>${escape(d.modified.slice(0,10))}</small>${query&&snippet?`<span class="search-snippet">${highlightText(snippet,query)}</span>`:""}</span>${view!=="trash"?'<span class="directory-reorder" title="拖动文档条：归类或排序" aria-hidden="true">⋮⋮</span>':""}</button>`;
+  };
   const groupRow = (id:string|null,name:string,items:RhineDocument[]) => {
     const shut = !!id && collapsed.has(id) && !query;
     return `<section class="category-group" data-drop-category="${id??""}"><div class="category-tick ${activeCategory===id?"active":""}" data-category-id="${id??""}"><button class="category-toggle" data-collapse="${id??""}" aria-expanded="${!shut}" ${items.length?"":"data-empty=true"}><span class="category-arrow">${items.length?(shut?"▸":"▾"):"·"}</span><strong>${escape(name)}</strong><small>${items.length}</small></button>${id&&view!=="trash"?`<span class="category-actions"><button data-category-action="add" title="在分类中新增文档">＋</button><button data-category-action="rename" title="重命名分类">✎</button><button data-category-action="remove" title="移除分类，保留文档">×</button></span>`:""}</div>${!shut?items.map(documentRow).join(""):""}</section>`;
   };
-  el.innerHTML = directoryCategories.filter(c=>view==="all"&&!query||list.some(d=>d.categoryId===c.id)).map(c=>groupRow(c.id,c.name,list.filter(d=>d.categoryId===c.id))).join("") + groupRow(null,"未分类",list.filter(d=>!d.categoryId));
+  const groups: {id:string|null;name:string;items:RhineDocument[]}[]=directoryCategories.filter(c=>view==="all"&&!query||list.some(d=>d.categoryId===c.id)).map(c=>({id:c.id,name:c.name,items:list.filter(d=>d.categoryId===c.id)}));
+  groups.push({id:null,name:"未分类",items:list.filter(d=>!d.categoryId)});
+  // Keep category major ticks; search ranks categories by their strongest match,
+  // then ranks the document ticks inside each category. Ordinary order is untouched.
+  if(query&&searchRelevance)groups.sort((a,b)=>Math.max(0,...b.items.map(d=>searchHits.get(d.id)?.score||semanticHits.get(d.id)?.score||0))-Math.max(0,...a.items.map(d=>searchHits.get(d.id)?.score||semanticHits.get(d.id)?.score||0)));
+  el.innerHTML = groups.map(c=>groupRow(c.id,c.name,c.items)).join("");
   if(!list.length && (query||view!=="all")) el.insertAdjacentHTML("beforeend",'<div class="empty">没有匹配的文档</div>');
   el.scrollTop=scroll;
   if(focused)Array.from(el.querySelectorAll<HTMLElement>(".document")).find(row=>row.dataset.id===focused)?.focus({preventScroll:true});
   if(overlay.open&&selected?.id!==previousSelection)el.querySelector<HTMLElement>(".selected")?.scrollIntoView({block:"nearest"});
   directoryWheel.refresh();
   $("count").textContent=`${list.length} 篇文档 · ${directoryCategories.length} 个分类 · 回收区 ${trash.length}`;
+  searchTools.hidden = !query;
+  updateSearchHighlights(false);
 }
 
 
@@ -200,6 +233,7 @@ function renderEditor() {
   $("document-info").textContent =
     `${selected.id} · 修改 ${new Date(selected.modified).toLocaleString()}${removed ? " · 回收区（只读）" : ""}`;
   if (changedDocument) libraryMotion.revealDocument();
+  updateSearchHighlights(changedDocument);
 }
 async function select(id: string) {
   if (selected?.id === id) { activeCategory = selected.categoryId ?? null; renderList(); return; }
@@ -219,7 +253,18 @@ async function refresh() {
   const version = ++refreshVersion;
   const data = await api.list();
   if (version !== refreshVersion) return;
+  const currentRevisions=new Map(data.documents.map(d=>[d.id,d.revision]));
+  const previousRevisions=new Map(documents.map(d=>[d.id,d.revision]));
+  if(data.documents.length!==documents.length||data.documents.some(d=>previousRevisions.get(d.id)!==d.revision)){
+    semanticVersion++;
+    for(const [id,hit] of semanticHits)if(!currentRevisions.has(id)||hit.revision!==currentRevisions.get(id))semanticHits.delete(id);
+  }
   documents = data.documents;
+  searchIndex.update([...data.documents, ...data.trash]);
+  const scopeControl = $<HTMLSelectElement>("search-scope");
+  scopeControl.replaceChildren(new Option("全部分类", "*"), ...data.categories.map(c=>new Option(c.name,c.id)),new Option("未分类", ""));
+  if(searchScope !== "*" && searchScope && !data.categories.some(c=>c.id===searchScope))searchScope="*";
+  scopeControl.value=searchScope;
   directoryCategories = data.categories;
   if(activeCategory&&!directoryCategories.some(c=>c.id===activeCategory))activeCategory=null;
   window.dispatchEvent(new CustomEvent("rhine-library-changed", {detail:data}));
@@ -392,21 +437,88 @@ $("new-category").onclick=()=>run(async()=>{$("new-menu").hidden=true;$("new").s
 function startEditing() {
   if(!selected || trash.some(d=>d.id===selected!.id))return;
   editing=true;overlay.dataset.editing="true";rich.setEditable(true);$<HTMLInputElement>("title").readOnly=false;$("save").textContent="保存";$("save").title="Ctrl+S 保存（继续编辑）";rich.focus();
+  updateSearchHighlights(false);
 }
 $("save").onclick = () => editing ? run(save) : startEditing();
 $("folder").onclick = () => run(() => api.openFolder());
 $("fullscreen").onclick = () => run(() => api.fullscreen());
 $("search").oninput = () => {
   query = $<HTMLInputElement>("search").value.trim().toLocaleLowerCase();
+  semanticVersion++; semanticHits.clear(); $("search-status").textContent="";
   page = 0;
   renderList();
 };
 $("sort").onchange = () => {
   sort = $<HTMLSelectElement>("sort").value;
+  searchRelevance=false;$("search-relevance").setAttribute("aria-pressed","false");
   localStorage.setItem("rhine-library-sort", JSON.stringify(sort));
   page = 0;
   renderList();
 };
+$("search-scope").onchange=()=>{searchScope=$<HTMLSelectElement>("search-scope").value;renderList();};
+$("search-relevance").onclick=()=>{searchRelevance=!searchRelevance;$("search-relevance").setAttribute("aria-pressed",String(searchRelevance));renderList();};
+$("search-semantic").onclick=async()=>{
+  if(!query)return;
+  const version=++semanticVersion, currentQuery=query;
+  const button=$<HTMLButtonElement>("search-semantic");button.disabled=true;
+  $("search-status").textContent="正在查询语义索引…";
+  try {
+    if(!window.rhineAI)throw Error("语义搜索需要更新后的 AI 接口。");
+    const hits=await window.rhineAI.semantic({query:currentQuery,...(searchScope!=="*"?{categoryId:searchScope||null}:{})});
+    if(version!==semanticVersion)return;
+    semanticHits=new Map(hits.filter(hit=>documents.some(d=>d.id===hit.id&&(!hit.revision||d.revision===hit.revision))).map(hit=>[hit.id,hit]));
+    $("search-status").textContent=`语义匹配 ${hits.length} 篇 · 关键词结果保留`;
+    renderList();
+  } catch(err) {if(version===semanticVersion)$("search-status").textContent=(err instanceof Error?err.message:String(err))+"；关键词搜索仍可使用。";}
+  finally {button.disabled=false;}
+};
+aiButton.onclick=()=>run(async()=>{
+  if(!aiWorkspace){const module=await import("./desktop-ai");aiWorkspace=module.mountAIWorkspace(overlay,{
+    selected:()=>selected,categories:()=>directoryCategories,beforeWrite:canLeave,changed:refresh,
+    navigate:async(id)=>{await select(id);if(selected?.id!==id)return;view="all";query="";semanticVersion++;semanticHits.clear();$<HTMLInputElement>("search").value="";updateNav();renderList();},
+  });}
+  await aiWorkspace.open();
+});
+
+// CSS Highlights paint read-only hits without inserting nodes into ProseMirror or its undo history.
+const highlightAPI=(globalThis as any).CSS?.highlights;
+let hitRanges: Range[] = [], hitPosition = 0, highlightSignature = "";
+let highlightRoot: HTMLElement | null = null;
+function updateSearchHighlights(scrollToFirst: boolean) {
+  const root=$("preview").querySelector<HTMLElement>(".tiptap");
+  const signature=`${selected?.id}|${query}|${editing}|${root?.textContent}`;
+  if(signature===highlightSignature&&root===highlightRoot&&!scrollToFirst)return;
+  highlightSignature=signature;highlightRoot=root;hitRanges=[];hitPosition=0;highlightAPI?.delete("rhine-search");
+  searchPosition.hidden=true;
+  if(!root||!query||editing)return;
+  const walker=document.createTreeWalker(root,NodeFilter.SHOW_TEXT),blocks=new Map<Element,Text[]>();
+  let node:Node|null;
+  while((node=walker.nextNode())){
+    if(!node.textContent||node.parentElement?.closest('.katex-mathml,[aria-hidden=true],annotation,script,style,[hidden]'))continue;
+    const block=node.parentElement?.closest("p,h1,h2,h3,h4,h5,h6,li,td,th,pre")||root;
+    const nodes=blocks.get(block)||[];nodes.push(node as Text);blocks.set(block,nodes);
+  }
+  // Merge inline marks within one block, never join separate paragraphs/cells
+  // into a phrase or inspect KaTeX's hidden source and duplicated accessibility text.
+  for(const nodes of blocks.values()){
+    let offset=0;const spans=nodes.map(node=>{const start=offset;offset+=node.length;return {node,start,end:offset};});
+    const text=nodes.map(node=>node.data).join("");
+    for(const match of findTextRanges(text,query)){
+      if(hitRanges.length>=200)break;
+      const start=spans.find(s=>s.end>match.start),end=spans.find(s=>s.end>=match.end);
+      if(!start||!end)continue;const range=document.createRange();range.setStart(start.node,match.start-start.start);range.setEnd(end.node,match.end-end.start);hitRanges.push(range);
+    }
+  }
+  if(highlightAPI&&(globalThis as any).Highlight)highlightAPI.set("rhine-search",new (globalThis as any).Highlight(...hitRanges));
+  if(hitRanges.length){searchPosition.hidden=false;$("search-position-label").textContent=`正文命中 1 / ${hitRanges.length}${hitRanges.length===200?"（最多显示 200）":""}`;if(scrollToFirst)requestAnimationFrame(()=>jumpSearch(0));}
+}
+function jumpSearch(delta: number) {
+  if(!hitRanges.length)return;hitPosition=(hitPosition+delta+hitRanges.length)%hitRanges.length;
+  const rect=hitRanges[hitPosition].getBoundingClientRect(),article=$("preview");
+  article.scrollTop+=rect.top-article.getBoundingClientRect().top-70;
+  $("search-position-label").textContent=`正文命中 ${hitPosition+1} / ${hitRanges.length}`;
+}
+$("search-previous").onclick=()=>jumpSearch(-1);$("search-next").onclick=()=>jumpSearch(1);
 overlay.querySelectorAll<HTMLElement>("[data-view]").forEach(
   (el) =>
     (el.onclick = () =>
@@ -503,6 +615,7 @@ $("preview").onclick = (e) => {
 document.addEventListener("keydown", (e) => {
   if (!overlay.open || overlay.dataset.motionState === "closing") return;
   if ($<HTMLDialogElement>("dialog").open) return;
+  if (aiWorkspace?.panel.open) return;
   if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "s") {
     e.preventDefault();
     run(save);

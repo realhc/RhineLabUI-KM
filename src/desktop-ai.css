@@ -1,0 +1,163 @@
+/* All additions are scoped to the existing glass workspace; no global theme changes. */
+#library-overlay #ai-workspace {
+  width: min(800px, 88vw);
+  max-height: 86vh;
+  margin: auto;
+  padding: 24px 28px;
+  overflow: auto;
+  color: var(--ink);
+  background: var(--theme-panel);
+  border: 1px solid var(--glass-stroke);
+  border-radius: 16px;
+  box-shadow: 0 20px 70px #0003;
+}
+#library-overlay #ai-workspace::backdrop {
+  background: #0003;
+}
+#library-overlay #ai-workspace .ai-heading {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+}
+#library-overlay #ai-workspace h2 {
+  margin: 5px 0 16px;
+  font-size: 22px;
+}
+#library-overlay #ai-workspace h3 {
+  margin: 16px 0 12px;
+  font-size: 15px;
+}
+#library-overlay #ai-workspace .ai-tabs,
+#library-overlay #ai-workspace .ai-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+}
+#library-overlay #ai-workspace .ai-tabs {
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--glass-stroke);
+}
+#library-overlay #ai-workspace .ai-tabs .active {
+  color: var(--theme-accent);
+  background: var(--glass-soft);
+}
+#library-overlay #ai-workspace label {
+  display: grid;
+  gap: 6px;
+  margin: 12px 0;
+  font-size: 12px;
+}
+#library-overlay #ai-workspace input:not([type="checkbox"]),
+#library-overlay #ai-workspace textarea,
+#library-overlay #ai-workspace select {
+  min-width: 0;
+  width: 100%;
+  padding: 9px 11px;
+  color: inherit;
+  background: var(--theme-field);
+  border: 1px solid var(--glass-stroke);
+  border-radius: 8px;
+  font: inherit;
+}
+#library-overlay #ai-workspace textarea {
+  resize: vertical;
+  min-height: 76px;
+  line-height: 1.7;
+}
+#library-overlay #ai-workspace .ai-check,
+#library-overlay #ai-workspace .ai-options label {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+#library-overlay #ai-workspace input[type="checkbox"] {
+  accent-color: var(--theme-accent);
+}
+#library-overlay #ai-workspace .ai-options {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+#library-overlay #ai-workspace .ai-columns {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+#library-overlay #ai-workspace .ai-muted {
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.8;
+}
+#library-overlay #ai-status {
+  min-height: 20px;
+  margin: 12px 0;
+  color: var(--theme-accent);
+  font-size: 12px;
+  white-space: pre-wrap;
+}
+#library-overlay #ai-workspace .ai-answer {
+  font-size: 14px;
+  line-height: 1.9;
+  overflow-wrap: anywhere;
+}
+#library-overlay #ai-workspace .ai-answer:empty {
+  display: none;
+}
+#library-overlay #ai-workspace .ai-answer pre,
+#library-overlay #ai-guide-text,
+#library-overlay #ai-operations pre {
+  overflow: auto;
+  max-height: 340px;
+  padding: 12px;
+  border: 1px solid var(--glass-stroke);
+  border-radius: 8px;
+  background: var(--glass-soft);
+  font:
+    12px/1.7 Consolas,
+    monospace;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+#library-overlay #ai-workspace .ai-answer table {
+  border-collapse: collapse;
+}
+#library-overlay #ai-workspace .ai-answer :is(td, th) {
+  padding: 7px;
+  border: 1px solid var(--glass-stroke);
+}
+#library-overlay #ai-workspace .ai-references {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin: 10px 0;
+}
+#library-overlay #ai-workspace .ai-task-row {
+  display: grid;
+  gap: 7px;
+  padding: 12px 0;
+  border-bottom: 1px solid var(--glass-stroke);
+}
+#library-overlay #ai-workspace .ai-task-row small {
+  color: var(--muted);
+  line-height: 1.6;
+}
+#library-overlay #ai-http-info {
+  display: grid;
+  gap: 7px;
+  margin: 12px 0;
+}
+#library-overlay #ai-workspace hr {
+  border: 0;
+  border-top: 1px solid var(--glass-stroke);
+  margin: 24px 0;
+}
+@media (max-width: 720px) {
+  #library-overlay #ai-workspace {
+    padding: 18px;
+  }
+  #library-overlay #ai-workspace .ai-columns {
+    grid-template-columns: 1fr;
+    gap: 0;
+  }
+}

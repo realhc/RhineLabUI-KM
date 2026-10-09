@@ -1,6 +1,6 @@
 {
   "name": "rhine-lab-analysis-os",
-  "version": "1.2.0",
+  "version": "1.3.0",
   "description": "Rhine Lab portable local Markdown knowledge base",
   "author": "Rhine Lab contributors",
   "main": "desktop/main.mjs",
@@ -33,6 +33,9 @@
     "check:desktop:editor": "node scripts/check-desktop-rich-editor.mjs",
     "check:desktop:directory": "node scripts/check-desktop-directory.mjs",
     "check:desktop:category-ui": "node scripts/check-desktop-category-ui.mjs",
+    "check:desktop:search": "node --experimental-strip-types scripts/check-desktop-search.mjs",
+    "check:desktop:ai": "node scripts/check-desktop-ai.mjs && node scripts/check-desktop-ai-automation.mjs",
+    "check:desktop:ai-ui": "node scripts/check-desktop-ai-ui.mjs",
     "format": "prettier --write src desktop scripts desktop.html package.json tsconfig.json vite.config.ts forge.config.cjs"
   },
   "dependencies": {

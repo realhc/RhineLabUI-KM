@@ -387,3 +387,17 @@
  #library-overlay::backdrop, #library-overlay button, #library-overlay .directory-label { transition:none!important; }
  #library-overlay #new-menu, #library-overlay #dialog, #library-overlay .document.selected::before { animation:none!important; }
 }
+
+/* Search-only additions leave the empty query directory geometry unchanged. */
+#library-overlay #search-tools { display:flex; gap:4px; flex-wrap:wrap; align-items:center; margin:6px 12px 0 24px; }
+#library-overlay #search-tools[hidden], #library-overlay #search-position[hidden] { display:none; }
+#library-overlay #search-tools :is(select,button) { padding:4px 6px; font-size:10px; background:transparent; border-color:var(--glass-stroke); }
+#library-overlay #search-tools select { min-width:0; flex:1; max-width:140px; }
+#library-overlay #search-tools [aria-pressed=true] { color:var(--theme-accent); background:var(--glass-soft); }
+#library-overlay #search-status { flex-basis:100%; color:var(--muted); font-size:10px; line-height:1.6; }
+#library-overlay .search-snippet { display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden; margin-top:5px; color:var(--muted); font-size:10px; line-height:1.6; }
+#library-overlay .directory-wheel .document:has(.search-snippet) { min-height:88px; }
+#library-overlay mark { color:var(--ink); background:color-mix(in srgb,var(--theme-accent) 28%,transparent); border-radius:2px; }
+#library-overlay #search-position { display:flex; align-items:center; justify-content:flex-end; gap:5px; padding:5px 16px; border-bottom:1px solid var(--glass-stroke); font-size:10px; color:var(--muted); }
+#library-overlay #search-position button { padding:2px 8px; background:transparent; box-shadow:none; }
+#library-overlay #preview ::highlight(rhine-search) { color:var(--ink); background:color-mix(in srgb,var(--theme-accent) 30%,transparent); }

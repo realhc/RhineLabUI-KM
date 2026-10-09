@@ -1,0 +1,22 @@
+{
+  "checks": {
+    "offlineStartup": true,
+    "searchAndHighlight": true,
+    "draftProtection": true,
+    "externalAPI": true,
+    "encryptedKey": true,
+    "summary": true,
+    "aiCreate": true,
+    "taskUI": true,
+    "guide": true,
+    "semantic": true,
+    "editingPreserved": true,
+    "categoryRelevance": true,
+    "highlightBlocksAndRebuild": true,
+    "nativeClipboard": true
+  },
+  "modelCalls": 5,
+  "embedCalls": 45,
+  "pageErrors": [],
+  "rendererRemoteRequests": []
+}

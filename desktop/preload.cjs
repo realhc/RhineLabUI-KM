@@ -38,3 +38,7 @@ contextBridge.exposeInMainWorld("rhine", {
     return () => ipcRenderer.removeListener("rhine:changed", listener);
   },
 });
+// Optional AI uses a separate capability bridge; the existing public repository API is unchanged.
+contextBridge.exposeInMainWorld("rhineAI",Object.fromEntries([
+  "state","saveSettings","test","run","cancel","semantic","guide","tasks","saveTask","removeTask","runTask","configureHTTP","copy",
+].map(name=>[name,invoke("ai:"+name)])));

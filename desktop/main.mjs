@@ -7,6 +7,8 @@ import {
   dialog,
   screen,
   Menu,
+  safeStorage,
+  clipboard,
 } from "electron";
 import { readFile, writeFile, realpath } from "node:fs/promises";
 import {
@@ -42,6 +44,17 @@ let window,
   repository,
   dirty = false,
   closing = false;
+let aiRuntimePromise;
+function getAIRuntime() {
+  // Failures in optional modules never gate startup, graphics or ordinary Markdown operations.
+  if(!aiRuntimePromise)aiRuntimePromise=import("./ai-runtime.mjs").then(async({createAIRuntime})=>createAIRuntime({
+    repository,isDirty:()=>dirty,
+    onChanged:()=>{if(window&&!window.isDestroyed())window.webContents.send("rhine:changed");},
+    encrypt:text=>{if(!safeStorage.isEncryptionAvailable())throw Error("系统密钥加密不可用，不能保存 API Key。");return safeStorage.encryptString(text).toString("base64");},
+    decrypt:text=>safeStorage.decryptString(Buffer.from(text,"base64")),
+  })).catch(error=>{aiRuntimePromise=undefined;throw error;});
+  return aiRuntimePromise;
+}
 const csp =
   "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self'; media-src 'self' blob:; connect-src 'self'; object-src 'none'; base-uri 'none'; frame-src 'none'; form-action 'none'";
 const trusted = (event) => {
@@ -304,6 +317,17 @@ else {
       });
 
       handle("fullscreen", () => window.setFullScreen(!window.isFullScreen()));
+      for(const name of ["state","saveSettings","test","run","cancel","semantic","guide","tasks","saveTask","removeTask","runTask","configureHTTP"])
+        handle("ai:"+name,async(...args)=>(await getAIRuntime()).call(name,...args));
+      handle("ai:copy",async kind=>{
+        const runtime=await getAIRuntime();
+        if(kind==="guide")clipboard.writeText(JSON.stringify(await runtime.call("guide"),null,2));
+        else if(kind==="connection"){
+          const {http}=await runtime.call("state");
+          if(!http.running||!http.token)throw Error("请先启用本机 API。");
+          clipboard.writeText(JSON.stringify({url:http.endpoint,token:http.token},null,2));
+        } else throw Error("未知复制操作");
+      });
       ipcMain.on("rhine:dirty", (event, value) => {
         try {
           trusted(event);
@@ -345,11 +369,14 @@ else {
           .finally(() => window?.destroy());
       });
       window.on("closed", () => {
+        if(aiRuntimePromise)void aiRuntimePromise.then(runtime=>runtime.close()).catch(()=>{});
         repository.close();
         window = null;
       });
       window.once("ready-to-show", () => window.show());
       await window.loadURL(entry);
+      // Load persisted schedules only after the normal client is usable; init itself makes no model calls.
+      void getAIRuntime().catch(()=>{});
     })
     .catch((error) => {
       dialog.showErrorBox("启动失败", error.stack || error.message);

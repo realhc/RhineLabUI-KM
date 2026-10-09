@@ -1,0 +1,943 @@
+{
+  "checks": {
+    "editorLoadsOnDemand": true,
+    "invisibleScan": {
+      "mutations": 0,
+      "skippedFrames": 258
+    },
+    "transientFrameRecovers": true,
+    "contextRestoredWithoutReload": true,
+    "unrestoredContextRebuildKeepsDraft": true,
+    "contextLossDuringReplacementLoadRetries": true,
+    "resizeAndToolbar": true,
+    "minimizeRestore": true,
+    "startupAndSkipRepeatedWithEarlyGpuLoss": true,
+    "darkTransparentControls": true
+  },
+  "errors": [],
+  "layouts": [
+    {
+      "width": 1000,
+      "height": 680,
+      "axis": 28.5,
+      "tickOffsets": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "controlsBottom": 205.95834350585938,
+      "panesTop": 222.6254119873047,
+      "scrollWidth": 1000,
+      "innerWidth": 1000,
+      "tools": [
+        {
+          "x": 290,
+          "y": 142.6666717529297,
+          "right": 366,
+          "bottom": 172.6666717529297
+        },
+        {
+          "x": 386.66668701171875,
+          "y": 142.6666717529297,
+          "right": 415.66668701171875,
+          "bottom": 172.6666717529297
+        },
+        {
+          "x": 417.66668701171875,
+          "y": 142.6666717529297,
+          "right": 446.66668701171875,
+          "bottom": 172.6666717529297
+        },
+        {
+          "x": 448.66668701171875,
+          "y": 142.6666717529297,
+          "right": 477.66668701171875,
+          "bottom": 172.6666717529297
+        },
+        {
+          "x": 479.66668701171875,
+          "y": 142.6666717529297,
+          "right": 508.66668701171875,
+          "bottom": 172.6666717529297
+        },
+        {
+          "x": 529.3333740234375,
+          "y": 142.6666717529297,
+          "right": 581.5312919616699,
+          "bottom": 172.6666717529297
+        },
+        {
+          "x": 583.53125,
+          "y": 142.6666717529297,
+          "right": 631.8854179382324,
+          "bottom": 172.6666717529297
+        },
+        {
+          "x": 633.8854370117188,
+          "y": 142.6666717529297,
+          "right": 671.8854370117188,
+          "bottom": 172.6666717529297
+        },
+        {
+          "x": 692.5521240234375,
+          "y": 142.6666717529297,
+          "right": 730.5521240234375,
+          "bottom": 172.6666717529297
+        },
+        {
+          "x": 732.5521240234375,
+          "y": 142.6666717529297,
+          "right": 781.5521240234375,
+          "bottom": 172.6666717529297
+        },
+        {
+          "x": 783.5521240234375,
+          "y": 142.6666717529297,
+          "right": 831.2812919616699,
+          "bottom": 172.6666717529297
+        },
+        {
+          "x": 833.28125,
+          "y": 142.6666717529297,
+          "right": 871.28125,
+          "bottom": 172.6666717529297
+        },
+        {
+          "x": 891.9479370117188,
+          "y": 142.6666717529297,
+          "right": 920.9479370117188,
+          "bottom": 172.6666717529297
+        },
+        {
+          "x": 922.9479370117188,
+          "y": 142.6666717529297,
+          "right": 951.9479370117188,
+          "bottom": 172.6666717529297
+        }
+      ]
+    },
+    {
+      "width": 1440,
+      "height": 900,
+      "axis": 28.5,
+      "tickOffsets": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "controlsBottom": 221.2916717529297,
+      "panesTop": 243.95834350585938,
+      "scrollWidth": 1440,
+      "innerWidth": 1440,
+      "tools": [
+        {
+          "x": 352,
+          "y": 158,
+          "right": 428,
+          "bottom": 188
+        },
+        {
+          "x": 448.66668701171875,
+          "y": 158,
+          "right": 477.66668701171875,
+          "bottom": 188
+        },
+        {
+          "x": 479.66668701171875,
+          "y": 158,
+          "right": 508.66668701171875,
+          "bottom": 188
+        },
+        {
+          "x": 510.66668701171875,
+          "y": 158,
+          "right": 539.6666870117188,
+          "bottom": 188
+        },
+        {
+          "x": 541.6666870117188,
+          "y": 158,
+          "right": 570.6666870117188,
+          "bottom": 188
+        },
+        {
+          "x": 591.3333740234375,
+          "y": 158,
+          "right": 643.5312919616699,
+          "bottom": 188
+        },
+        {
+          "x": 645.53125,
+          "y": 158,
+          "right": 693.8854179382324,
+          "bottom": 188
+        },
+        {
+          "x": 695.8854370117188,
+          "y": 158,
+          "right": 733.8854370117188,
+          "bottom": 188
+        },
+        {
+          "x": 754.5521240234375,
+          "y": 158,
+          "right": 792.5521240234375,
+          "bottom": 188
+        },
+        {
+          "x": 794.5521240234375,
+          "y": 158,
+          "right": 843.5521240234375,
+          "bottom": 188
+        },
+        {
+          "x": 845.5521240234375,
+          "y": 158,
+          "right": 893.2812919616699,
+          "bottom": 188
+        },
+        {
+          "x": 895.28125,
+          "y": 158,
+          "right": 933.28125,
+          "bottom": 188
+        },
+        {
+          "x": 953.9479370117188,
+          "y": 158,
+          "right": 982.9479370117188,
+          "bottom": 188
+        },
+        {
+          "x": 984.9479370117188,
+          "y": 158,
+          "right": 1013.9479370117188,
+          "bottom": 188
+        }
+      ]
+    },
+    {
+      "width": 1920,
+      "height": 1080,
+      "axis": 28.5,
+      "tickOffsets": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "controlsBottom": 221.2916717529297,
+      "panesTop": 243.97906494140625,
+      "scrollWidth": 1920,
+      "innerWidth": 1920,
+      "tools": [
+        {
+          "x": 352,
+          "y": 158,
+          "right": 428,
+          "bottom": 188
+        },
+        {
+          "x": 448.66668701171875,
+          "y": 158,
+          "right": 477.66668701171875,
+          "bottom": 188
+        },
+        {
+          "x": 479.66668701171875,
+          "y": 158,
+          "right": 508.66668701171875,
+          "bottom": 188
+        },
+        {
+          "x": 510.66668701171875,
+          "y": 158,
+          "right": 539.6666870117188,
+          "bottom": 188
+        },
+        {
+          "x": 541.6666870117188,
+          "y": 158,
+          "right": 570.6666870117188,
+          "bottom": 188
+        },
+        {
+          "x": 591.3333740234375,
+          "y": 158,
+          "right": 643.5312919616699,
+          "bottom": 188
+        },
+        {
+          "x": 645.53125,
+          "y": 158,
+          "right": 693.8854179382324,
+          "bottom": 188
+        },
+        {
+          "x": 695.8854370117188,
+          "y": 158,
+          "right": 733.8854370117188,
+          "bottom": 188
+        },
+        {
+          "x": 754.5521240234375,
+          "y": 158,
+          "right": 792.5521240234375,
+          "bottom": 188
+        },
+        {
+          "x": 794.5521240234375,
+          "y": 158,
+          "right": 843.5521240234375,
+          "bottom": 188
+        },
+        {
+          "x": 845.5521240234375,
+          "y": 158,
+          "right": 893.2812919616699,
+          "bottom": 188
+        },
+        {
+          "x": 895.28125,
+          "y": 158,
+          "right": 933.28125,
+          "bottom": 188
+        },
+        {
+          "x": 953.9479370117188,
+          "y": 158,
+          "right": 982.9479370117188,
+          "bottom": 188
+        },
+        {
+          "x": 984.9479370117188,
+          "y": 158,
+          "right": 1013.9479370117188,
+          "bottom": 188
+        }
+      ]
+    }
+  ],
+  "darkControls": {
+    "background": "rgba(0, 0, 0, 0)",
+    "border": "0px",
+    "shadow": "none",
+    "buttonShadows": [
+      "none",
+      "none",
+      "none",
+      "none",
+      "none",
+      "none",
+      "none",
+      "none",
+      "none",
+      "none",
+      "none",
+      "none",
+      "none",
+      "none",
+      "none",
+      "none",
+      "none",
+      "none",
+      "none",
+      "none",
+      "none",
+      "none"
+    ]
+  },
+  "before": {
+    "decryption": {
+      "time": -1,
+      "intervals": [],
+      "markers": 0,
+      "point": 0,
+      "label": 0,
+      "labelValue": 0,
+      "clarity": 0,
+      "phase": "waiting",
+      "modelClarity": 0
+    },
+    "topLeft": [
+      -543,
+      160
+    ],
+    "topRight": [
+      -189,
+      -1
+    ],
+    "labelTopLeft": [
+      -469,
+      194
+    ],
+    "labelBottomLeft": [
+      -468,
+      248
+    ],
+    "modelPosition": [
+      0,
+      -2.196,
+      -12.2014
+    ],
+    "cameraPosition": [
+      -106.1925,
+      44.0065,
+      64.5992
+    ],
+    "fieldOfView": 3.6935348587136376,
+    "loaded": true,
+    "drawCalls": 55,
+    "renderedFrames": 21,
+    "reusedFrames": 0,
+    "superPerformance": false,
+    "presentation": 1,
+    "triangles": 6053345,
+    "archiveCount": 350,
+    "archiveCandidates": 494,
+    "archiveCulled": 144,
+    "archiveCapacity": 576,
+    "archiveCoverage": "standard",
+    "returningFiles": 0,
+    "selectionPhase": "settled",
+    "pendingPulse": null,
+    "pulses": [],
+    "referenceTime": 34.47,
+    "selectedSlot": 76,
+    "selectedLane": 2,
+    "selectedCell": {
+      "lane": 2,
+      "row": 12
+    },
+    "hoverCell": null,
+    "hoverLifts": {},
+    "dragTrack": null,
+    "archiveMomentum": null,
+    "holdingArchive": false,
+    "dragProjection": {
+      "lane": {
+        "x": -292.9298168903351,
+        "y": 138.50113089274424
+      },
+      "row": {
+        "x": -49.15145569625544,
+        "y": -10.064952255233944
+      }
+    },
+    "dragMapping": null,
+    "coordinateOrigin": {
+      "lane": 0,
+      "row": 0
+    },
+    "poolBounds": {
+      "minLane": -4,
+      "maxLane": 9,
+      "minRow": -13,
+      "maxRow": 68
+    },
+    "laneFocus": 2,
+    "columnCamera": 0,
+    "rotation": 0,
+    "clearance": -3.506767043157496,
+    "canInspect": false,
+    "returnPhase": "lowering",
+    "extraction": 0.182,
+    "appearance": 0.417,
+    "cameraDetail": 0,
+    "idleGain": 0.22374949874847308,
+    "flatten": 0,
+    "spectrumActivity": 0,
+    "selectedIndexDim": 0,
+    "returningIndexDims": [],
+    "cameraDistance": 130.78011969522473,
+    "cameraNear": 5,
+    "cameraFar": 300,
+    "fogNear": 135.78011969522473,
+    "fogFar": 155.78011969522473,
+    "returningAppearance": [],
+    "rail": 0,
+    "threeState": "on",
+    "renderHealth": {
+      "graphicsLost": false,
+      "recoveringGraphics": false,
+      "graphicsRecoveries": 0,
+      "frameErrors": 0,
+      "inspectionSkippedFrames": 186
+    },
+    "fps": 80,
+    "mode": "archive",
+    "ready": true,
+    "startup": "started",
+    "motion": {
+      "reduced": false,
+      "preset": "full"
+    },
+    "bootTime": null,
+    "selected": "X-001",
+    "saved": [],
+    "audio": {
+      "state": "running",
+      "scene": "archive",
+      "tracks": 3,
+      "voices": 0,
+      "loaded": true,
+      "playedKeys": 0,
+      "error": "",
+      "preferences": {
+        "sound": true,
+        "music": true,
+        "soundVolume": 0.55,
+        "musicVolume": 0.5
+      }
+    }
+  },
+  "restored": {
+    "decryption": {
+      "time": -1,
+      "intervals": [],
+      "markers": 0,
+      "point": 0,
+      "label": 0,
+      "labelValue": 0,
+      "clarity": 0,
+      "phase": "waiting",
+      "modelClarity": 0
+    },
+    "topLeft": [
+      480,
+      307
+    ],
+    "topRight": [
+      837,
+      127
+    ],
+    "labelTopLeft": [
+      557,
+      345
+    ],
+    "labelBottomLeft": [
+      557,
+      404
+    ],
+    "modelPosition": [
+      0,
+      -2.004,
+      -2.1701
+    ],
+    "cameraPosition": [
+      -114.2633,
+      45.4693,
+      68.7836
+    ],
+    "fieldOfView": 3.228512203840774,
+    "loaded": true,
+    "drawCalls": 98,
+    "renderedFrames": 454,
+    "reusedFrames": 0,
+    "superPerformance": false,
+    "presentation": 1,
+    "triangles": 5935631,
+    "archiveCount": 330,
+    "archiveCandidates": 470,
+    "archiveCulled": 140,
+    "archiveCapacity": 576,
+    "archiveCoverage": "standard",
+    "returningFiles": 0,
+    "selectionPhase": "settled",
+    "pendingPulse": null,
+    "pulses": [],
+    "referenceTime": 38.59,
+    "selectedSlot": 76,
+    "selectedLane": 2,
+    "selectedCell": {
+      "lane": 2,
+      "row": 12
+    },
+    "hoverCell": null,
+    "hoverLifts": {},
+    "dragTrack": null,
+    "archiveMomentum": null,
+    "holdingArchive": false,
+    "dragProjection": {
+      "lane": {
+        "x": -295.20439448054645,
+        "y": 154.23521357830347
+      },
+      "row": {
+        "x": -56.83773686865204,
+        "y": -11.095622425027933
+      }
+    },
+    "dragMapping": null,
+    "coordinateOrigin": {
+      "lane": 0,
+      "row": 0
+    },
+    "poolBounds": {
+      "minLane": -4,
+      "maxLane": 9,
+      "minRow": -28,
+      "maxRow": 53
+    },
+    "laneFocus": 2,
+    "columnCamera": 0,
+    "rotation": 0,
+    "clearance": -3.2958328503375847,
+    "canInspect": false,
+    "returnPhase": "lowering",
+    "extraction": 0.4,
+    "appearance": 1,
+    "cameraDetail": 0.001,
+    "idleGain": 0.4438611098131676,
+    "flatten": 0,
+    "spectrumActivity": 0,
+    "selectedIndexDim": 0,
+    "returningIndexDims": [],
+    "cameraDistance": 139.80878552014858,
+    "cameraNear": 5,
+    "cameraFar": 300,
+    "fogNear": 144.80124714157103,
+    "fogFar": 164.7924523665639,
+    "returningAppearance": [],
+    "rail": 0,
+    "threeState": "on",
+    "renderHealth": {
+      "graphicsLost": false,
+      "recoveringGraphics": false,
+      "graphicsRecoveries": 0,
+      "frameErrors": 1,
+      "inspectionSkippedFrames": 619
+    },
+    "fps": 34,
+    "mode": "archive",
+    "ready": true,
+    "startup": "started",
+    "motion": {
+      "reduced": false,
+      "preset": "full"
+    },
+    "bootTime": null,
+    "selected": "X-001",
+    "saved": [],
+    "audio": {
+      "state": "running",
+      "scene": "archive",
+      "tracks": 3,
+      "voices": 0,
+      "loaded": true,
+      "playedKeys": 0,
+      "error": "",
+      "preferences": {
+        "sound": true,
+        "music": true,
+        "soundVolume": 0.55,
+        "musicVolume": 0.5
+      }
+    }
+  },
+  "rebuilt": {
+    "decryption": {
+      "time": -1,
+      "intervals": [],
+      "markers": 0,
+      "point": 0,
+      "label": 0,
+      "labelValue": 0,
+      "clarity": 0,
+      "phase": "waiting",
+      "modelClarity": 0
+    },
+    "topLeft": [
+      464,
+      312
+    ],
+    "topRight": [
+      820,
+      132
+    ],
+    "labelTopLeft": [
+      541,
+      350
+    ],
+    "labelBottomLeft": [
+      541,
+      409
+    ],
+    "modelPosition": [
+      -0.1738,
+      -2.0009,
+      -2.2063
+    ],
+    "cameraPosition": [
+      -114.5561,
+      45.5345,
+      68.6578
+    ],
+    "fieldOfView": 3.2258902023720513,
+    "loaded": true,
+    "drawCalls": 166,
+    "renderedFrames": 263,
+    "reusedFrames": 0,
+    "superPerformance": false,
+    "presentation": 1,
+    "triangles": 6282197,
+    "archiveCount": 331,
+    "archiveCandidates": 470,
+    "archiveCulled": 139,
+    "archiveCapacity": 576,
+    "archiveCoverage": "standard",
+    "returningFiles": 1,
+    "selectionPhase": "wave",
+    "pendingPulse": null,
+    "pulses": [
+      {
+        "lane": 2,
+        "row": 12,
+        "time": 18.4509
+      },
+      {
+        "lane": 0,
+        "row": 12,
+        "time": 19.084400000000002
+      }
+    ],
+    "referenceTime": 36.47,
+    "selectedSlot": 12,
+    "selectedLane": 0,
+    "selectedCell": {
+      "lane": 0,
+      "row": 12
+    },
+    "hoverCell": null,
+    "hoverLifts": {},
+    "dragTrack": null,
+    "archiveMomentum": null,
+    "holdingArchive": false,
+    "dragProjection": {
+      "lane": {
+        "x": -294.7644020104773,
+        "y": 154.59931306770338
+      },
+      "row": {
+        "x": -56.89629411407468,
+        "y": -11.073243796056879
+      }
+    },
+    "dragMapping": null,
+    "coordinateOrigin": {
+      "lane": 0,
+      "row": 0
+    },
+    "poolBounds": {
+      "minLane": -6,
+      "maxLane": 7,
+      "minRow": -28,
+      "maxRow": 52
+    },
+    "laneFocus": 0.021904135941239345,
+    "columnCamera": -10.22616655141511,
+    "rotation": 0,
+    "clearance": -3.2899817974727754,
+    "canInspect": false,
+    "returnPhase": "lowering",
+    "extraction": 0.397,
+    "appearance": 1,
+    "cameraDetail": 0,
+    "idleGain": 0.00008030438263430127,
+    "flatten": 0,
+    "spectrumActivity": 0,
+    "selectedIndexDim": 0,
+    "returningIndexDims": [
+      {
+        "cell": {
+          "lane": 2,
+          "row": 12
+        },
+        "dim": 0
+      }
+    ],
+    "cameraDistance": 139.9995974143848,
+    "cameraNear": 5,
+    "cameraFar": 300,
+    "fogNear": 144.9995974143848,
+    "fogFar": 164.9995974143848,
+    "returningAppearance": [
+      {
+        "slot": 76,
+        "clarity": 0,
+        "cell": {
+          "lane": 2,
+          "row": 12
+        },
+        "lift": 0.0019972835813890032,
+        "quality": 0.0000012356080819093782,
+        "rotation": 0,
+        "worldY": -4.043036828652804,
+        "phase": "lowering"
+      }
+    ],
+    "rail": 0,
+    "threeState": "on",
+    "renderHealth": {
+      "graphicsLost": false,
+      "recoveringGraphics": false,
+      "graphicsRecoveries": 1,
+      "frameErrors": 1,
+      "inspectionSkippedFrames": 1871
+    },
+    "fps": 131,
+    "mode": "archive",
+    "ready": true,
+    "startup": "started",
+    "motion": {
+      "reduced": false,
+      "preset": "full"
+    },
+    "bootTime": null,
+    "selected": "X-002",
+    "saved": [],
+    "audio": {
+      "state": "running",
+      "scene": "archive",
+      "tracks": 3,
+      "voices": 0,
+      "loaded": true,
+      "playedKeys": 0,
+      "error": "",
+      "preferences": {
+        "sound": true,
+        "music": true,
+        "soundVolume": 0.55,
+        "musicVolume": 0.5
+      }
+    }
+  }
+}

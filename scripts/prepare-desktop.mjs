@@ -1,10 +1,15 @@
 import { readFile, writeFile, mkdir, copyFile } from "node:fs/promises";
+import ts from "typescript";
 import {
   cleanDesktopResources,
   inspectDesktopResources,
 } from "./desktop-resources.mjs";
 // A PNG-compressed ICO is supported by Windows Vista and newer.
 await mkdir("desktop", { recursive: true });
+// One source of truth for browser and AI keyword search; generated JS has no runtime TS dependency.
+await writeFile("desktop/search.mjs",ts.transpileModule(await readFile("src/desktop-search.ts","utf8"),{
+  compilerOptions:{target:ts.ScriptTarget.ES2022,module:ts.ModuleKind.ES2022},
+}).outputText);
 const png = await readFile("public/icons/icon-192.png");
 const header = Buffer.alloc(22);
 header.writeUInt16LE(1, 2);
