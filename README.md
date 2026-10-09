@@ -10,11 +10,11 @@ Rhine Lab 是一个 Windows 便携客户端。实时渲染的档案阵列、玻�
 
 文档保存在程序旁的文件夹中。无需账户、API Key、开发服务器或另外安装 Node.js，解压即可离线使用。
 
-源码与本地 **1.3.0** 构建新增搜索增强、可选 AI 助手和定时文档；公开下载附件以 Releases 已发布版本为准。AI 能力需要自行配置兼容的模型接口，未接入时全部原有功能与关键词搜索照常使用。
+**1.3.0** 新增搜索增强、可选 AI 助手和定时文档，便携客户端见 [v1.3.0 Release](https://github.com/realhc/RhineLabUI-KM/releases/tag/v1.3.0)。AI 能力需要自行配置兼容的模型接口，未接入时全部原有功能与关键词搜索照常使用。
 
 ## 快速开始
 
-1. 从 [Releases](https://github.com/realhc/RhineLabUI-KM/releases/latest) 下载 **RhineLab-win32-x64-1.2.0.zip**，完整解压到有写入权限的文件夹。
+1. 从 [Releases](https://github.com/realhc/RhineLabUI-KM/releases/latest) 下载 **RhineLab-win32-x64-1.3.0.zip**，完整解压到有写入权限的文件夹。
 2. 运行其中的 **RhineLab.exe**。保留同目录的 `resources` 等运行文件，不能只复制 EXE。
 3. 等待资源就绪，点击进入；可以点击 `ENTER SYSTEM` 跳过开场。
 4. 点击 `ARCHIVE INDEX` 打开知识库，或从档案详情进入对应文档。
