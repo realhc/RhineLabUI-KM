@@ -4,6 +4,7 @@ import { mountLibraryMotion } from "./desktop-library-motion";
 import { mountRichEditor, richToolbar } from "./desktop-rich-editor";
 import { createSearchIndex, highlightText, findTextRanges } from "./desktop-search";
 import { createDocumentResolver } from "./desktop-graph-data";
+import { mountDocumentDrafting } from "./desktop-drafting";
 
 const api = window.rhine;
 const overlay = document.createElement("dialog");
@@ -102,6 +103,7 @@ const rich = mountRichEditor($("preview"),$("format"), () => setDirty(true), req
   busyChanged: busy => api?.setDirty(dirty || busy),
   documents: () => documents,
 });
+mountDocumentDrafting($("preview"));
 
 function notify(message: string) {
   $("notice").textContent = message;

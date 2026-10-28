@@ -27,6 +27,7 @@ npm.cmd run package:desktop
 npm.cmd run check:desktop:package
 npm.cmd run check:desktop:editor
 npm.cmd run check:desktop:graph-ui
+npm.cmd run check:desktop:drafting-ui
 ```
 
 图片检查使用 `check:desktop:model-images-ui` 和 `check:desktop:document-images-ui`；AI 界面使用 `check:desktop:ai-ui`。启动和界面生命周期使用 `check:desktop:recovery`、`check:desktop:motion`，分类及文件工作流使用 `check:desktop:category-ui`、`check:desktop:workflow`。

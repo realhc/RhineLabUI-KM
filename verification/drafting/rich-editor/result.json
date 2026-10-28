@@ -1,0 +1,22 @@
+{
+  "renderedOnly": true,
+  "transparentControls": true,
+  "editShortcut": true,
+  "saveKeepsEditing": true,
+  "originalBytesPreserved": true,
+  "headingLevels": true,
+  "selectedMarks": true,
+  "link": true,
+  "codeBlock": true,
+  "tableEditing": true,
+  "latexRoundtrip": true,
+  "attachmentPreserved": true,
+  "undoIsolation": true,
+  "unsavedGuard": true,
+  "wholeRowDrag": true,
+  "trashRestore": true,
+  "restart": true,
+  "offline": true,
+  "errors": [],
+  "failed": []
+}

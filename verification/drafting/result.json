@@ -1,0 +1,45 @@
+{
+  "checks": {
+    "lightGeometry": {
+      "dx": 0,
+      "dy": 0,
+      "outsideEditor": true,
+      "pointerEvents": "none",
+      "width": 1053,
+      "scrollWidth": 1053,
+      "labelsHidden": false
+    },
+    "untouchedMarkdownPreserved": true,
+    "undoIgnoresDecoration": true,
+    "rebuiltEditorGeometry": {
+      "dx": 0,
+      "dy": 0,
+      "outsideEditor": true,
+      "pointerEvents": "none",
+      "width": 1053,
+      "scrollWidth": 1053,
+      "labelsHidden": false
+    },
+    "noIdleRedraw": true,
+    "gridDoesNotBlockNodes": true,
+    "darkGeometry": {
+      "dx": 0,
+      "dy": 0,
+      "outsideEditor": true,
+      "pointerEvents": "none",
+      "width": 1053,
+      "scrollWidth": 1053,
+      "labelsHidden": false
+    },
+    "narrowGeometry": {
+      "dx": 0,
+      "dy": 0,
+      "outsideEditor": true,
+      "pointerEvents": "none",
+      "width": 679,
+      "scrollWidth": 679,
+      "labelsHidden": true
+    }
+  },
+  "errors": []
+}

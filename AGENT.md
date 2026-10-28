@@ -28,6 +28,7 @@ Node.js 至少 22.12，Windows PowerShell 使用 npm.cmd，其他平台可用 np
 - src/desktop-rich-editor.ts：排版编辑、选区、Markdown 序列化与文档独立撤销栈。
 - src/model-images.ts：三维模型图片；src/document-images.ts、src/editor-document-images.ts：正文图片读取、拖放、粘贴与异步位置跟踪。
 - src/desktop-graph-data.ts：从活动文档的内链派生关系；src/desktop-graph.ts、src/desktop-graph.css：图谱界面和导航。
+- src/desktop-drafting.ts、src/desktop-drafting.css：编辑器外的正文工程网格和标题尺寸定位，不进入 Markdown 或撤销记录。
 - src/desktop-library-motion.ts、src/desktop-directory.ts：界面生命周期与原生 scrollTop 惯性。
 - scripts/prepare-desktop.mjs、scripts/desktop-resources.mjs、forge.config.cjs：离线资源、许可及打包白名单。
 - src/desktop-search.ts：无 I/O 的中文/英文关键词索引、相关性、上下文与安全高亮；构建时生成 desktop/search.mjs，供主进程工具复用。

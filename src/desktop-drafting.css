@@ -1,0 +1,51 @@
+/* Radix Sand alpha steps: quiet construction lines, with step 11 for dimensions. */
+#library-overlay {
+  --draft-grid-minor: color-mix(in srgb, #1f150019 45%, transparent);
+  --draft-grid-major: color-mix(in srgb, #19130029 55%, transparent);
+  --draft-guide: #1915014a;
+  --draft-label: #63635e;
+}
+[data-dark-surface="true"] #library-overlay {
+  --draft-grid-minor: color-mix(in srgb, #fefef31b 35%, transparent);
+  --draft-grid-major: color-mix(in srgb, #fffaed2d 50%, transparent);
+  --draft-guide: #fffbed3c;
+  --draft-label: #b5b3ad;
+}
+#library-overlay #preview { position:relative; isolation:isolate; }
+#library-overlay #panes { container-type:inline-size; container-name:document-sheet; }
+#library-overlay #document-drafting {
+  position:absolute;
+  top:0;
+  left:0;
+  z-index:-1;
+  overflow:hidden;
+  pointer-events:none;
+  user-select:none;
+}
+#library-overlay #document-drafting :is(path,line,rect) {
+  fill:none;
+  stroke-width:1;
+  vector-effect:non-scaling-stroke;
+}
+#library-overlay #document-grid-minor path { stroke:var(--draft-grid-minor); }
+#library-overlay #document-grid-major path { stroke:var(--draft-grid-major); }
+#library-overlay #document-drafting .draft-paper-minor { fill:url(#document-grid-minor); stroke:none; }
+#library-overlay #document-drafting .draft-paper-major { fill:url(#document-grid-major); stroke:none; }
+#library-overlay #document-drafting .draft-rail,
+#library-overlay #document-drafting .draft-heading-box { stroke:var(--draft-grid-major); }
+#library-overlay #document-drafting .draft-heading-corner,
+#library-overlay #document-drafting .draft-dimension { stroke:var(--draft-guide); }
+#library-overlay #document-drafting .draft-size {
+  font:12px Consolas,"Microsoft YaHei",monospace;
+  fill:var(--draft-label);
+  stroke:var(--content);
+  stroke-width:4px;
+  paint-order:stroke;
+}
+#library-overlay .rich-document :is(pre,table,[data-type=block-math]) { background-color:var(--content); }
+@container document-sheet (max-width:720px) {
+  #library-overlay #document-drafting :is(.draft-size,.draft-dimension) { display:none; }
+}
+@media print {
+  #library-overlay #document-drafting { display:none; }
+}

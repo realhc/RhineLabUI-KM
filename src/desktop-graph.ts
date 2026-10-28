@@ -21,13 +21,17 @@ export function mountGraphWorkspace(overlay: HTMLDialogElement, hooks: Hooks) {
   panel.setAttribute("aria-labelledby", "graph-title");
   panel.innerHTML = `<header class="graph-header"><div><div class="graph-kicker">ARCHIVE DIRECTORY</div><h2 id="graph-title">关系图谱</h2></div><button id="graph-close" type="button" aria-label="关闭关系图谱">CLOSE ×</button></header>
     <div class="graph-tools"><input id="graph-search" type="search" placeholder="搜索文档" aria-label="搜索图谱中的文档" autocomplete="off"><label class="graph-orphans-label"><input id="graph-orphans" type="checkbox" checked>显示孤点</label><button id="graph-fit" type="button" title="调整视野以显示全部节点">适应画面</button><span id="graph-count" role="status" aria-live="polite"></span></div>
-    <div class="graph-stage"><svg id="graph-canvas" role="group" aria-label="文档关系图谱"><g class="graph-transform"><g class="graph-edges"></g><g class="graph-nodes"></g></g></svg><div id="graph-empty" class="graph-empty" hidden></div></div>`;
+    <div class="graph-stage"><svg id="graph-canvas" role="group" aria-label="文档关系图谱"><defs><pattern id="graph-grid-minor" patternUnits="userSpaceOnUse" width="32" height="32"><path d="M32 .5H.5V32"/></pattern><pattern id="graph-grid-major" patternUnits="userSpaceOnUse" width="160" height="160"><path d="M160 .5H.5V160"/></pattern></defs><g class="graph-grid" aria-hidden="true"><rect class="graph-grid-minor" width="100%" height="100%" fill="url(#graph-grid-minor)"/><rect class="graph-grid-major" width="100%" height="100%" fill="url(#graph-grid-major)"/></g><g class="graph-transform"><g class="graph-edges"></g><g class="graph-nodes"></g></g></svg><div id="graph-empty" class="graph-empty" hidden></div></div>`;
   overlay.append(panel);
   const $ = <T extends Element>(id: string) => panel.querySelector<T>(`#${id}`)!;
   const search = $<HTMLInputElement>("graph-search");
   const orphans = $<HTMLInputElement>("graph-orphans");
   const canvas = $<SVGSVGElement>("graph-canvas");
   const transform = panel.querySelector<SVGGElement>(".graph-transform")!;
+  const grid = [
+    { pattern: $<SVGPatternElement>("graph-grid-minor"), surface: panel.querySelector<SVGRectElement>(".graph-grid-minor")!, unit: 32 },
+    { pattern: $<SVGPatternElement>("graph-grid-major"), surface: panel.querySelector<SVGRectElement>(".graph-grid-major")!, unit: 160 },
+  ];
   const edgeLayer = panel.querySelector<SVGGElement>(".graph-edges")!;
   const nodeLayer = panel.querySelector<SVGGElement>(".graph-nodes")!;
   const empty = $<HTMLElement>("graph-empty");
@@ -37,12 +41,27 @@ export function mountGraphWorkspace(overlay: HTMLDialogElement, hooks: Hooks) {
   let edgesByNode = new Map<string, Link[]>();
   let sourceNodes: GraphNode[] = [], sourceEdges: GraphEdge[] = [];
   let scale = 1, tx = 0, ty = 0;
+  let gridScale = Number.NaN;
   let hovered = "", suppressClick = false, selecting = false;
   let opener: HTMLElement | null = null;
   let drag: { id: number; node?: Point; startX: number; startY: number; lastX: number; lastY: number; moved: boolean; capture: Element } | undefined;
 
   function applyTransform() {
     transform.setAttribute("transform", `translate(${tx} ${ty}) scale(${scale})`);
+    // Paint only two SVG tiles, with fixed one-pixel strokes at every zoom level.
+    // The phase follows world origin without a large off-screen grid geometry.
+    for (const { pattern, surface, unit } of grid) {
+      const spacing = unit * scale;
+      pattern.setAttribute("x", String(((tx % spacing) + spacing) % spacing));
+      pattern.setAttribute("y", String(((ty % spacing) + spacing) % spacing));
+      if (gridScale !== scale) {
+        pattern.setAttribute("width", String(spacing));
+        pattern.setAttribute("height", String(spacing));
+        pattern.firstElementChild!.setAttribute("d", `M${spacing} .5H.5V${spacing}`);
+        surface.style.opacity = String(clamp((spacing - 14) / (unit === 32 ? 14 : 22), 0, 1));
+      }
+    }
+    gridScale = scale;
   }
   function updateLink(link: Link) {
     link.element.setAttribute("x1", String(link.source.x));

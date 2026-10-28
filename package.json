@@ -42,7 +42,8 @@
     "check:desktop:document-images": "node tests/check-desktop-document-images.mjs",
     "check:desktop:document-images-ui": "node tests/check-desktop-document-images-ui.mjs",
     "check:desktop:graph-data": "node --experimental-strip-types --test tests/check-desktop-graph-data.mjs",
-    "check:desktop:graph-ui": "node tests/check-desktop-graph-ui.mjs"
+    "check:desktop:graph-ui": "node tests/check-desktop-graph-ui.mjs",
+    "check:desktop:drafting-ui": "node tests/check-desktop-drafting-ui.mjs"
   },
   "dependencies": {
     "@kitlangton/rolling-number": "0.4.1",
