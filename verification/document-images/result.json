@@ -1,0 +1,31 @@
+{
+  "checks": {
+    "dropCoordinatesAndAutoEdit": {
+      "defaultPrevented": true,
+      "pendingAtDrop": true,
+      "coordinates": {
+        "clientX": 458.6208435058594,
+        "clientY": 287.62501525878906
+      }
+    },
+    "undoRedoAndRelativeMarkdown": true,
+    "inlinePixels": {
+      "red": 168619,
+      "blue": 0,
+      "green": 0
+    },
+    "clipboardAtCaret": true,
+    "pickerJpegMultiImageAndCancel": true,
+    "mappingDuringInputAndSaveWait": true,
+    "invalidDoesNotPollute": true,
+    "documentIsolationAndReload": true,
+    "unsafeReferencesDoNotFetch": true,
+    "recycleAndRestore": true,
+    "restartPersistence": true,
+    "detailReaderImages": true
+  },
+  "errors": [],
+  "requests": [],
+  "portable": "C:\\Users\\Administrator\\Documents\\ChatGPT\\CodexSandbox\\rhine-model-images\\release\\document-images-test\\portable",
+  "retainedRun": "C:\\Users\\Administrator\\Documents\\ChatGPT\\CodexSandbox\\rhine-model-images\\release\\document-images-test"
+}

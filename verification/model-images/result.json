@@ -1,0 +1,30 @@
+{
+  "checks": {
+    "importAndResize": true,
+    "cancelKeepsImage": true,
+    "invalidKeepsImage": true,
+    "unsavedGuard": true,
+    "repeatedArrayInstances": 6,
+    "arrayPixels": {
+      "red": 6180,
+      "blue": 0
+    },
+    "detailPixels": {
+      "red": 117636,
+      "blue": 0
+    },
+    "viewer": {
+      "red": 506,
+      "blue": 1758
+    },
+    "replaceAndSwitch": {
+      "red": 0,
+      "blue": 158374
+    },
+    "restartPersistence": true,
+    "trashRestoreAndRemove": true
+  },
+  "errors": [],
+  "requests": [],
+  "portable": "C:\\Users\\Administrator\\Documents\\ChatGPT\\CodexSandbox\\rhine-model-images\\release\\model-images-test\\1792924546241\\portable"
+}

@@ -9,4 +9,4 @@
 - `package-audit.json`：76 个 ZIP 文件逐项匹配便携目录、EXE 版本、运行资源与 ZIP SHA-256。
 - `delivery.json`：本地程序与 ZIP 相对路径、版本、校验和及真实数据保留结果。该记录形成于功能交付时，早于 Release 发布；公开附件见 [v1.3.0 Release](https://github.com/realhc/RhineLabUI-KM/releases/tag/v1.3.0)。
 
-行为测试位于 `scripts/check-desktop-search.mjs`、`check-desktop-ai.mjs`、`check-desktop-ai-automation.mjs` 和 `check-desktop-ai-ui.mjs`。源码维护规则见 `AGENT.md`，接入说明见 `docs/AI-API.md`。
+行为测试位于 `tests/check-desktop-search.mjs`、`check-desktop-ai.mjs`、`check-desktop-ai-automation.mjs` 和 `check-desktop-ai-ui.mjs`。源码维护规则见 `AGENT.md`，接入说明见 `docs/AI-API.md`。

@@ -1,0 +1,46 @@
+{
+  "approved": true,
+  "targets": [
+    {
+      "path": "C:\\Users\\Administrator\\Documents\\ChatGPT\\CodexSandbox\\rhine-model-images\\release\\desktop",
+      "files": 845,
+      "bytes": 37553321.0
+    },
+    {
+      "path": "C:\\Users\\Administrator\\Documents\\ChatGPT\\CodexSandbox\\rhine-model-images\\release\\packages",
+      "files": 78,
+      "bytes": 611966464.0
+    },
+    {
+      "path": "C:\\Users\\Administrator\\Documents\\ChatGPT\\CodexSandbox\\rhine-model-images\\release\\document-images-test",
+      "files": 403,
+      "bytes": 862152443.0
+    },
+    {
+      "path": "C:\\Users\\Administrator\\Documents\\ChatGPT\\CodexSandbox\\rhine-model-images\\verification\\document-images-backend",
+      "files": 34,
+      "bytes": 590013.0
+    }
+  ],
+  "freedBytes": 1512683088.0,
+  "freedMiB": 1442.61,
+  "retained": "Source, dependencies, evidence and E-drive deliverables; no real data touched",
+  "additionalSingleFiles": [
+    {
+      "bytes": 13344,
+      "path": "scripts/check-document-images-rich-regression.tmp.mjs"
+    },
+    {
+      "bytes": 2473,
+      "path": "scripts/verify-document-image-delivery.tmp.mjs"
+    },
+    {
+      "bytes": 1360,
+      "path": "verification/document-images/failure.json"
+    },
+    {
+      "bytes": 403670,
+      "path": "verification/document-images/failure.png"
+    }
+  ]
+}

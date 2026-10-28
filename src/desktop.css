@@ -351,7 +351,7 @@
 #library-overlay #format select { background:transparent; border:0; box-shadow:none; padding:6px 4px; font-size:12px; max-width:130px; min-height:30px; }
 #library-overlay .editor-inputs { display:grid; gap:12px; margin-top:16px; }
 #library-overlay .editor-inputs label { display:grid; gap:6px; font-size:12px; }
-#library-overlay .editor-inputs input, #library-overlay .editor-inputs textarea { width:100%; padding:9px; border:1px solid var(--glass-stroke); border-radius:8px; background:var(--theme-field); }
+#library-overlay .editor-inputs input, #library-overlay .editor-inputs textarea, #library-overlay .editor-inputs select { width:100%; padding:9px; border:1px solid var(--glass-stroke); border-radius:8px; background:var(--theme-field); }
 #library-overlay .document[draggable=true] { cursor:grab; }
 #library-overlay .document[draggable=true]:active { cursor:grabbing; }
 [data-dark-surface=true] #library-overlay .library-controls { background:transparent; box-shadow:none; }

@@ -1,0 +1,87 @@
+{
+  "date": "2026-10-28",
+  "historical": [
+    {
+      "sourceVersion": "1.2.0",
+      "version": "1.0.0",
+      "sourceZip": "RhineLab-win32-x64-1.2.0.zip",
+      "sourceSHA256": "46746fe72b29d59fb4ad1facb51c01044ddc987b273a1f3b2e92302870c1120f",
+      "zip": "RhineLab-win32-x64-1.0.0.zip",
+      "sha256": "a2def14e556dc4c8987a654a5061c7c9d06f9caaff1710ce48a0f41ce09cbd23",
+      "runtimeFiles": 76,
+      "asarFiles": 849,
+      "onlyVersionAndIntegrityChanged": true,
+      "executableSectionsPreserved": true,
+      "unchangedRuntimeFiles": 74,
+      "personalDataIncluded": false,
+      "zipIntegrityPassed": true,
+      "asarSHA256": "ac1d560279e68eb847a6b40be2ebf4a4ae3e041cc9a80c153a9b0056f56f4387",
+      "exeSHA256": "dc9cb9e46161ec9ef9f325ce10dc69aed9d08d05e44aacb79ecbbdd4c4a651fc"
+    },
+    {
+      "sourceVersion": "1.3.0",
+      "version": "1.1.0",
+      "sourceZip": "RhineLab-win32-x64-1.3.0.zip",
+      "sourceSHA256": "f0f7125f9108949f57e85acb302aa1a044733be8103aca468df070777e53f875",
+      "zip": "RhineLab-win32-x64-1.1.0.zip",
+      "sha256": "556df8008d4d872cbe5b22079b35fcdd7c994d671b3d3867e0b780f218f43a5a",
+      "runtimeFiles": 76,
+      "asarFiles": 857,
+      "onlyVersionAndIntegrityChanged": true,
+      "executableSectionsPreserved": true,
+      "unchangedRuntimeFiles": 74,
+      "personalDataIncluded": false,
+      "zipIntegrityPassed": true,
+      "asarSHA256": "f933759d0f3fe9354d18c327b94a358cf81d3ca7c4a6e7afe11e791a629c5dd3",
+      "exeSHA256": "7938cb640424627733c853947c52a234c47e75cb7feeeaf19c2543b7b4d54069"
+    }
+  ],
+  "historicalStartup": [
+    {
+      "version": "1.0.0",
+      "windowReady": true,
+      "pageErrors": []
+    },
+    {
+      "version": "1.1.0",
+      "windowReady": true,
+      "pageErrors": []
+    }
+  ],
+  "preview": {
+    "version": "1.2.0-preview.1",
+    "releasePublished": false,
+    "sha256": "31ea6e46922f87221804f13cc2467950a9bc05a235f7a058336d154bd01d83c4",
+    "runtimeFiles": 76,
+    "siteFiles": 846,
+    "graphUI": {
+      "checks": {
+        "insertAndSaveInternalLink": true,
+        "nodesEdgesFiltersAndZoom": true,
+        "nodeAndBodyLinkNavigation": true,
+        "unsavedDraftGuard": true,
+        "escapeReturnsToLibrary": true,
+        "restartPersistence": true
+      },
+      "errors": [],
+      "requests": []
+    }
+  },
+  "sourceChecks": {
+    "typecheckAndBuild": true,
+    "syntaxChecks": 34,
+    "contentChecks": 17,
+    "graphDataChecks": 6,
+    "packageBoundary": true,
+    "categories": true,
+    "exhibit": true,
+    "categoryUI": true,
+    "fileWorkflow": true
+  },
+  "dataMigration": {
+    "activeLibraryFiles": 88,
+    "diagnosticBackupFiles": 42,
+    "allFileHashesPreserved": true,
+    "personalDataIncludedInZIP": false
+  }
+}

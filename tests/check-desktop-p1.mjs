@@ -12,7 +12,7 @@ for (const name of checks) {
   const result = await new Promise((resolve, reject) => {
     const child = spawn(
       process.execPath,
-      [...process.execArgv, "scripts/" + name],
+      [...process.execArgv, "tests/" + name],
       { stdio: ["ignore", "pipe", "pipe"] },
     );
     let output = "";

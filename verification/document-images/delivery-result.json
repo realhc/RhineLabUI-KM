@@ -1,0 +1,9 @@
+{
+  "sourceFiles": 16,
+  "programVerified": true,
+  "zipVerified": true,
+  "temporaryOutputsRemoved": true,
+  "cleanupGiB": 1.41,
+  "realDataUnchanged": true,
+  "verification": "See result.json, backend-result.json, package-result.json and rich-editor/result.json"
+}

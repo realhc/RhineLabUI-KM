@@ -33,7 +33,7 @@ async function enter(page) {
   await page.waitForTimeout(2400);
   await page.locator('[data-action="search"]').click();
   await poll(page,
-    () => document.querySelector("#library-overlay").open,
+    () => document.querySelector("#library-overlay")?.open,
   );
 }
 try {

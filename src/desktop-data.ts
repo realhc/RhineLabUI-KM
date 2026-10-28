@@ -1,6 +1,7 @@
 import content from "../content/archives.json" with { type: "json" };
 export interface ArchiveRecord {
   id: string;
+  modelImage?: string;
   title: string;
   en: string;
   department: string;
@@ -89,6 +90,7 @@ function recordFor(
           source: "",
         }),
     id: doc.id,
+    ...(doc.modelImage ? { modelImage: doc.modelImage } : {}),
     title: doc.title,
     category: doc.category || "未分类",
   };

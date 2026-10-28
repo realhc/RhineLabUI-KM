@@ -1,0 +1,2000 @@
+{
+  "passed": false,
+  "viewport": {
+    "width": 1440,
+    "height": 900
+  },
+  "scaleFactor": 1,
+  "fixedSSAONoise": true,
+  "run": "C:\\Users\\Administrator\\Documents\\ChatGPT\\CodexSandbox\\rhine-model-images\\release\\no-image-compare\\1792924805332",
+  "builds": [
+    {
+      "name": "original",
+      "source": "E:\\CodexSandbox\\Projects\\RhineLabUI-main\\release\\packages\\RhineLab-win32-x64",
+      "portable": "C:\\Users\\Administrator\\Documents\\ChatGPT\\CodexSandbox\\rhine-model-images\\release\\no-image-compare\\1792924805332\\original",
+      "profile": "C:\\Users\\Administrator\\Documents\\ChatGPT\\CodexSandbox\\rhine-model-images\\release\\no-image-compare\\1792924805332\\original-profile",
+      "themes": {
+        "light": {
+          "environment": {
+            "width": 1440,
+            "height": 900,
+            "devicePixelRatio": 1,
+            "darkSurface": "false",
+            "preferences": {
+              "sound": false,
+              "music": false,
+              "soundVolume": 0.55,
+              "musicVolume": 0.5,
+              "motion": {
+                "boot": false,
+                "selectionWave": false,
+                "idleWave": false,
+                "pointerParallax": false,
+                "dragMomentum": false,
+                "selectionTransition": false,
+                "detailTransition": false,
+                "modelDecryption": false,
+                "documentReveal": false,
+                "rollingText": false,
+                "rollingNumbers": false,
+                "surfaceTransitions": false,
+                "viewerNavigation": false,
+                "viewerModelTransition": false
+              },
+              "motionPreset": "reduced",
+              "quality": true,
+              "superPerformance": false,
+              "rendering": {
+                "scale": 100,
+                "pixelRatio": 1.5,
+                "antialias": "off",
+                "shadows": 2048,
+                "aoSamples": 32,
+                "aoResolution": 1,
+                "depthOfField": 100,
+                "transmission": 1,
+                "anisotropy": 16
+              },
+              "colorTheme": "light"
+            },
+            "canvas": {
+              "width": 1440,
+              "height": 900,
+              "x": 0,
+              "y": 0,
+              "cssWidth": 1440,
+              "cssHeight": 900
+            }
+          },
+          "documentIds": [
+            "X-001",
+            "X-002",
+            "X-003",
+            "X-004",
+            "X-005",
+            "X-006",
+            "X-007",
+            "X-008",
+            "X-009",
+            "X-010",
+            "X-011",
+            "X-012",
+            "X-013",
+            "X-014",
+            "X-015",
+            "X-016",
+            "X-017",
+            "X-018",
+            "X-019",
+            "X-020",
+            "X-021",
+            "X-022",
+            "X-023",
+            "X-024",
+            "X-025",
+            "X-026",
+            "X-027",
+            "X-028",
+            "X-029",
+            "X-030",
+            "X-031",
+            "X-032",
+            "X-033",
+            "X-034",
+            "X-035",
+            "X-036",
+            "X-037",
+            "X-038",
+            "X-039",
+            "X-040"
+          ],
+          "imagePath": "C:\\Users\\Administrator\\Documents\\ChatGPT\\CodexSandbox\\rhine-model-images\\verification\\model-images\\no-image-original-light.png",
+          "capturePixels": {
+            "width": 1440,
+            "height": 900,
+            "opaquePixels": 1296000,
+            "pixels": 1296000,
+            "minRGB": 6,
+            "maxRGB": 245
+          },
+          "scene": {
+            "mode": "archive",
+            "selected": "X-001",
+            "selectedCell": {
+              "lane": 2,
+              "row": 12
+            },
+            "selectedSlot": 76,
+            "selectedLane": 2,
+            "modelPosition": [
+              0,
+              -1.9963,
+              -2.17
+            ],
+            "cameraPosition": [
+              -114.5565,
+              45.5345,
+              68.6579
+            ],
+            "fieldOfView": 3.3322196837484346,
+            "cameraDetail": 0,
+            "cameraDistance": 140,
+            "cameraNear": 5,
+            "cameraFar": 300,
+            "fogNear": 145,
+            "fogFar": 165,
+            "extraction": 0.4,
+            "appearance": 1,
+            "rotation": 0,
+            "rail": 0,
+            "laneFocus": 2,
+            "columnCamera": 0,
+            "topLeft": [
+              465,
+              313
+            ],
+            "topRight": [
+              809,
+              139
+            ],
+            "labelTopLeft": [
+              540,
+              350
+            ],
+            "labelBottomLeft": [
+              540,
+              408
+            ],
+            "presentation": 1,
+            "returningFiles": 0,
+            "idleGain": 0,
+            "flatten": 0,
+            "archiveCount": 337,
+            "archiveCandidates": 473,
+            "archiveCoverage": "standard",
+            "superPerformance": false,
+            "decryption": {
+              "time": -1,
+              "intervals": [],
+              "markers": 0,
+              "point": 0,
+              "label": 0,
+              "labelValue": 0,
+              "clarity": 0,
+              "phase": "waiting",
+              "modelClarity": 0
+            },
+            "motion": {
+              "reduced": true,
+              "preset": "reduced"
+            }
+          },
+          "statsBefore": {
+            "decryption": {
+              "time": -1,
+              "intervals": [],
+              "markers": 0,
+              "point": 0,
+              "label": 0,
+              "labelValue": 0,
+              "clarity": 0,
+              "phase": "waiting",
+              "modelClarity": 0
+            },
+            "topLeft": [
+              465,
+              313
+            ],
+            "topRight": [
+              809,
+              139
+            ],
+            "labelTopLeft": [
+              540,
+              350
+            ],
+            "labelBottomLeft": [
+              540,
+              408
+            ],
+            "modelPosition": [
+              0,
+              -1.9963,
+              -2.17
+            ],
+            "cameraPosition": [
+              -114.5565,
+              45.5345,
+              68.6579
+            ],
+            "fieldOfView": 3.3322196837484346,
+            "loaded": true,
+            "drawCalls": 0,
+            "renderedFrames": 174,
+            "reusedFrames": 620,
+            "superPerformance": false,
+            "presentation": 1,
+            "triangles": 0,
+            "archiveCount": 337,
+            "archiveCandidates": 473,
+            "archiveCulled": 136,
+            "archiveCapacity": 576,
+            "archiveCoverage": "standard",
+            "returningFiles": 0,
+            "selectionPhase": "settled",
+            "pendingPulse": null,
+            "pulses": [],
+            "referenceTime": 37.8,
+            "selectedSlot": 76,
+            "selectedLane": 2,
+            "selectedCell": {
+              "lane": 2,
+              "row": 12
+            },
+            "hoverCell": {
+              "lane": 4,
+              "row": -8
+            },
+            "hoverLifts": {
+              "4:-8": 0.28
+            },
+            "dragTrack": null,
+            "archiveMomentum": null,
+            "holdingArchive": false,
+            "dragProjection": {
+              "lane": {
+                "x": -296.9378876602735,
+                "y": 155.79668963878788
+              },
+              "row": {
+                "x": -57.42016798654355,
+                "y": -11.159004021951011
+              }
+            },
+            "dragMapping": null,
+            "coordinateOrigin": {
+              "lane": 0,
+              "row": 0
+            },
+            "poolBounds": {
+              "minLane": -4,
+              "maxLane": 9,
+              "minRow": -28,
+              "maxRow": 53
+            },
+            "laneFocus": 2,
+            "columnCamera": 0,
+            "rotation": 0,
+            "clearance": -3.286490313229033,
+            "canInspect": false,
+            "returnPhase": "lowering",
+            "extraction": 0.4,
+            "appearance": 1,
+            "cameraDetail": 0,
+            "idleGain": 0,
+            "flatten": 0,
+            "spectrumActivity": 0,
+            "selectedIndexDim": 0,
+            "returningIndexDims": [],
+            "cameraDistance": 140,
+            "cameraNear": 5,
+            "cameraFar": 300,
+            "fogNear": 145,
+            "fogFar": 165,
+            "returningAppearance": [],
+            "rail": 0,
+            "threeState": "on",
+            "renderHealth": {
+              "graphicsLost": false,
+              "recoveringGraphics": false,
+              "graphicsRecoveries": 0,
+              "frameErrors": 0,
+              "inspectionSkippedFrames": 794
+            },
+            "fps": 240,
+            "mode": "archive",
+            "ready": true,
+            "startup": "started",
+            "motion": {
+              "reduced": true,
+              "preset": "reduced"
+            },
+            "bootTime": null,
+            "selected": "X-001",
+            "saved": [],
+            "audio": {
+              "state": "locked",
+              "scene": "archive",
+              "tracks": 0,
+              "voices": 0,
+              "loaded": false,
+              "playedKeys": 0,
+              "error": "",
+              "preferences": {
+                "sound": false,
+                "music": false,
+                "soundVolume": 0.55,
+                "musicVolume": 0.5
+              }
+            }
+          },
+          "statsAfter": {
+            "decryption": {
+              "time": -1,
+              "intervals": [],
+              "markers": 0,
+              "point": 0,
+              "label": 0,
+              "labelValue": 0,
+              "clarity": 0,
+              "phase": "waiting",
+              "modelClarity": 0
+            },
+            "topLeft": [
+              465,
+              313
+            ],
+            "topRight": [
+              809,
+              139
+            ],
+            "labelTopLeft": [
+              540,
+              350
+            ],
+            "labelBottomLeft": [
+              540,
+              408
+            ],
+            "modelPosition": [
+              0,
+              -1.9963,
+              -2.17
+            ],
+            "cameraPosition": [
+              -114.5565,
+              45.5345,
+              68.6579
+            ],
+            "fieldOfView": 3.3322196837484346,
+            "loaded": true,
+            "drawCalls": 0,
+            "renderedFrames": 176,
+            "reusedFrames": 667,
+            "superPerformance": false,
+            "presentation": 1,
+            "triangles": 0,
+            "archiveCount": 337,
+            "archiveCandidates": 473,
+            "archiveCulled": 136,
+            "archiveCapacity": 576,
+            "archiveCoverage": "standard",
+            "returningFiles": 0,
+            "selectionPhase": "wave",
+            "pendingPulse": null,
+            "pulses": [
+              {
+                "lane": 2,
+                "row": 12,
+                "time": 7.686100000000001
+              }
+            ],
+            "referenceTime": 38.05,
+            "selectedSlot": 76,
+            "selectedLane": 2,
+            "selectedCell": {
+              "lane": 2,
+              "row": 12
+            },
+            "hoverCell": null,
+            "hoverLifts": {},
+            "dragTrack": null,
+            "archiveMomentum": null,
+            "holdingArchive": false,
+            "dragProjection": {
+              "lane": {
+                "x": -296.9378876602735,
+                "y": 155.79668963878788
+              },
+              "row": {
+                "x": -57.42016798654355,
+                "y": -11.159004021951011
+              }
+            },
+            "dragMapping": null,
+            "coordinateOrigin": {
+              "lane": 0,
+              "row": 0
+            },
+            "poolBounds": {
+              "minLane": -4,
+              "maxLane": 9,
+              "minRow": -28,
+              "maxRow": 53
+            },
+            "laneFocus": 2,
+            "columnCamera": 0,
+            "rotation": 0,
+            "clearance": -3.286490313229033,
+            "canInspect": false,
+            "returnPhase": "lowering",
+            "extraction": 0.4,
+            "appearance": 1,
+            "cameraDetail": 0,
+            "idleGain": 0,
+            "flatten": 0,
+            "spectrumActivity": 0,
+            "selectedIndexDim": 0,
+            "returningIndexDims": [],
+            "cameraDistance": 140,
+            "cameraNear": 5,
+            "cameraFar": 300,
+            "fogNear": 145,
+            "fogFar": 165,
+            "returningAppearance": [],
+            "rail": 0,
+            "threeState": "on",
+            "renderHealth": {
+              "graphicsLost": false,
+              "recoveringGraphics": false,
+              "graphicsRecoveries": 0,
+              "frameErrors": 0,
+              "inspectionSkippedFrames": 843
+            },
+            "fps": 240,
+            "mode": "archive",
+            "ready": true,
+            "startup": "started",
+            "motion": {
+              "reduced": true,
+              "preset": "reduced"
+            },
+            "bootTime": null,
+            "selected": "X-001",
+            "saved": [],
+            "audio": {
+              "state": "locked",
+              "scene": "archive",
+              "tracks": 0,
+              "voices": 0,
+              "loaded": false,
+              "playedKeys": 0,
+              "error": "",
+              "preferences": {
+                "sound": false,
+                "music": false,
+                "soundVolume": 0.55,
+                "musicVolume": 0.5
+              }
+            }
+          }
+        },
+        "dark": {
+          "environment": {
+            "width": 1440,
+            "height": 900,
+            "devicePixelRatio": 1,
+            "darkSurface": "true",
+            "preferences": {
+              "sound": false,
+              "music": false,
+              "soundVolume": 0.55,
+              "musicVolume": 0.5,
+              "motion": {
+                "boot": false,
+                "selectionWave": false,
+                "idleWave": false,
+                "pointerParallax": false,
+                "dragMomentum": false,
+                "selectionTransition": false,
+                "detailTransition": false,
+                "modelDecryption": false,
+                "documentReveal": false,
+                "rollingText": false,
+                "rollingNumbers": false,
+                "surfaceTransitions": false,
+                "viewerNavigation": false,
+                "viewerModelTransition": false
+              },
+              "motionPreset": "reduced",
+              "quality": true,
+              "superPerformance": false,
+              "rendering": {
+                "scale": 100,
+                "pixelRatio": 1.5,
+                "antialias": "off",
+                "shadows": 2048,
+                "aoSamples": 32,
+                "aoResolution": 1,
+                "depthOfField": 100,
+                "transmission": 1,
+                "anisotropy": 16
+              },
+              "colorTheme": "dark"
+            },
+            "canvas": {
+              "width": 1440,
+              "height": 900,
+              "x": 0,
+              "y": 0,
+              "cssWidth": 1440,
+              "cssHeight": 900
+            }
+          },
+          "documentIds": [
+            "X-001",
+            "X-002",
+            "X-003",
+            "X-004",
+            "X-005",
+            "X-006",
+            "X-007",
+            "X-008",
+            "X-009",
+            "X-010",
+            "X-011",
+            "X-012",
+            "X-013",
+            "X-014",
+            "X-015",
+            "X-016",
+            "X-017",
+            "X-018",
+            "X-019",
+            "X-020",
+            "X-021",
+            "X-022",
+            "X-023",
+            "X-024",
+            "X-025",
+            "X-026",
+            "X-027",
+            "X-028",
+            "X-029",
+            "X-030",
+            "X-031",
+            "X-032",
+            "X-033",
+            "X-034",
+            "X-035",
+            "X-036",
+            "X-037",
+            "X-038",
+            "X-039",
+            "X-040"
+          ],
+          "imagePath": "C:\\Users\\Administrator\\Documents\\ChatGPT\\CodexSandbox\\rhine-model-images\\verification\\model-images\\no-image-original-dark.png",
+          "capturePixels": {
+            "width": 1440,
+            "height": 900,
+            "opaquePixels": 1296000,
+            "pixels": 1296000,
+            "minRGB": 4,
+            "maxRGB": 230
+          },
+          "scene": {
+            "mode": "archive",
+            "selected": "X-001",
+            "selectedCell": {
+              "lane": 2,
+              "row": 12
+            },
+            "selectedSlot": 76,
+            "selectedLane": 2,
+            "modelPosition": [
+              0,
+              -1.9963,
+              -2.17
+            ],
+            "cameraPosition": [
+              -114.5565,
+              45.5345,
+              68.6579
+            ],
+            "fieldOfView": 3.3322196837484346,
+            "cameraDetail": 0,
+            "cameraDistance": 140,
+            "cameraNear": 5,
+            "cameraFar": 300,
+            "fogNear": 141,
+            "fogFar": 156,
+            "extraction": 0.4,
+            "appearance": 1,
+            "rotation": 0,
+            "rail": 0,
+            "laneFocus": 2,
+            "columnCamera": 0,
+            "topLeft": [
+              465,
+              313
+            ],
+            "topRight": [
+              809,
+              139
+            ],
+            "labelTopLeft": [
+              540,
+              350
+            ],
+            "labelBottomLeft": [
+              540,
+              408
+            ],
+            "presentation": 1,
+            "returningFiles": 0,
+            "idleGain": 0,
+            "flatten": 0,
+            "archiveCount": 285,
+            "archiveCandidates": 404,
+            "archiveCoverage": "standard",
+            "superPerformance": false,
+            "decryption": {
+              "time": -1,
+              "intervals": [],
+              "markers": 0,
+              "point": 0,
+              "label": 0,
+              "labelValue": 0,
+              "clarity": 0,
+              "phase": "waiting",
+              "modelClarity": 0
+            },
+            "motion": {
+              "reduced": true,
+              "preset": "reduced"
+            }
+          },
+          "statsBefore": {
+            "decryption": {
+              "time": -1,
+              "intervals": [],
+              "markers": 0,
+              "point": 0,
+              "label": 0,
+              "labelValue": 0,
+              "clarity": 0,
+              "phase": "waiting",
+              "modelClarity": 0
+            },
+            "topLeft": [
+              465,
+              313
+            ],
+            "topRight": [
+              809,
+              139
+            ],
+            "labelTopLeft": [
+              540,
+              350
+            ],
+            "labelBottomLeft": [
+              540,
+              408
+            ],
+            "modelPosition": [
+              0,
+              -1.9963,
+              -2.17
+            ],
+            "cameraPosition": [
+              -114.5565,
+              45.5345,
+              68.6579
+            ],
+            "fieldOfView": 3.3322196837484346,
+            "loaded": true,
+            "drawCalls": 0,
+            "renderedFrames": 186,
+            "reusedFrames": 709,
+            "superPerformance": false,
+            "presentation": 1,
+            "triangles": 0,
+            "archiveCount": 285,
+            "archiveCandidates": 404,
+            "archiveCulled": 119,
+            "archiveCapacity": 288,
+            "archiveCoverage": "standard",
+            "returningFiles": 0,
+            "selectionPhase": "settled",
+            "pendingPulse": null,
+            "pulses": [],
+            "referenceTime": 38.16,
+            "selectedSlot": 76,
+            "selectedLane": 2,
+            "selectedCell": {
+              "lane": 2,
+              "row": 12
+            },
+            "hoverCell": {
+              "lane": 4,
+              "row": -8
+            },
+            "hoverLifts": {
+              "4:-8": 0.28
+            },
+            "dragTrack": null,
+            "archiveMomentum": null,
+            "holdingArchive": false,
+            "dragProjection": {
+              "lane": {
+                "x": -296.9378876602735,
+                "y": 155.79668963878788
+              },
+              "row": {
+                "x": -57.42016798654355,
+                "y": -11.159004021951011
+              }
+            },
+            "dragMapping": null,
+            "coordinateOrigin": {
+              "lane": 0,
+              "row": 0
+            },
+            "poolBounds": {
+              "minLane": -4,
+              "maxLane": 8,
+              "minRow": -20,
+              "maxRow": 53
+            },
+            "laneFocus": 2,
+            "columnCamera": 0,
+            "rotation": 0,
+            "clearance": -3.286490313229033,
+            "canInspect": false,
+            "returnPhase": "lowering",
+            "extraction": 0.4,
+            "appearance": 1,
+            "cameraDetail": 0,
+            "idleGain": 0,
+            "flatten": 0,
+            "spectrumActivity": 0,
+            "selectedIndexDim": 0,
+            "returningIndexDims": [],
+            "cameraDistance": 140,
+            "cameraNear": 5,
+            "cameraFar": 300,
+            "fogNear": 141,
+            "fogFar": 156,
+            "returningAppearance": [],
+            "rail": 0,
+            "threeState": "on",
+            "renderHealth": {
+              "graphicsLost": false,
+              "recoveringGraphics": false,
+              "graphicsRecoveries": 0,
+              "frameErrors": 0,
+              "inspectionSkippedFrames": 895
+            },
+            "fps": 236,
+            "mode": "archive",
+            "ready": true,
+            "startup": "started",
+            "motion": {
+              "reduced": true,
+              "preset": "reduced"
+            },
+            "bootTime": null,
+            "selected": "X-001",
+            "saved": [],
+            "audio": {
+              "state": "locked",
+              "scene": "archive",
+              "tracks": 0,
+              "voices": 0,
+              "loaded": false,
+              "playedKeys": 0,
+              "error": "",
+              "preferences": {
+                "sound": false,
+                "music": false,
+                "soundVolume": 0.55,
+                "musicVolume": 0.5
+              }
+            }
+          },
+          "statsAfter": {
+            "decryption": {
+              "time": -1,
+              "intervals": [],
+              "markers": 0,
+              "point": 0,
+              "label": 0,
+              "labelValue": 0,
+              "clarity": 0,
+              "phase": "waiting",
+              "modelClarity": 0
+            },
+            "topLeft": [
+              465,
+              313
+            ],
+            "topRight": [
+              809,
+              139
+            ],
+            "labelTopLeft": [
+              540,
+              350
+            ],
+            "labelBottomLeft": [
+              540,
+              408
+            ],
+            "modelPosition": [
+              0,
+              -1.9963,
+              -2.17
+            ],
+            "cameraPosition": [
+              -114.5565,
+              45.5345,
+              68.6579
+            ],
+            "fieldOfView": 3.3322196837484346,
+            "loaded": true,
+            "drawCalls": 0,
+            "renderedFrames": 188,
+            "reusedFrames": 752,
+            "superPerformance": false,
+            "presentation": 1,
+            "triangles": 0,
+            "archiveCount": 285,
+            "archiveCandidates": 404,
+            "archiveCulled": 119,
+            "archiveCapacity": 288,
+            "archiveCoverage": "standard",
+            "returningFiles": 0,
+            "selectionPhase": "wave",
+            "pendingPulse": null,
+            "pulses": [
+              {
+                "lane": 2,
+                "row": 12,
+                "time": 4.9962
+              }
+            ],
+            "referenceTime": 38.4,
+            "selectedSlot": 76,
+            "selectedLane": 2,
+            "selectedCell": {
+              "lane": 2,
+              "row": 12
+            },
+            "hoverCell": null,
+            "hoverLifts": {},
+            "dragTrack": null,
+            "archiveMomentum": null,
+            "holdingArchive": false,
+            "dragProjection": {
+              "lane": {
+                "x": -296.9378876602735,
+                "y": 155.79668963878788
+              },
+              "row": {
+                "x": -57.42016798654355,
+                "y": -11.159004021951011
+              }
+            },
+            "dragMapping": null,
+            "coordinateOrigin": {
+              "lane": 0,
+              "row": 0
+            },
+            "poolBounds": {
+              "minLane": -4,
+              "maxLane": 8,
+              "minRow": -20,
+              "maxRow": 53
+            },
+            "laneFocus": 2,
+            "columnCamera": 0,
+            "rotation": 0,
+            "clearance": -3.286490313229033,
+            "canInspect": false,
+            "returnPhase": "lowering",
+            "extraction": 0.4,
+            "appearance": 1,
+            "cameraDetail": 0,
+            "idleGain": 0,
+            "flatten": 0,
+            "spectrumActivity": 0,
+            "selectedIndexDim": 0,
+            "returningIndexDims": [],
+            "cameraDistance": 140,
+            "cameraNear": 5,
+            "cameraFar": 300,
+            "fogNear": 141,
+            "fogFar": 156,
+            "returningAppearance": [],
+            "rail": 0,
+            "threeState": "on",
+            "renderHealth": {
+              "graphicsLost": false,
+              "recoveringGraphics": false,
+              "graphicsRecoveries": 0,
+              "frameErrors": 0,
+              "inspectionSkippedFrames": 940
+            },
+            "fps": 227,
+            "mode": "archive",
+            "ready": true,
+            "startup": "started",
+            "motion": {
+              "reduced": true,
+              "preset": "reduced"
+            },
+            "bootTime": null,
+            "selected": "X-001",
+            "saved": [],
+            "audio": {
+              "state": "locked",
+              "scene": "archive",
+              "tracks": 0,
+              "voices": 0,
+              "loaded": false,
+              "playedKeys": 0,
+              "error": "",
+              "preferences": {
+                "sound": false,
+                "music": false,
+                "soundVolume": 0.55,
+                "musicVolume": 0.5
+              }
+            }
+          }
+        }
+      },
+      "errors": []
+    },
+    {
+      "name": "modified",
+      "source": "C:\\Users\\Administrator\\Documents\\ChatGPT\\CodexSandbox\\rhine-model-images\\release\\packages\\RhineLab-win32-x64",
+      "portable": "C:\\Users\\Administrator\\Documents\\ChatGPT\\CodexSandbox\\rhine-model-images\\release\\no-image-compare\\1792924805332\\modified",
+      "profile": "C:\\Users\\Administrator\\Documents\\ChatGPT\\CodexSandbox\\rhine-model-images\\release\\no-image-compare\\1792924805332\\modified-profile",
+      "themes": {
+        "light": {
+          "environment": {
+            "width": 1440,
+            "height": 900,
+            "devicePixelRatio": 1,
+            "darkSurface": "false",
+            "preferences": {
+              "sound": false,
+              "music": false,
+              "soundVolume": 0.55,
+              "musicVolume": 0.5,
+              "motion": {
+                "boot": false,
+                "selectionWave": false,
+                "idleWave": false,
+                "pointerParallax": false,
+                "dragMomentum": false,
+                "selectionTransition": false,
+                "detailTransition": false,
+                "modelDecryption": false,
+                "documentReveal": false,
+                "rollingText": false,
+                "rollingNumbers": false,
+                "surfaceTransitions": false,
+                "viewerNavigation": false,
+                "viewerModelTransition": false
+              },
+              "motionPreset": "reduced",
+              "quality": true,
+              "superPerformance": false,
+              "rendering": {
+                "scale": 100,
+                "pixelRatio": 1.5,
+                "antialias": "off",
+                "shadows": 2048,
+                "aoSamples": 32,
+                "aoResolution": 1,
+                "depthOfField": 100,
+                "transmission": 1,
+                "anisotropy": 16
+              },
+              "colorTheme": "light"
+            },
+            "canvas": {
+              "width": 1440,
+              "height": 900,
+              "x": 0,
+              "y": 0,
+              "cssWidth": 1440,
+              "cssHeight": 900
+            }
+          },
+          "documentIds": [
+            "X-001",
+            "X-002",
+            "X-003",
+            "X-004",
+            "X-005",
+            "X-006",
+            "X-007",
+            "X-008",
+            "X-009",
+            "X-010",
+            "X-011",
+            "X-012",
+            "X-013",
+            "X-014",
+            "X-015",
+            "X-016",
+            "X-017",
+            "X-018",
+            "X-019",
+            "X-020",
+            "X-021",
+            "X-022",
+            "X-023",
+            "X-024",
+            "X-025",
+            "X-026",
+            "X-027",
+            "X-028",
+            "X-029",
+            "X-030",
+            "X-031",
+            "X-032",
+            "X-033",
+            "X-034",
+            "X-035",
+            "X-036",
+            "X-037",
+            "X-038",
+            "X-039",
+            "X-040"
+          ],
+          "imagePath": "C:\\Users\\Administrator\\Documents\\ChatGPT\\CodexSandbox\\rhine-model-images\\verification\\model-images\\no-image-modified-light.png",
+          "capturePixels": {
+            "width": 1440,
+            "height": 900,
+            "opaquePixels": 1296000,
+            "pixels": 1296000,
+            "minRGB": 6,
+            "maxRGB": 245
+          },
+          "scene": {
+            "mode": "archive",
+            "selected": "X-001",
+            "selectedCell": {
+              "lane": 2,
+              "row": 12
+            },
+            "selectedSlot": 76,
+            "selectedLane": 2,
+            "modelPosition": [
+              0,
+              -1.9963,
+              -2.17
+            ],
+            "cameraPosition": [
+              -114.5565,
+              45.5345,
+              68.6579
+            ],
+            "fieldOfView": 3.3322196837484346,
+            "cameraDetail": 0,
+            "cameraDistance": 140,
+            "cameraNear": 5,
+            "cameraFar": 300,
+            "fogNear": 145,
+            "fogFar": 165,
+            "extraction": 0.4,
+            "appearance": 1,
+            "rotation": 0,
+            "rail": 0,
+            "laneFocus": 2,
+            "columnCamera": 0,
+            "topLeft": [
+              465,
+              313
+            ],
+            "topRight": [
+              809,
+              139
+            ],
+            "labelTopLeft": [
+              540,
+              350
+            ],
+            "labelBottomLeft": [
+              540,
+              408
+            ],
+            "presentation": 1,
+            "returningFiles": 0,
+            "idleGain": 0,
+            "flatten": 0,
+            "archiveCount": 337,
+            "archiveCandidates": 473,
+            "archiveCoverage": "standard",
+            "superPerformance": false,
+            "decryption": {
+              "time": -1,
+              "intervals": [],
+              "markers": 0,
+              "point": 0,
+              "label": 0,
+              "labelValue": 0,
+              "clarity": 0,
+              "phase": "waiting",
+              "modelClarity": 0
+            },
+            "motion": {
+              "reduced": true,
+              "preset": "reduced"
+            }
+          },
+          "statsBefore": {
+            "decryption": {
+              "time": -1,
+              "intervals": [],
+              "markers": 0,
+              "point": 0,
+              "label": 0,
+              "labelValue": 0,
+              "clarity": 0,
+              "phase": "waiting",
+              "modelClarity": 0
+            },
+            "topLeft": [
+              465,
+              313
+            ],
+            "topRight": [
+              809,
+              139
+            ],
+            "labelTopLeft": [
+              540,
+              350
+            ],
+            "labelBottomLeft": [
+              540,
+              408
+            ],
+            "modelPosition": [
+              0,
+              -1.9963,
+              -2.17
+            ],
+            "cameraPosition": [
+              -114.5565,
+              45.5345,
+              68.6579
+            ],
+            "fieldOfView": 3.3322196837484346,
+            "loaded": true,
+            "modelImages": {
+              "selected": "",
+              "selectedReady": false,
+              "batches": 0,
+              "visible": 0,
+              "pending": 0
+            },
+            "drawCalls": 0,
+            "renderedFrames": 152,
+            "reusedFrames": 641,
+            "superPerformance": false,
+            "presentation": 1,
+            "triangles": 0,
+            "archiveCount": 337,
+            "archiveCandidates": 473,
+            "archiveCulled": 136,
+            "archiveCapacity": 576,
+            "archiveCoverage": "standard",
+            "returningFiles": 0,
+            "selectionPhase": "settled",
+            "pendingPulse": null,
+            "pulses": [],
+            "referenceTime": 37.91,
+            "selectedSlot": 76,
+            "selectedLane": 2,
+            "selectedCell": {
+              "lane": 2,
+              "row": 12
+            },
+            "hoverCell": {
+              "lane": 4,
+              "row": -8
+            },
+            "hoverLifts": {
+              "4:-8": 0.28
+            },
+            "dragTrack": null,
+            "archiveMomentum": null,
+            "holdingArchive": false,
+            "dragProjection": {
+              "lane": {
+                "x": -296.9378876602735,
+                "y": 155.79668963878788
+              },
+              "row": {
+                "x": -57.42016798654355,
+                "y": -11.159004021951011
+              }
+            },
+            "dragMapping": null,
+            "coordinateOrigin": {
+              "lane": 0,
+              "row": 0
+            },
+            "poolBounds": {
+              "minLane": -4,
+              "maxLane": 9,
+              "minRow": -28,
+              "maxRow": 53
+            },
+            "laneFocus": 2,
+            "columnCamera": 0,
+            "rotation": 0,
+            "clearance": -3.286490313229033,
+            "canInspect": false,
+            "returnPhase": "lowering",
+            "extraction": 0.4,
+            "appearance": 1,
+            "cameraDetail": 0,
+            "idleGain": 0,
+            "flatten": 0,
+            "spectrumActivity": 0,
+            "selectedIndexDim": 0,
+            "returningIndexDims": [],
+            "cameraDistance": 140,
+            "cameraNear": 5,
+            "cameraFar": 300,
+            "fogNear": 145,
+            "fogFar": 165,
+            "returningAppearance": [],
+            "rail": 0,
+            "threeState": "on",
+            "renderHealth": {
+              "graphicsLost": false,
+              "recoveringGraphics": false,
+              "graphicsRecoveries": 0,
+              "frameErrors": 0,
+              "inspectionSkippedFrames": 793
+            },
+            "fps": 236,
+            "mode": "archive",
+            "ready": true,
+            "startup": "started",
+            "motion": {
+              "reduced": true,
+              "preset": "reduced"
+            },
+            "bootTime": null,
+            "selected": "X-001",
+            "saved": [],
+            "audio": {
+              "state": "locked",
+              "scene": "archive",
+              "tracks": 0,
+              "voices": 0,
+              "loaded": false,
+              "playedKeys": 0,
+              "error": "",
+              "preferences": {
+                "sound": false,
+                "music": false,
+                "soundVolume": 0.55,
+                "musicVolume": 0.5
+              }
+            }
+          },
+          "statsAfter": {
+            "decryption": {
+              "time": -1,
+              "intervals": [],
+              "markers": 0,
+              "point": 0,
+              "label": 0,
+              "labelValue": 0,
+              "clarity": 0,
+              "phase": "waiting",
+              "modelClarity": 0
+            },
+            "topLeft": [
+              465,
+              313
+            ],
+            "topRight": [
+              809,
+              139
+            ],
+            "labelTopLeft": [
+              540,
+              350
+            ],
+            "labelBottomLeft": [
+              540,
+              408
+            ],
+            "modelPosition": [
+              0,
+              -1.9963,
+              -2.17
+            ],
+            "cameraPosition": [
+              -114.5565,
+              45.5345,
+              68.6579
+            ],
+            "fieldOfView": 3.3322196837484346,
+            "loaded": true,
+            "modelImages": {
+              "selected": "",
+              "selectedReady": false,
+              "batches": 0,
+              "visible": 0,
+              "pending": 0
+            },
+            "drawCalls": 0,
+            "renderedFrames": 154,
+            "reusedFrames": 685,
+            "superPerformance": false,
+            "presentation": 1,
+            "triangles": 0,
+            "archiveCount": 337,
+            "archiveCandidates": 473,
+            "archiveCulled": 136,
+            "archiveCapacity": 576,
+            "archiveCoverage": "standard",
+            "returningFiles": 0,
+            "selectionPhase": "wave",
+            "pendingPulse": null,
+            "pulses": [
+              {
+                "lane": 2,
+                "row": 12,
+                "time": 8.2757
+              }
+            ],
+            "referenceTime": 38.15,
+            "selectedSlot": 76,
+            "selectedLane": 2,
+            "selectedCell": {
+              "lane": 2,
+              "row": 12
+            },
+            "hoverCell": null,
+            "hoverLifts": {},
+            "dragTrack": null,
+            "archiveMomentum": null,
+            "holdingArchive": false,
+            "dragProjection": {
+              "lane": {
+                "x": -296.9378876602735,
+                "y": 155.79668963878788
+              },
+              "row": {
+                "x": -57.42016798654355,
+                "y": -11.159004021951011
+              }
+            },
+            "dragMapping": null,
+            "coordinateOrigin": {
+              "lane": 0,
+              "row": 0
+            },
+            "poolBounds": {
+              "minLane": -4,
+              "maxLane": 9,
+              "minRow": -28,
+              "maxRow": 53
+            },
+            "laneFocus": 2,
+            "columnCamera": 0,
+            "rotation": 0,
+            "clearance": -3.286490313229033,
+            "canInspect": false,
+            "returnPhase": "lowering",
+            "extraction": 0.4,
+            "appearance": 1,
+            "cameraDetail": 0,
+            "idleGain": 0,
+            "flatten": 0,
+            "spectrumActivity": 0,
+            "selectedIndexDim": 0,
+            "returningIndexDims": [],
+            "cameraDistance": 140,
+            "cameraNear": 5,
+            "cameraFar": 300,
+            "fogNear": 145,
+            "fogFar": 165,
+            "returningAppearance": [],
+            "rail": 0,
+            "threeState": "on",
+            "renderHealth": {
+              "graphicsLost": false,
+              "recoveringGraphics": false,
+              "graphicsRecoveries": 0,
+              "frameErrors": 0,
+              "inspectionSkippedFrames": 839
+            },
+            "fps": 236,
+            "mode": "archive",
+            "ready": true,
+            "startup": "started",
+            "motion": {
+              "reduced": true,
+              "preset": "reduced"
+            },
+            "bootTime": null,
+            "selected": "X-001",
+            "saved": [],
+            "audio": {
+              "state": "locked",
+              "scene": "archive",
+              "tracks": 0,
+              "voices": 0,
+              "loaded": false,
+              "playedKeys": 0,
+              "error": "",
+              "preferences": {
+                "sound": false,
+                "music": false,
+                "soundVolume": 0.55,
+                "musicVolume": 0.5
+              }
+            }
+          }
+        },
+        "dark": {
+          "environment": {
+            "width": 1440,
+            "height": 900,
+            "devicePixelRatio": 1,
+            "darkSurface": "true",
+            "preferences": {
+              "sound": false,
+              "music": false,
+              "soundVolume": 0.55,
+              "musicVolume": 0.5,
+              "motion": {
+                "boot": false,
+                "selectionWave": false,
+                "idleWave": false,
+                "pointerParallax": false,
+                "dragMomentum": false,
+                "selectionTransition": false,
+                "detailTransition": false,
+                "modelDecryption": false,
+                "documentReveal": false,
+                "rollingText": false,
+                "rollingNumbers": false,
+                "surfaceTransitions": false,
+                "viewerNavigation": false,
+                "viewerModelTransition": false
+              },
+              "motionPreset": "reduced",
+              "quality": true,
+              "superPerformance": false,
+              "rendering": {
+                "scale": 100,
+                "pixelRatio": 1.5,
+                "antialias": "off",
+                "shadows": 2048,
+                "aoSamples": 32,
+                "aoResolution": 1,
+                "depthOfField": 100,
+                "transmission": 1,
+                "anisotropy": 16
+              },
+              "colorTheme": "dark"
+            },
+            "canvas": {
+              "width": 1440,
+              "height": 900,
+              "x": 0,
+              "y": 0,
+              "cssWidth": 1440,
+              "cssHeight": 900
+            }
+          },
+          "documentIds": [
+            "X-001",
+            "X-002",
+            "X-003",
+            "X-004",
+            "X-005",
+            "X-006",
+            "X-007",
+            "X-008",
+            "X-009",
+            "X-010",
+            "X-011",
+            "X-012",
+            "X-013",
+            "X-014",
+            "X-015",
+            "X-016",
+            "X-017",
+            "X-018",
+            "X-019",
+            "X-020",
+            "X-021",
+            "X-022",
+            "X-023",
+            "X-024",
+            "X-025",
+            "X-026",
+            "X-027",
+            "X-028",
+            "X-029",
+            "X-030",
+            "X-031",
+            "X-032",
+            "X-033",
+            "X-034",
+            "X-035",
+            "X-036",
+            "X-037",
+            "X-038",
+            "X-039",
+            "X-040"
+          ],
+          "imagePath": "C:\\Users\\Administrator\\Documents\\ChatGPT\\CodexSandbox\\rhine-model-images\\verification\\model-images\\no-image-modified-dark.png",
+          "capturePixels": {
+            "width": 1440,
+            "height": 900,
+            "opaquePixels": 1296000,
+            "pixels": 1296000,
+            "minRGB": 4,
+            "maxRGB": 230
+          },
+          "scene": {
+            "mode": "archive",
+            "selected": "X-001",
+            "selectedCell": {
+              "lane": 2,
+              "row": 12
+            },
+            "selectedSlot": 76,
+            "selectedLane": 2,
+            "modelPosition": [
+              0,
+              -1.9963,
+              -2.17
+            ],
+            "cameraPosition": [
+              -114.5565,
+              45.5345,
+              68.6579
+            ],
+            "fieldOfView": 3.3322196837484346,
+            "cameraDetail": 0,
+            "cameraDistance": 140,
+            "cameraNear": 5,
+            "cameraFar": 300,
+            "fogNear": 141,
+            "fogFar": 156,
+            "extraction": 0.4,
+            "appearance": 1,
+            "rotation": 0,
+            "rail": 0,
+            "laneFocus": 2,
+            "columnCamera": 0,
+            "topLeft": [
+              465,
+              313
+            ],
+            "topRight": [
+              809,
+              139
+            ],
+            "labelTopLeft": [
+              540,
+              350
+            ],
+            "labelBottomLeft": [
+              540,
+              408
+            ],
+            "presentation": 1,
+            "returningFiles": 0,
+            "idleGain": 0,
+            "flatten": 0,
+            "archiveCount": 285,
+            "archiveCandidates": 404,
+            "archiveCoverage": "standard",
+            "superPerformance": false,
+            "decryption": {
+              "time": -1,
+              "intervals": [],
+              "markers": 0,
+              "point": 0,
+              "label": 0,
+              "labelValue": 0,
+              "clarity": 0,
+              "phase": "waiting",
+              "modelClarity": 0
+            },
+            "motion": {
+              "reduced": true,
+              "preset": "reduced"
+            }
+          },
+          "statsBefore": {
+            "decryption": {
+              "time": -1,
+              "intervals": [],
+              "markers": 0,
+              "point": 0,
+              "label": 0,
+              "labelValue": 0,
+              "clarity": 0,
+              "phase": "waiting",
+              "modelClarity": 0
+            },
+            "topLeft": [
+              465,
+              313
+            ],
+            "topRight": [
+              809,
+              139
+            ],
+            "labelTopLeft": [
+              540,
+              350
+            ],
+            "labelBottomLeft": [
+              540,
+              408
+            ],
+            "modelPosition": [
+              0,
+              -1.9963,
+              -2.17
+            ],
+            "cameraPosition": [
+              -114.5565,
+              45.5345,
+              68.6579
+            ],
+            "fieldOfView": 3.3322196837484346,
+            "loaded": true,
+            "modelImages": {
+              "selected": "",
+              "selectedReady": false,
+              "batches": 0,
+              "visible": 0,
+              "pending": 0
+            },
+            "drawCalls": 0,
+            "renderedFrames": 178,
+            "reusedFrames": 714,
+            "superPerformance": false,
+            "presentation": 1,
+            "triangles": 0,
+            "archiveCount": 285,
+            "archiveCandidates": 404,
+            "archiveCulled": 119,
+            "archiveCapacity": 288,
+            "archiveCoverage": "standard",
+            "returningFiles": 0,
+            "selectionPhase": "settled",
+            "pendingPulse": null,
+            "pulses": [],
+            "referenceTime": 38.18,
+            "selectedSlot": 76,
+            "selectedLane": 2,
+            "selectedCell": {
+              "lane": 2,
+              "row": 12
+            },
+            "hoverCell": {
+              "lane": 4,
+              "row": -8
+            },
+            "hoverLifts": {
+              "4:-8": 0.28
+            },
+            "dragTrack": null,
+            "archiveMomentum": null,
+            "holdingArchive": false,
+            "dragProjection": {
+              "lane": {
+                "x": -296.9378876602735,
+                "y": 155.79668963878788
+              },
+              "row": {
+                "x": -57.42016798654355,
+                "y": -11.159004021951011
+              }
+            },
+            "dragMapping": null,
+            "coordinateOrigin": {
+              "lane": 0,
+              "row": 0
+            },
+            "poolBounds": {
+              "minLane": -4,
+              "maxLane": 8,
+              "minRow": -20,
+              "maxRow": 53
+            },
+            "laneFocus": 2,
+            "columnCamera": 0,
+            "rotation": 0,
+            "clearance": -3.286490313229033,
+            "canInspect": false,
+            "returnPhase": "lowering",
+            "extraction": 0.4,
+            "appearance": 1,
+            "cameraDetail": 0,
+            "idleGain": 0,
+            "flatten": 0,
+            "spectrumActivity": 0,
+            "selectedIndexDim": 0,
+            "returningIndexDims": [],
+            "cameraDistance": 140,
+            "cameraNear": 5,
+            "cameraFar": 300,
+            "fogNear": 141,
+            "fogFar": 156,
+            "returningAppearance": [],
+            "rail": 0,
+            "threeState": "on",
+            "renderHealth": {
+              "graphicsLost": false,
+              "recoveringGraphics": false,
+              "graphicsRecoveries": 0,
+              "frameErrors": 0,
+              "inspectionSkippedFrames": 892
+            },
+            "fps": 236,
+            "mode": "archive",
+            "ready": true,
+            "startup": "started",
+            "motion": {
+              "reduced": true,
+              "preset": "reduced"
+            },
+            "bootTime": null,
+            "selected": "X-001",
+            "saved": [],
+            "audio": {
+              "state": "locked",
+              "scene": "archive",
+              "tracks": 0,
+              "voices": 0,
+              "loaded": false,
+              "playedKeys": 0,
+              "error": "",
+              "preferences": {
+                "sound": false,
+                "music": false,
+                "soundVolume": 0.55,
+                "musicVolume": 0.5
+              }
+            }
+          },
+          "statsAfter": {
+            "decryption": {
+              "time": -1,
+              "intervals": [],
+              "markers": 0,
+              "point": 0,
+              "label": 0,
+              "labelValue": 0,
+              "clarity": 0,
+              "phase": "waiting",
+              "modelClarity": 0
+            },
+            "topLeft": [
+              465,
+              313
+            ],
+            "topRight": [
+              809,
+              139
+            ],
+            "labelTopLeft": [
+              540,
+              350
+            ],
+            "labelBottomLeft": [
+              540,
+              408
+            ],
+            "modelPosition": [
+              0,
+              -1.9963,
+              -2.17
+            ],
+            "cameraPosition": [
+              -114.5565,
+              45.5345,
+              68.6579
+            ],
+            "fieldOfView": 3.3322196837484346,
+            "loaded": true,
+            "modelImages": {
+              "selected": "",
+              "selectedReady": false,
+              "batches": 0,
+              "visible": 0,
+              "pending": 0
+            },
+            "drawCalls": 0,
+            "renderedFrames": 180,
+            "reusedFrames": 754,
+            "superPerformance": false,
+            "presentation": 1,
+            "triangles": 0,
+            "archiveCount": 285,
+            "archiveCandidates": 404,
+            "archiveCulled": 119,
+            "archiveCapacity": 288,
+            "archiveCoverage": "standard",
+            "returningFiles": 0,
+            "selectionPhase": "wave",
+            "pendingPulse": null,
+            "pulses": [
+              {
+                "lane": 2,
+                "row": 12,
+                "time": 5.0551
+              }
+            ],
+            "referenceTime": 38.4,
+            "selectedSlot": 76,
+            "selectedLane": 2,
+            "selectedCell": {
+              "lane": 2,
+              "row": 12
+            },
+            "hoverCell": null,
+            "hoverLifts": {},
+            "dragTrack": null,
+            "archiveMomentum": null,
+            "holdingArchive": false,
+            "dragProjection": {
+              "lane": {
+                "x": -296.9378876602735,
+                "y": 155.79668963878788
+              },
+              "row": {
+                "x": -57.42016798654355,
+                "y": -11.159004021951011
+              }
+            },
+            "dragMapping": null,
+            "coordinateOrigin": {
+              "lane": 0,
+              "row": 0
+            },
+            "poolBounds": {
+              "minLane": -4,
+              "maxLane": 8,
+              "minRow": -20,
+              "maxRow": 53
+            },
+            "laneFocus": 2,
+            "columnCamera": 0,
+            "rotation": 0,
+            "clearance": -3.286490313229033,
+            "canInspect": false,
+            "returnPhase": "lowering",
+            "extraction": 0.4,
+            "appearance": 1,
+            "cameraDetail": 0,
+            "idleGain": 0,
+            "flatten": 0,
+            "spectrumActivity": 0,
+            "selectedIndexDim": 0,
+            "returningIndexDims": [],
+            "cameraDistance": 140,
+            "cameraNear": 5,
+            "cameraFar": 300,
+            "fogNear": 141,
+            "fogFar": 156,
+            "returningAppearance": [],
+            "rail": 0,
+            "threeState": "on",
+            "renderHealth": {
+              "graphicsLost": false,
+              "recoveringGraphics": false,
+              "graphicsRecoveries": 0,
+              "frameErrors": 0,
+              "inspectionSkippedFrames": 934
+            },
+            "fps": 227,
+            "mode": "archive",
+            "ready": true,
+            "startup": "started",
+            "motion": {
+              "reduced": true,
+              "preset": "reduced"
+            },
+            "bootTime": null,
+            "selected": "X-001",
+            "saved": [],
+            "audio": {
+              "state": "locked",
+              "scene": "archive",
+              "tracks": 0,
+              "voices": 0,
+              "loaded": false,
+              "playedKeys": 0,
+              "error": "",
+              "preferences": {
+                "sound": false,
+                "music": false,
+                "soundVolume": 0.55,
+                "musicVolume": 0.5
+              }
+            }
+          }
+        }
+      },
+      "errors": []
+    }
+  ],
+  "comparisons": [
+    {
+      "theme": "light",
+      "geometryMatch": true,
+      "sameDocumentIds": true,
+      "exactPixelMatch": true,
+      "pixelDiff": {
+        "width": 1440,
+        "height": 900,
+        "pixels": 1296000,
+        "differentPixels": 0,
+        "differentPixelPercent": 0,
+        "meanAbsoluteRGBDifference": 0,
+        "maxChannelDifference": 0,
+        "rgbPixelsOver1": 0,
+        "rgbPixelsOver5": 0,
+        "rgbPixelsOver20": 0,
+        "alphaDifferencePixels": 0,
+        "format": "nativeImage.toBitmap() raw BGRA, RGB channel deltas"
+      }
+    },
+    {
+      "theme": "dark",
+      "geometryMatch": true,
+      "sameDocumentIds": true,
+      "exactPixelMatch": false,
+      "pixelDiff": {
+        "width": 1440,
+        "height": 900,
+        "pixels": 1296000,
+        "differentPixels": 2,
+        "differentPixelPercent": 0.00015432098765432098,
+        "meanAbsoluteRGBDifference": 5.1440329218107e-7,
+        "maxChannelDifference": 1,
+        "rgbPixelsOver1": 0,
+        "rgbPixelsOver5": 0,
+        "rgbPixelsOver20": 0,
+        "alphaDifferencePixels": 0,
+        "format": "nativeImage.toBitmap() raw BGRA, RGB channel deltas"
+      }
+    }
+  ]
+}

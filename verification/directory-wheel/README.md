@@ -2,4 +2,4 @@
 
 2026-09-30 的实际客户端记录：贯穿的主轴两端细、中央粗；文档刻度按垂直位置呈透视变化。滚轮或空白拖动浏览，点击选中，键盘控制目录焦点。后续版本已扩展为整条文档拖放与动量衰减。
 
-结果见 [result.json](result.json)；浅色、暗色小窗口截图保留。可在隔离的便携包中运行 scripts/check-desktop-directory.mjs，检查滚轮、拖动、点击、草稿保护、键盘与排序。
+结果见 [result.json](result.json)；浅色、暗色小窗口截图保留。可在隔离的便携包中运行 tests/check-desktop-directory.mjs，检查滚轮、拖动、点击、草稿保护、键盘与排序。

@@ -10,9 +10,70 @@ const validId = (id) =>
   !/^(con|prn|aux|nul|com[0-9]|lpt[0-9])$/i.test(id);
 const fail = (code, message) => Object.assign(new Error(message), { code });
 const keys = ["id", "title", "category", "order", "created", "modified"];
+const validModelImage = (value) => typeof value === "string" && /^[a-f0-9]{64}\.png$/.test(value);
+const modelImageLimit = 8 * 1024 * 1024;
+const pngSignature = Buffer.from([137, 80, 78, 71, 13, 10, 26, 10]);
+function assertModelImage(bytes) {
+  if (!Buffer.isBuffer(bytes) || bytes.length < 45 || bytes.length > modelImageLimit ||
+      !bytes.subarray(0, 8).equals(pngSignature) || bytes.readUInt32BE(8) !== 13 ||
+      bytes.toString("ascii", 12, 16) !== "IHDR" ||
+      bytes.readUInt32BE(16) < 1 || bytes.readUInt32BE(16) > 1024 ||
+      bytes.readUInt32BE(20) < 1 || bytes.readUInt32BE(20) > 1024 ||
+      bytes.toString("ascii", bytes.length - 8, bytes.length - 4) !== "IEND")
+    throw fail("IMAGE", "模型图片无效或超过 1024 像素 / 8 MB。");
+}
+const documentImageLimit = 20 * 1024 * 1024;
+const documentImageReference = /^\.\.\/assets\/document-images\/([a-f0-9]{64})\.(png|jpg)$/;
+// Inspect headers before native decoding, so pixel limits also protect imports.
+export function inspectDocumentImage(input) {
+  if (!(input instanceof Uint8Array) || input.byteLength < 1 || input.byteLength > documentImageLimit)
+    throw fail("IMAGE", "正文图片必须为不超过 20 MB 的 PNG 或 JPEG 文件。");
+  const bytes = Buffer.from(input.buffer, input.byteOffset, input.byteLength);
+  let width, height, extension;
+  if (bytes.length >= 45 && bytes.subarray(0, 8).equals(pngSignature) &&
+      bytes.readUInt32BE(8) === 13 && bytes.toString("ascii", 12, 16) === "IHDR") {
+    width = bytes.readUInt32BE(16);
+    height = bytes.readUInt32BE(20);
+    let offset = 8, pixels = false, complete = false;
+    while (offset + 12 <= bytes.length) {
+      const length = bytes.readUInt32BE(offset), end = offset + length + 12;
+      if (end > bytes.length) break;
+      const kind = bytes.toString("ascii", offset + 4, offset + 8);
+      if (kind === "IDAT" && length > 0) pixels = true;
+      if (kind === "IEND") { complete = length === 0 && end === bytes.length; break; }
+      offset = end;
+    }
+    if (pixels && complete) extension = "png";
+  } else if (bytes[0] === 0xff && bytes[1] === 0xd8 &&
+      bytes[bytes.length - 2] === 0xff && bytes[bytes.length - 1] === 0xd9) {
+    let offset = 2, scan = false;
+    while (offset + 4 < bytes.length) {
+      if (bytes[offset++] !== 0xff) break;
+      while (bytes[offset] === 0xff) offset++;
+      const marker = bytes[offset++];
+      if (marker === 0xd9) break;
+      if (marker === 0x01 || (marker >= 0xd0 && marker <= 0xd8)) continue;
+      if (offset + 2 > bytes.length) break;
+      const length = bytes.readUInt16BE(offset);
+      if (length < 2 || offset + length > bytes.length) break;
+      if (marker === 0xda) { scan = true; break; }
+      if (length >= 11 && marker >= 0xc0 && marker <= 0xcf && ![0xc4, 0xc8, 0xcc].includes(marker)) {
+        if (length !== 8 + 3 * bytes[offset + 7]) break;
+        width = bytes.readUInt16BE(offset + 5);
+        height = bytes.readUInt16BE(offset + 3);
+      }
+      offset += length;
+    }
+    if (scan && width && height) extension = "jpg";
+  }
+  if (!extension) throw fail("IMAGE", "正文图片格式无效，请选择完整的 PNG 或 JPEG 图片。");
+  if (width < 1 || height < 1 || width > 16384 || height > 16384 || width * height > 32000000)
+    throw fail("IMAGE", "正文图片不能超过 3200 万像素，单边不能超过 16384 像素。");
+  return { extension, mime: extension === "png" ? "image/png" : "image/jpeg", width, height };
+}
 const titleKey = (title) => title.trim().normalize("NFC").toLocaleLowerCase();
 const encode = (doc) =>
-  `---\n${keys.map((key) => `${key}: ${JSON.stringify(doc[key])}`).join("\n")}\n---\n${doc.body}`;
+  `---\n${[...keys, ...(doc.modelImage ? ["modelImage"] : [])].map((key) => `${key}: ${JSON.stringify(doc[key])}`).join("\n")}\n---\n${doc.body}`;
 function decode(raw, filename, stat) {
   let meta = {},
     body = raw;
@@ -42,6 +103,8 @@ function decode(raw, filename, stat) {
   }
   const id = meta.id ?? `external-${hash(filename).slice(0, 24)}`;
   if (!validId(id)) throw fail("INVALID_ID", "文档 ID 无效。");
+  if (meta.modelImage !== undefined && !validModelImage(meta.modelImage))
+    throw fail("FORMAT", "模型图片引用无效。");
   const doc = {
     id,
     title: meta.title ?? filename.replace(/\.md$/i, ""),
@@ -51,6 +114,7 @@ function decode(raw, filename, stat) {
     modified: meta.modified ?? stat.mtime.toISOString(),
     body,
     revision: hash(raw),
+    ...(meta.modelImage ? { modelImage: meta.modelImage } : {}),
   };
   if (
     typeof doc.title !== "string" ||
@@ -76,6 +140,7 @@ export class Repository {
     this.queue = Promise.resolve();
     this.listInFlight = null;
     this.mutating = false;
+    this.documentImageImports = new Map();
   }
   async safe(target, allowMissing = false) {
     const absolute = path.resolve(target);
@@ -288,6 +353,113 @@ export class Repository {
   async read(id, trash = false) {
     const doc = (await this.locate(id, trash)).doc;
     return (await this.directory.decorate({documents:[doc],trash:[],issues:[]})).documents[0];
+  }
+  async modelImageEntry(id, revision) {
+    if (typeof revision !== "string" || !/^[a-f0-9]{64}$/.test(revision))
+      throw fail("INPUT", "修改模型图片需要有效的文档版本。");
+    const entry = await this.locate(id);
+    if (entry.doc.revision !== revision)
+      throw fail("CONFLICT", "文件已被修改，请重新载入后设置模型图片。");
+    return entry;
+  }
+  async readModelImage(id, expectedRef) {
+    if (!validModelImage(expectedRef)) throw fail("INPUT", "模型图片引用无效。");
+    const { doc } = await this.locate(id);
+    if (doc.modelImage !== expectedRef)
+      throw fail("CONFLICT", "模型图片已变化，请刷新后重试。");
+    const target = path.join(this.root, "assets", "model-images", expectedRef);
+    await this.safe(target);
+    const stat = await fs.stat(target);
+    if (!stat.isFile() || stat.size > modelImageLimit)
+      throw fail("IMAGE", "模型图片不是普通文件或超过 8 MB。");
+    const bytes = await fs.readFile(target);
+    assertModelImage(bytes);
+    if (`${hash(bytes)}.png` !== expectedRef) throw fail("IMAGE", "模型图片内容与引用不一致。");
+    return `data:image/png;base64,${bytes.toString("base64")}`;
+  }
+  setModelImage(id, revision, bytes) {
+    return this.serialize(async () => {
+      const entry = await this.modelImageEntry(id, revision);
+      assertModelImage(bytes);
+      const modelImage = `${hash(bytes)}.png`;
+      const folder = path.join(this.root, "assets", "model-images");
+      await this.safe(folder, true);
+      await fs.mkdir(folder, { recursive: true });
+      const target = path.join(folder, modelImage);
+      await this.safe(target, true);
+      let existing;
+      try { existing = await fs.readFile(target); }
+      catch (error) { if (error.code !== "ENOENT") throw error; }
+      if (existing && !existing.equals(bytes)) throw fail("IMAGE", "已有模型图片内容不一致。");
+      if (!existing) await this.atomic(target, bytes, null);
+      if (entry.doc.modelImage === modelImage) return this.read(id);
+      await this.backup(entry);
+      await this.atomic(entry.target, encode({ ...entry.doc, modelImage, modified: new Date().toISOString() }), revision);
+      return this.read(id);
+    });
+  }
+  removeModelImage(id, revision) {
+    return this.serialize(async () => {
+      const entry = await this.modelImageEntry(id, revision);
+      if (!entry.doc.modelImage) return this.read(id);
+      const doc = { ...entry.doc, modified: new Date().toISOString() };
+      delete doc.modelImage;
+      // Keep content-addressed files: existing backups and recycled documents may reference them.
+      await this.backup(entry);
+      await this.atomic(entry.target, encode(doc), revision);
+      return this.read(id);
+    });
+  }
+  async importDocumentImage(id, input) {
+    const info = inspectDocumentImage(input);
+    // Own the byte snapshot before queuing a write; callers may reuse their view.
+    const bytes = Buffer.from(input);
+    return this.serialize(async () => {
+      await this.locate(id);
+      const name = `${hash(bytes)}.${info.extension}`;
+      const src = `../assets/document-images/${name}`;
+      const folder = path.join(this.root, "assets", "document-images");
+      await this.safe(folder, true);
+      await fs.mkdir(folder, { recursive: true });
+      const target = path.join(folder, name);
+      await this.safe(target, true);
+      let existing;
+      try {
+        const stat = await fs.stat(target);
+        if (!stat.isFile() || stat.size !== bytes.length) throw fail("IMAGE", "已有正文图片内容不一致。");
+        existing = await fs.readFile(target);
+      } catch (error) { if (error.code !== "ENOENT") throw error; }
+      if (existing && !existing.equals(bytes)) throw fail("IMAGE", "已有正文图片内容不一致。");
+      if (!existing) await this.atomic(target, bytes, null);
+      let imported = this.documentImageImports.get(id);
+      if (!imported) this.documentImageImports.set(id, imported = new Set());
+      imported.add(src);
+      // The editor saves Markdown through its normal Ctrl+S/revision workflow.
+      return { src, dataUrl: `data:${info.mime};base64,${bytes.toString("base64")}` };
+    });
+  }
+  async readDocumentImage(id, src) {
+    const reference = typeof src === "string" && documentImageReference.exec(src);
+    if (!reference) throw fail("INPUT", "正文图片引用无效。");
+    this.assertId(id);
+    const { locations } = await this.scan();
+    const entry = locations.get(id);
+    if (!entry) throw fail("NOT_FOUND", "文档已被移动或删除。");
+    if (!entry.doc.body.includes(src) && !this.documentImageImports.get(id)?.has(src))
+      throw fail("IMAGE_REFERENCE", "图片不属于该文档已保存的正文或本次导入。");
+    const target = path.join(this.root, "assets", "document-images", `${reference[1]}.${reference[2]}`);
+    await this.safe(target);
+    const stat = await fs.stat(target);
+    if (!stat.isFile() || stat.size > documentImageLimit) throw fail("IMAGE", "正文图片不是普通文件或超过 20 MB。");
+    const bytes = await fs.readFile(target);
+    const info = inspectDocumentImage(bytes);
+    if (hash(bytes) !== reference[1] || info.extension !== reference[2])
+      throw fail("IMAGE", "正文图片内容与引用不一致。");
+    // A saved image may be removed, saved, then restored by undo this session.
+    let available = this.documentImageImports.get(id);
+    if (!available) this.documentImageImports.set(id, available = new Set());
+    available.add(src);
+    return `data:${info.mime};base64,${bytes.toString("base64")}`;
   }
   validateInput(input) {
     if (
@@ -624,5 +796,6 @@ export class Repository {
   }
   close() {
     this.watchers.splice(0).forEach((close) => close());
+    this.documentImageImports.clear();
   }
 }

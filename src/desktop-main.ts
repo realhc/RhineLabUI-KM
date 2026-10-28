@@ -47,6 +47,7 @@ async function openLibrary(
   }
 }
 import { renderMarkdown } from "./desktop-markdown";
+import { hydrateDocumentImages } from "./document-images";
 let libraryVisible = false;
 import {
   createRollingNumber,
@@ -908,6 +909,9 @@ function setTab(tab: string, sound = true) {
               "",
             )}<p class="log-note">本次会话已通过身份验证。档案内容以当前终端可访问范围展示。</p>`;
   $("#tab-panel").scrollTop = 0;
+  const selectedDocument = documentForRecord(selected);
+  if (tab === "overview" && selectedDocument)
+    hydrateDocumentImages($("#tab-panel"), selectedDocument.id, () => documentDecryption.refresh());
   documentDecryption.refresh();
   if (sound) {
     tabTransition.reveal($("#tab-panel"), !motionActive("surfaceTransitions"));

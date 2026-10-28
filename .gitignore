@@ -22,3 +22,7 @@ __pycache__/
 
 # Independently licensed private font sources; never commit the original files.
 public/fonts/novecento/
+
+# Local notes, personal backups and disposable verification workspaces
+local/
+.tmp/

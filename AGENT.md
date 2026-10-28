@@ -2,11 +2,17 @@
 
 ## 目标与工作方式
 
-本仓库只维护 Windows 本地 Markdown 知识库客户端。先读 README.md、本文、plan.md；涉及视觉继续读 DESIGN.md。以用户本次请求确定完成标准，先检查 Git 状态和实际发行包，保留无关未提交内容。
+本仓库只维护 Windows 本地 Markdown 知识库客户端。先读 README.md、本文、HANDOFF.md 和 plan.md；涉及视觉继续读 DESIGN.md。以用户本次请求确定完成标准，先检查 Git 状态和实际发行包，保留无关未提交内容。
 
 用户要求的正式功能在完成相关验证后可直接提交并同步到当前远程分支，不需重复确认。新实验、额外发布范围和破坏性操作仍按用户明确授权处理。不要引入未经请求的依赖、重构或功能。
 
 沿用原生实现，不启用前端设计或动效 Skill 重做界面。若任务可并行，按独立文件或职责委派，避免互相覆盖。美术模型通过 Blender MCP 制作，保留生成脚本与源工程。
+
+## 版本与本地目录
+
+版本对应以 [docs/VERSIONS.md](docs/VERSIONS.md) 为准。正式版为 1.0.0（基础客户端）和 1.1.0（搜索与可选 AI）；当前源码及本地程序为 1.2.0-preview.1，包含模型图片、正文图片和关系图谱，暂不发布 Release。历史版本归一提交只修正版本元数据，不能混入后续功能。
+
+`release/v1.0.0/`、`release/v1.1.0/` 各保留正式 ZIP 和校验清单；`release/local-1.2.0-preview.1/` 保留当前本地 ZIP、校验清单及解压程序。打包中间文件仍由工具在 `release/desktop/`、`release/packages/` 生成，验收和归档后按当前用户授权清理。`local/notes/` 与 `local/data-backups/` 只放本机备注和数据备份，均不进入 Git。目录搬迁前后核对真实 RhineLabData，个人数据绝不进入 ZIP。
 
 ## 环境与入口
 
@@ -20,11 +26,15 @@ Node.js 至少 22.12，Windows PowerShell 使用 npm.cmd，其他平台可用 np
 - src/desktop-data.ts：动态分类与展陈映射；稳定文档 ID 与可见槽位分开。
 - src/desktop.ts、src/desktop.css：知识库 DOM、功能区与布局。
 - src/desktop-rich-editor.ts：排版编辑、选区、Markdown 序列化与文档独立撤销栈。
+- src/model-images.ts：三维模型图片；src/document-images.ts、src/editor-document-images.ts：正文图片读取、拖放、粘贴与异步位置跟踪。
+- src/desktop-graph-data.ts：从活动文档的内链派生关系；src/desktop-graph.ts、src/desktop-graph.css：图谱界面和导航。
 - src/desktop-library-motion.ts、src/desktop-directory.ts：界面生命周期与原生 scrollTop 惯性。
 - scripts/prepare-desktop.mjs、scripts/desktop-resources.mjs、forge.config.cjs：离线资源、许可及打包白名单。
 - src/desktop-search.ts：无 I/O 的中文/英文关键词索引、相关性、上下文与安全高亮；构建时生成 desktop/search.mjs，供主进程工具复用。
 - src/desktop-ai.ts、src/desktop-ai.css：按需加载的可选助手、接入和任务面板；单独 window.rhineAI 桥接，不扩展编辑器状态。
 - desktop/ai-runtime.mjs：可选模块组合与显式 IPC 分发表；desktop/ai-service.mjs、ai-tools.mjs：模型连接、工具执行、语义索引；ai-automation.mjs：持久任务与恢复；ai-http.mjs：仅本机的外部工具接口。
+
+`scripts/` 保留开发和资源构建工具，验证脚本集中在 `tests/`，测试基准材料在 `tests/fixtures/`。目录与构建说明见 [docs/DEVELOPMENT.md](docs/DEVELOPMENT.md)，按任务选择检查见 [tests/README.md](tests/README.md)。
 
 ## 必须保持的产品行为
 
@@ -64,11 +74,11 @@ npm.cmd run check:desktop:package
 npm.cmd run check:desktop:workflow
 npm.cmd run check:desktop:recovery
 npm.cmd run check:desktop:motion
-node scripts/check-desktop-rich-editor.mjs
-node --experimental-strip-types scripts/check-desktop-search.mjs
-node scripts/check-desktop-ai.mjs
-node scripts/check-desktop-ai-automation.mjs
-node scripts/check-desktop-ai-ui.mjs
+node tests/check-desktop-rich-editor.mjs
+node --experimental-strip-types tests/check-desktop-search.mjs
+node tests/check-desktop-ai.mjs
+node tests/check-desktop-ai-automation.mjs
+node tests/check-desktop-ai-ui.mjs
 ```
 
 涉及场景时，与上一个发行程序在相同视口、时间、主题、画质和 DPI 下比较。不要降低视觉阈值来使失败通过。GUI 测试顺序执行，避免多个原生窗口相互遮挡。环境原生进程故障需与应用错误区分，保留实际日志；不得绕过权限或导出身份凭据。
@@ -80,5 +90,5 @@ Forge 的退出码不能单独证明打包完成。曾出现本机 Node 的 ZIP 
 ## 下一步开发顺序
 
 1. 按实际问题继续覆盖不同显卡、多 DPI/显示器、睡眠恢复与只读目录，特别是启动/跳过开场和未保存编辑期间的恢复。
-2. 图片附件、文档历史恢复或跨设备同步需要先确定用户需求与文件格式，再设计目录边界、迁移、冲突与恢复；不假定已经支持。
+2. 模型图片、正文图片和关系图谱已在当前预览版实现。文档历史恢复与跨设备同步仍需按明确需求设计目录、迁移、冲突及恢复。
 3. 在明确发布需求后考虑 Windows 签名和更新机制，保留便携目录及数据迁移能力。当前没有自动更新、云同步或安装器。

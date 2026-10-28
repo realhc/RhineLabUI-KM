@@ -9,8 +9,9 @@ import {
   Menu,
   safeStorage,
   clipboard,
+  nativeImage,
 } from "electron";
-import { readFile, writeFile, realpath } from "node:fs/promises";
+import { readFile, writeFile, realpath, open } from "node:fs/promises";
 import {
   resolve,
   dirname,
@@ -18,8 +19,9 @@ import {
   isAbsolute,
   join,
   extname,
+  basename,
 } from "node:path";
-import { Repository } from "./repository.mjs";
+import { Repository, inspectDocumentImage } from "./repository.mjs";
 
 protocol.registerSchemesAsPrivileged([
   {
@@ -90,6 +92,79 @@ function external(value) {
   )
     throw new Error("只允许 HTTP / HTTPS 链接");
   return shell.openExternal(url.href);
+}
+function modelImageSize(bytes) {
+  if (bytes.length >= 24 && bytes.subarray(0, 8).equals(Buffer.from([137,80,78,71,13,10,26,10])))
+    return [bytes.readUInt32BE(16), bytes.readUInt32BE(20)];
+  if (bytes[0] === 0xff && bytes[1] === 0xd8) {
+    let offset = 2;
+    while (offset + 4 < bytes.length) {
+      if (bytes[offset++] !== 0xff) break;
+      while (bytes[offset] === 0xff) offset++;
+      const marker = bytes[offset++];
+      if (marker === 0xd9 || marker === 0xda) break;
+      if (marker === 0x01 || (marker >= 0xd0 && marker <= 0xd8)) continue;
+      if (offset + 2 > bytes.length) break;
+      const length = bytes.readUInt16BE(offset);
+      if (length < 2 || offset + length > bytes.length) break;
+      if (length >= 8 && marker >= 0xc0 && marker <= 0xcf && ![0xc4, 0xc8, 0xcc].includes(marker))
+        return [bytes.readUInt16BE(offset + 5), bytes.readUInt16BE(offset + 3)];
+      offset += length;
+    }
+  }
+  throw Object.assign(new Error("请选择有效的 PNG 或 JPEG 图片。"), { code: "IMAGE" });
+}
+async function importModelImage(file) {
+  const limit = 20 * 1024 * 1024;
+  const handle = await open(file, "r");
+  let bytes;
+  try {
+    const stat = await handle.stat();
+    if (!stat.isFile() || stat.size > limit) throw new Error("请选择不超过 20 MB 的普通图片文件。");
+    const buffer = Buffer.alloc(Math.min(stat.size + 1, limit + 1));
+    const { bytesRead } = await handle.read(buffer, 0, buffer.length, 0);
+    if (bytesRead > limit || bytesRead !== stat.size) throw new Error("图片文件过大或读取期间发生变化，请重试。");
+    bytes = buffer.subarray(0, bytesRead);
+  } finally { await handle.close(); }
+  const [width, height] = modelImageSize(bytes);
+  if (width < 1 || height < 1 || width > 16384 || height > 16384 || width * height > 32000000)
+    throw Object.assign(new Error("图片不能超过 3200 万像素，单边不能超过 16384 像素。"), { code: "IMAGE" });
+  let image = nativeImage.createFromBuffer(bytes);
+  if (image.isEmpty()) throw Object.assign(new Error("图片无法解码，请更换图片。"), { code: "IMAGE" });
+  const size = image.getSize();
+  if (size.width < 1 || size.height < 1 || size.width > 16384 || size.height > 16384 || size.width * size.height > 32000000)
+    throw Object.assign(new Error("图片尺寸超出导入限制。"), { code: "IMAGE" });
+  if (size.width > 1024 || size.height > 1024) {
+    const scale = 1024 / Math.max(size.width, size.height);
+    image = image.resize({ width: Math.max(1, Math.round(size.width * scale)), height: Math.max(1, Math.round(size.height * scale)), quality: "best" });
+  }
+  return image.toPNG();
+}
+function verifyDocumentImage(input) {
+  const info = inspectDocumentImage(input);
+  const bytes = Buffer.from(input.buffer, input.byteOffset, input.byteLength);
+  const image = nativeImage.createFromBuffer(bytes);
+  if (image.isEmpty()) throw Object.assign(new Error("正文图片无法解码，请更换图片。"), { code: "IMAGE" });
+  const size = image.getSize();
+  if (size.width < 1 || size.height < 1 || size.width > 16384 || size.height > 16384 || size.width * size.height > 32000000 ||
+      size.width * size.height !== info.width * info.height)
+    throw Object.assign(new Error("正文图片尺寸无效或超出导入限制。"), { code: "IMAGE" });
+  // Keep the original bytes, resolution, metadata and compression.
+  return bytes;
+}
+async function readPickedDocumentImage(file) {
+  const limit = 20 * 1024 * 1024;
+  const handle = await open(file, "r");
+  try {
+    const stat = await handle.stat();
+    if (!stat.isFile() || stat.size < 1 || stat.size > limit)
+      throw Object.assign(new Error("请选择不超过 20 MB 的普通 PNG 或 JPEG 图片文件。"), { code: "IMAGE" });
+    const buffer = Buffer.alloc(stat.size + 1);
+    const { bytesRead } = await handle.read(buffer, 0, buffer.length, 0);
+    if (bytesRead !== stat.size)
+      throw Object.assign(new Error("图片在读取期间发生变化，请重试。"), { code: "IMAGE" });
+    return verifyDocumentImage(buffer.subarray(0, bytesRead));
+  } finally { await handle.close(); }
 }
 if (!app.requestSingleInstanceLock()) app.quit();
 else {
@@ -283,6 +358,49 @@ else {
         "purge",
       ])
         handle(method, (...args) => repository[method](...args));
+      handle("readModelImage", (id, expectedRef) => repository.readModelImage(id, expectedRef));
+      handle("importDocumentImage", async (id, input) => {
+        await repository.locate(id);
+        return repository.importDocumentImage(id, verifyDocumentImage(input));
+      });
+      handle("pickDocumentImages", async id => {
+        await repository.locate(id);
+        const result = await dialog.showOpenDialog(window, {
+          title: "插入正文图片",
+          properties: ["openFile", "multiSelections"],
+          filters: [{ name: "图片", extensions: ["png", "jpg", "jpeg"] }],
+        });
+        if (result.canceled || !result.filePaths.length) return null;
+        if (result.filePaths.length > 10)
+          throw Object.assign(new Error("一次最多插入 10 张图片。"), { code: "INPUT" });
+        const imported = [];
+        for (const file of result.filePaths) {
+          const bytes = await readPickedDocumentImage(file);
+          imported.push({ ...await repository.importDocumentImage(id, bytes), name: basename(file) });
+        }
+        return imported;
+      });
+      handle("readDocumentImage", (id, src) => repository.readDocumentImage(id, src));
+      const requireSavedImageEdit = () => {
+        if (dirty) throw Object.assign(new Error("请先保存正文，再修改模型图片。"), { code: "DIRTY" });
+      };
+      handle("setModelImage", async (id, revision) => {
+        requireSavedImageEdit();
+        await repository.modelImageEntry(id, revision);
+        const result = await dialog.showOpenDialog(window, {
+          title: "选择模型图片",
+          properties: ["openFile"],
+          filters: [{ name: "图片", extensions: ["png", "jpg", "jpeg"] }],
+        });
+        if (result.canceled || !result.filePaths.length) return null;
+        const bytes = await importModelImage(result.filePaths[0]);
+        requireSavedImageEdit();
+        return repository.setModelImage(id, revision, bytes);
+      });
+      handle("removeModelImage", (id, revision) => {
+        requireSavedImageEdit();
+        return repository.removeModelImage(id, revision);
+      });
       handle("openFolder", async () => {
         const error = await shell.openPath(data);
         if (error) throw new Error(error);

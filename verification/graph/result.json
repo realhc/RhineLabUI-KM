@@ -1,0 +1,12 @@
+{
+  "checks": {
+    "insertAndSaveInternalLink": true,
+    "nodesEdgesFiltersAndZoom": true,
+    "nodeAndBodyLinkNavigation": true,
+    "unsavedDraftGuard": true,
+    "escapeReturnsToLibrary": true,
+    "restartPersistence": true
+  },
+  "errors": [],
+  "requests": []
+}

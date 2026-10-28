@@ -1,4 +1,5 @@
 interface RhineCategory { id:string; name:string; lane:number; }
+interface RhineDocumentImage { src: string; dataUrl: string; name?: string; }
 interface RhineDocument {
   id: string;
   title: string;
@@ -9,6 +10,7 @@ interface RhineDocument {
   modified: string;
   body: string;
   revision: string;
+  modelImage?: string;
 }
 interface Window {
   rhine: {
@@ -19,6 +21,13 @@ interface Window {
       categories: RhineCategory[];
       nextLane: number;
     }>;
+    read(id: string, trash?: boolean): Promise<RhineDocument>;
+    setModelImage(id: string, revision: string): Promise<RhineDocument | null>;
+    removeModelImage(id: string, revision: string): Promise<RhineDocument>;
+    readModelImage(id: string, expectedRef: string): Promise<string>;
+    importDocumentImage(id: string, bytes: Uint8Array): Promise<RhineDocumentImage>;
+    pickDocumentImages(id: string): Promise<RhineDocumentImage[] | null>;
+    readDocumentImage(id: string, src: string): Promise<string>;
     create(data: {
       title: string;
       category: string;

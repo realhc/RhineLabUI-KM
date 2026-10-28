@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import { test } from "node:test";
-import { loadContent, validateContent } from "./archive-content.mjs";
+import { loadContent, validateContent } from "../scripts/archive-content.mjs";
 import { escapeHtml } from "../src/html.ts";
 
 const content = await loadContent();

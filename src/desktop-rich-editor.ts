@@ -4,39 +4,8 @@ import { Markdown } from "@tiptap/markdown";
 import { TableKit } from "@tiptap/extension-table";
 import { Mathematics } from "@tiptap/extension-mathematics";
 import "katex/dist/katex.min.css";
-
-// Preserve attachment references without fetching local files or remote images.
-const Attachment = Node.create({
-  name: "image",
-  group: "inline",
-  inline: true,
-  atom: true,
-  addAttributes: () => ({
-    src: { default: "" },
-    alt: { default: "" },
-    title: { default: null },
-  }),
-  parseHTML: () => [{ tag: "span[data-attachment]" }],
-  renderHTML: ({ node }) => [
-    "span",
-    { "data-attachment": "", class: "attachment" },
-    "[图片：" + (node.attrs.alt || "附件") + " — 暂不支持附件]",
-  ],
-  parseMarkdown: (token) => ({
-    type: "image",
-    attrs: { src: token.href, alt: token.text, title: token.title },
-  }),
-  renderMarkdown: (node) =>
-    "![" +
-    String(node.attrs?.alt || "").replace(/[\[\]]/g, "\\$&") +
-    "](<" +
-    String(node.attrs?.src || "").replace(/>/g, "%3E") +
-    ">" +
-    (node.attrs?.title
-      ? ' "' + String(node.attrs.title).replace(/"/g, '\\"') + '"'
-      : "") +
-    ")",
-});
+import { createDocumentImageEditor, type DocumentImageEditorOptions } from "./editor-document-images";
+import { createDocumentResolver } from "./desktop-graph-data";
 
 // HTML code remains literal, as in the previous Markdown reader.
 const LiteralHTML = Node.create({
@@ -101,6 +70,7 @@ export const richToolbar =
   '<div class="format-group" role="group" aria-label="插入内容">' +
   [
     ["link", "链接", "插入或修改链接"],
+    ["image", "图片", "插入本地图片"],
     ["codeBlock", "代码块", "把选中的内容设为代码块"],
     ["math", "∑ 公式", "插入 LaTeX 公式"],
     ["table", "表格", "插入表格"],
@@ -125,15 +95,24 @@ type Request = (
   kind: "link" | "math" | "table",
   initial?: Record<string, string>,
 ) => Promise<Record<string, string> | null>;
+type RichEditorOptions = DocumentImageEditorOptions & { documents?: () => RhineDocument[] };
 export function mountRichEditor(
   element: HTMLElement,
   toolbar: HTMLElement,
   changed: () => void,
   request: Request,
+  options: RichEditorOptions = {},
 ) {
   let raw = "",
     documentId = "",
     editable = false;
+  let editor: Editor;
+  const images = createDocumentImageEditor({
+    ...options,
+    editor: () => editor,
+    documentId: () => documentId,
+    editable: () => editable,
+  });
   const math = async (latex: string, pos: number, block: boolean) => {
     if (!editable) return;
     const result = await request("math", {
@@ -156,11 +135,11 @@ export function mountRichEditor(
           link: {
             openOnClick: false,
             autolink: false,
-            isAllowedUri: (url) => /^https?:\/\//i.test(url),
+            isAllowedUri: (url) => /^https?:\/\//i.test(url) || !!createDocumentResolver(options.documents?.() || [])(url),
           },
           heading: { levels: [1, 2, 3, 4, 5, 6] },
         }),
-        Attachment,
+        images.extension,
         LiteralHTML,
         TableKit,
         Mathematics.configure({
@@ -175,6 +154,16 @@ export function mountRichEditor(
         Markdown,
       ],
       editorProps: {
+        handleDOMEvents: {
+          dragover: (_view, event) => {
+            if (!event.dataTransfer?.types.includes("Files")) return false;
+            event.preventDefault();
+            return true;
+          },
+          drop: (view, event) => images.drop(view, event),
+          paste: (view, event) => images.paste(view, event),
+        },
+        transformPastedHTML: html => images.sanitizeHTML(html),
         attributes: {
           class: "rich-document",
           role: "textbox",
@@ -191,12 +180,13 @@ export function mountRichEditor(
       onSelectionUpdate: () => updateToolbar(),
       onTransaction: () => updateToolbar(),
     });
-  let editor = createEditor();
+  editor = createEditor();
   function updateToolbar() {
     toolbar.querySelectorAll<HTMLButtonElement>("button").forEach((button) => {
       const command = button.dataset.command!;
       button.disabled =
         !editable ||
+        (command === "image" && images.busy()) ||
         (command === "undo"
           ? !editor.can().undo()
           : command === "redo"
@@ -247,6 +237,9 @@ export function mountRichEditor(
     if (!action || !editable) return;
     const chain = editor.chain().focus();
     switch (action) {
+      case "image":
+        await images.pick(editor);
+        break;
       case "bold":
         chain.toggleBold().run();
         break;
@@ -358,12 +351,15 @@ export function mountRichEditor(
   };
   return {
     body: () => raw,
+    busy: images.busy,
+    whenIdle: images.whenIdle,
     load(body: string, id: string) {
       if (id === documentId && body === raw) return;
+      images.reset();
       editor.destroy();
-      editor = createEditor();
       documentId = id;
       raw = body;
+      editor = createEditor();
       // Preserve original bytes until the user actually changes the content.
       editor
         .chain()
@@ -380,5 +376,6 @@ export function mountRichEditor(
       updateToolbar();
     },
     focus: () => editor.commands.focus(),
+    destroy() { images.reset(); editor.destroy(); },
   };
 }

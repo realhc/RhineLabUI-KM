@@ -133,6 +133,6 @@ AI 对话的“允许写入”和本机 API 的“允许写入”分别控制各
 - `desktop/ai-service.mjs`：模型连接、工具定义与统一执行边界；具体入口以 `AGENT.md` 为准。
 - `desktop/ai-automation.mjs`：任务时间、持久恢复日志、睡眠补跑与新文档写入。
 - `desktop/ai-http.mjs`：可选回环 HTTP 服务，认证、权限与有界请求。
-- `scripts/check-desktop-ai-automation.mjs`：临时知识库与模拟模型的 API/任务回归，不调用外部服务。
+- `tests/check-desktop-ai-automation.mjs`：临时知识库与模拟模型的 API/任务回归，不调用外部服务。
 
 新增工具要提供清晰 JSON Schema、说明只读或写入，以及所需修订；通过受限仓库操作，不拼接用户路径或调用 eval。新增自动化类型要保留重入保护、输出恢复日志和补跑上限。详细 AI 开发约束写在 [AGENT.md](../AGENT.md)。

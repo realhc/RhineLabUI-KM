@@ -47,7 +47,7 @@ npm.cmd run check:desktop:package
 npm.cmd run check:desktop
 npm.cmd run check:desktop:recovery
 npm.cmd run check:desktop:motion
-node scripts/check-desktop-rich-editor.mjs
+node tests/check-desktop-rich-editor.mjs
 ```
 
 所有运行测试复制客户端并排除真实 RhineLabData，使用隔离配置。原有个人数据在交付前后逐文件核对。交付记录见 [delivery.json](delivery.json)，后续独立客户端发行检查见 [standalone](../standalone/README.md)。

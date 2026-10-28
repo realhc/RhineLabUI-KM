@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import { createRequire } from "node:module";
-import { inspectDesktopResources } from "./desktop-resources.mjs";
+import { inspectDesktopResources } from "../scripts/desktop-resources.mjs";
 
 const config = createRequire(import.meta.url)("../forge.config.cjs");
 const ignore = config.packagerConfig.ignore;
@@ -42,7 +42,7 @@ for (const path of [
   "/release/desktop/resources.json",
   "/release/packages",
   "/verification",
-  "/scripts",
+  "/scripts", "/tests",
   "/docs",
 ])
   assert.equal(

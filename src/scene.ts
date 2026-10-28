@@ -1,6 +1,7 @@
 import * as THREE from "three";
 import { ArchiveVisibility } from "./archive-visibility";
 import { InstanceUpdates } from "./instance-updates";
+import { ModelImages } from "./model-images";
 import { RenderState } from "./render-state";
 import { SharedDepthAO, SharedDepthBokeh } from "./shared-depth";
 import { disposeThreeTree } from "./three-resources";
@@ -19,7 +20,7 @@ import { applyTextureQuality, resizeQuality } from "./quality-renderer";
 import { CardAppearance } from "./appearance";
 import { configureInternalOptics } from "./internal-optics";
 import { DecryptionController } from "./decryption";
-import { fileAtSlot, fileLocation, archiveColumns as desktopColumnNames, columnFiles as desktopColumnFiles } from "./desktop-data";
+import { records, fileAtSlot, fileLocation, archiveColumns as desktopColumnNames, columnFiles as desktopColumnFiles } from "./desktop-data";
 import {
   cellKey,
   sameCell,
@@ -74,6 +75,7 @@ export class ArchiveScene {
   dispose() {
     this.inputEvents.abort();
     this.cancelPointer();
+    this.modelImages.dispose();
     disposeThreeTree(this.scene);
     this.appearance.disposeSources();
     this.model.clear();
@@ -177,6 +179,7 @@ export class ArchiveScene {
   private extraCoverage = false;
   setArchiveCoverage(extra: boolean) { this.extraCoverage = extra; }
   private model = new THREE.Group();
+  private modelImages!: ModelImages;
   private appearance = new CardAppearance();
   private decryption = new DecryptionController();
   private cursor = new THREE.Vector2();
@@ -268,6 +271,8 @@ export class ArchiveScene {
     this.renderer.shadowMap.type = THREE.PCFSoftShadowMap;
     this.renderer.toneMapping = THREE.ACESFilmicToneMapping;
     this.renderer.toneMappingExposure = 1.05;
+    this.modelImages = new ModelImages(() => this.renderState.invalidate(), this.renderer.capabilities.getMaxAnisotropy());
+    this.scene.add(this.modelImages.array);
     this.renderer.domElement.setAttribute(
       "aria-label",
       "三维研究档案阵列，点击选择，左右拖动切列，上下拖动或滚轮切换列内档案",
@@ -495,6 +500,7 @@ export class ArchiveScene {
 
   private assemblyTemplate?: Promise<THREE.Group>;
   async createAssemblyModel() {
+    const picture = records[fileAtCell(this.selectedCell)];
     this.assemblyTemplate ??= new GLTFLoader()
       .loadAsync(publicAsset("assets/archive-assembly.glb"))
       .then((gltf) => {
@@ -549,6 +555,8 @@ export class ArchiveScene {
     label.userData.themeAmount.value = this.themeAmount;
     model.add(label);
     meshes.push(label);
+    const print = await this.modelImages.assembly(picture);
+    if (print) { model.add(print); meshes.push(print); }
     return {
       model,
       setClarity: (value: number) => this.appearance.setClarity(model, value),
@@ -558,6 +566,7 @@ export class ArchiveScene {
           (mesh.material as THREE.Material).dispose();
         }
         texture.dispose();
+        if (print) print.material.map?.dispose();
       },
     };
   }
@@ -708,6 +717,7 @@ export class ArchiveScene {
     const changed = !sameCell(cell, this.selectedCell);
     if (this.looping && changed && this.loaded && this.lift.value > 0.0001) {
       const group = this.model.clone(true);
+      this.modelImages.snapshot(group);
       const label = group.children[group.children.length - 1] as THREE.Mesh;
       const canvas = document.createElement("canvas");
       canvas.width = 1024;
@@ -762,6 +772,7 @@ export class ArchiveScene {
     } else this.emitPulse(cell);
     this.targetRotation = 0;
     this.drawLabel(index);
+    void this.modelImages.select(this.model, records[index]);
   }
   private emitPulse(cell: ArchiveCell) {
     this.pulses.push({ ...cell, time: this.clock });
@@ -1678,6 +1689,7 @@ export class ArchiveScene {
     // renderer culling and do not need an O(n) bound recomputation each frame.
     if (matricesChanged || countChanged || !this.instances[0].boundingSphere) this.instances[0].computeBoundingSphere();
     this.themeUpdates?.commit();
+    this.modelImages.update(this.drawnCells, this.instances[0].instanceMatrix);
     let neighborTop = -Infinity;
     const lane = selectedLane,
       row = selectedRow;
@@ -1794,6 +1806,7 @@ export class ArchiveScene {
         .map((v) => Math.round(v * 10000) / 10000),
       fieldOfView: this.camera.fov,
       loaded: this.loaded,
+      modelImages: this.modelImages.stats(),
       drawCalls: this.renderer.info.render.calls,
       renderedFrames: this.renderedFrames,
       reusedFrames: this.reusedFrames,

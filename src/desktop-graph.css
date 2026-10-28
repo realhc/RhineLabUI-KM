@@ -1,0 +1,77 @@
+#library-overlay #graph-workspace {
+  width:min(1240px,calc(100vw - 48px));
+  height:min(820px,calc(100dvh - 48px));
+  max-width:none;
+  max-height:none;
+  margin:auto;
+  padding:0;
+  overflow:hidden;
+  border:1px solid var(--glass-stroke);
+  border-radius:22px;
+  background:var(--theme-panel);
+  color:var(--ink);
+  box-shadow:0 28px 90px color-mix(in srgb,var(--ink) 22%,transparent);
+}
+#library-overlay #graph-workspace[open] { display:flex; flex-direction:column; }
+#library-overlay #graph-workspace::backdrop {
+  background:color-mix(in srgb,var(--ink) 48%,transparent);
+  backdrop-filter:blur(8px);
+}
+#library-overlay .graph-header {
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:16px;
+  flex:none;
+  padding:18px 24px;
+  border-bottom:1px solid var(--glass-stroke);
+  background:var(--glass-soft);
+}
+#library-overlay .graph-kicker { font-size:12px; letter-spacing:.14em; color:var(--muted); }
+#library-overlay .graph-header h2 { margin:3px 0 0; font-size:22px; font-weight:600; }
+#library-overlay .graph-header button { font-size:12px; }
+#library-overlay .graph-tools {
+  display:flex;
+  align-items:center;
+  flex-wrap:wrap;
+  gap:12px;
+  padding:10px 24px;
+  border-bottom:1px solid var(--glass-stroke);
+  background:var(--glass-soft);
+  font-size:12px;
+}
+#library-overlay #graph-search { width:min(280px,45vw); font-size:12px; }
+#library-overlay .graph-orphans-label { display:inline-flex; align-items:center; gap:7px; cursor:pointer; white-space:nowrap; }
+#library-overlay .graph-orphans-label input { margin:0; accent-color:var(--theme-accent); }
+#library-overlay #graph-fit { font-size:12px; }
+#library-overlay #graph-count { color:var(--muted); margin-left:auto; white-space:nowrap; }
+#library-overlay .graph-stage { position:relative; min-height:0; flex:1; overflow:hidden; background:var(--theme-paper); }
+#library-overlay #graph-canvas { display:block; width:100%; height:100%; touch-action:none; cursor:grab; }
+#library-overlay #graph-canvas.graph-panning { cursor:grabbing; }
+#library-overlay .graph-edges line { stroke:var(--glass-stroke); stroke-width:1.6; transition:opacity 160ms ease,stroke-width 160ms ease; }
+#library-overlay .graph-edges line.graph-focus { stroke:var(--theme-accent); stroke-width:2.6; }
+#library-overlay .graph-node { cursor:pointer; pointer-events:bounding-box; transition:opacity 160ms ease; }
+#library-overlay .graph-node .graph-hit { fill:transparent; stroke:none; }
+#library-overlay .graph-node circle { fill:var(--theme-accent); stroke:var(--theme-paper); stroke-width:2; }
+#library-overlay .graph-node text { font:12px MiSans,"Microsoft YaHei",sans-serif; fill:var(--ink); paint-order:stroke; stroke:var(--theme-paper); stroke-width:3; stroke-linejoin:round; }
+#library-overlay .graph-node.graph-focus circle,
+#library-overlay .graph-node.graph-match circle { stroke:var(--ink); stroke-width:2.5; }
+#library-overlay .graph-node.graph-muted,
+#library-overlay .graph-edges line.graph-muted { opacity:.12; }
+#library-overlay .graph-node:focus-visible { outline:none; }
+#library-overlay .graph-node:focus-visible circle { stroke:var(--ink); stroke-width:3; }
+#library-overlay .graph-dense .graph-node text { opacity:0; }
+#library-overlay .graph-dense .graph-node:is(.graph-focus,.graph-match,:focus-visible) text { opacity:1; }
+#library-overlay .graph-empty { position:absolute; inset:0; display:grid; place-items:center; padding:24px; text-align:center; font-size:14px; color:var(--muted); pointer-events:none; }
+#library-overlay .graph-empty[hidden] { display:none; }
+@media (max-width:640px) {
+  #library-overlay #graph-workspace { width:calc(100vw - 20px); height:calc(100dvh - 20px); border-radius:14px; }
+  #library-overlay .graph-header { padding:14px 16px; }
+  #library-overlay .graph-tools { padding:9px 16px; gap:8px; }
+  #library-overlay #graph-search { width:100%; }
+  #library-overlay #graph-count { margin-left:0; }
+}
+@media (prefers-reduced-motion:reduce) {
+  #library-overlay .graph-node,
+  #library-overlay .graph-edges line { transition:none; }
+}
