@@ -1,5 +1,6 @@
 interface RhineCategory { id:string; name:string; lane:number; }
 interface RhineDocumentImage { src: string; dataUrl: string; name?: string; }
+interface RhineHistoryEntry { key: string; savedAt: string; title: string; revision: string; bytes: number; }
 interface RhineDocument {
   id: string;
   title: string;
@@ -22,6 +23,9 @@ interface Window {
       nextLane: number;
     }>;
     read(id: string, trash?: boolean): Promise<RhineDocument>;
+    listHistory(id: string): Promise<RhineHistoryEntry[]>;
+    readHistory(id: string, key: string): Promise<RhineDocument>;
+    restoreHistory(id: string, key: string, revision: string): Promise<RhineDocument>;
     setModelImage(id: string, revision: string): Promise<RhineDocument | null>;
     removeModelImage(id: string, revision: string): Promise<RhineDocument>;
     readModelImage(id: string, expectedRef: string): Promise<string>;

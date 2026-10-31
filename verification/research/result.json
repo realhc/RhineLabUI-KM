@@ -1,0 +1,15 @@
+{
+  "checks": {
+    "longDocumentGrid": true,
+    "outlineAndPosition": true,
+    "searchHitNavigation": true,
+    "quickSwitcher": true,
+    "wikiCompletion": true,
+    "draftProtectedNavigation": true,
+    "backlinksMentionsAndLocalGraph": true,
+    "historyRestoreRetainsCurrent": true,
+    "historyCopy": true,
+    "narrowLayout": true
+  },
+  "errors": []
+}

@@ -1,0 +1,10 @@
+{
+  "checks": {
+    "deterministicIdentityAndTypography": true,
+    "customPrioritySnapshotAndViewer": true,
+    "staleRequestsDisposed": true,
+    "arrayQueueCacheAndDisposal": true,
+    "failureDoesNotStarveQueue": true
+  },
+  "errors": []
+}

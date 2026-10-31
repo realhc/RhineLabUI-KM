@@ -4,27 +4,27 @@
     "cancelKeepsImage": true,
     "invalidKeepsImage": true,
     "unsavedGuard": true,
-    "repeatedArrayInstances": 6,
+    "repeatedArrayInstances": 296,
     "arrayPixels": {
-      "red": 6180,
+      "red": 7076,
       "blue": 0
     },
     "detailPixels": {
-      "red": 117636,
+      "red": 117675,
       "blue": 0
     },
     "viewer": {
-      "red": 506,
-      "blue": 1758
+      "red": 66065,
+      "blue": 0
     },
     "replaceAndSwitch": {
       "red": 0,
-      "blue": 158374
+      "blue": 157506
     },
     "restartPersistence": true,
     "trashRestoreAndRemove": true
   },
   "errors": [],
   "requests": [],
-  "portable": "C:\\Users\\Administrator\\Documents\\ChatGPT\\CodexSandbox\\rhine-model-images\\release\\model-images-test\\1792924546241\\portable"
+  "portable": "C:\\Users\\Administrator\\Documents\\ChatGPT\\CodexSandbox\\rhine-model-images\\release\\document-images-test\\model-images\\1793382541375\\portable"
 }

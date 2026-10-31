@@ -6,7 +6,7 @@ GitHub 保留两个正式 Release。最新源码及本地程序使用 1.2.0-prev
 | --- | --- | --- | --- |
 | [1.0.0](https://github.com/realhc/RhineLabUI-KM/releases/tag/v1.0.0) | 原 v1.2.0 | Windows 便携客户端、本地 Markdown、刻度目录、排版编辑与三维终端 | GitHub 正式 Release |
 | [1.1.0](https://github.com/realhc/RhineLabUI-KM/releases/tag/v1.1.0) | 原 v1.3.0 | 搜索增强、可选 AI 助手、本机工具接口与定时文档 | GitHub 正式 Release，默认下载版本 |
-| 1.2.0-preview.1 | 当前 `main` | 模型图片、正文图片、文档内链和关系图谱，以及源码目录整理 | 最新源码与本地预览 |
+| 1.2.0-preview.1 | 当前 `main` | 图片、阅读定位、反向链接与局部图谱、历史恢复、统一档案标识与内容封面 | 最新源码与本地预览 |
 
 历史版本的归一只修正版本元数据和发行介绍，功能分别沿用原来的两个版本。相应历史源码提交仅纠正版本元数据；版本标签、程序版本、ZIP 文件名和校验清单保持一致。已有验收材料中的旧版本号是当时的记录。
 

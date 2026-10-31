@@ -34,6 +34,8 @@ try{
  await page.keyboard.press('e');await page.keyboard.press('Control+s');assert.equal((await page.evaluate(id=>window.rhine.read(id),docs.source.id)).body,docs.body);checks.untouchedMarkdownPreserved=true;
  const before=await page.locator('#preview .tiptap').innerText();await page.locator('#preview .tiptap').press('Control+End');await page.keyboard.insertText('尺寸验证');await page.waitForTimeout(250);await page.keyboard.press('Control+z');assert.equal(await page.locator('#preview .tiptap').innerText(),before);checks.undoIgnoresDecoration=true;await page.keyboard.press('Control+s');
  await open(docs.target);await open(docs.source);checks.rebuiltEditorGeometry=await waitGeometry();
+ // Let the repository watcher finish its post-save refresh before measuring idle redraws.
+ await page.waitForTimeout(600);
  await page.evaluate(()=>{window.draftMutations=0;window.draftObserver=new MutationObserver(()=>window.draftMutations++);window.draftObserver.observe(document.querySelector('#document-drafting'),{childList:true,attributes:true,subtree:true});});await page.waitForTimeout(500);assert.equal(await page.evaluate(()=>{window.draftObserver.disconnect();return window.draftMutations;}),0);checks.noIdleRedraw=true;
  await page.locator('#graph-open').click();await poll(()=>document.querySelector('#graph-workspace')?.open);
  assert.equal(await page.locator('#graph-canvas .graph-grid').evaluate(element=>getComputedStyle(element).pointerEvents),'none');

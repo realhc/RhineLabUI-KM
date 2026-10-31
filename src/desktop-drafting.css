@@ -34,7 +34,8 @@
 #library-overlay #document-drafting .draft-rail,
 #library-overlay #document-drafting .draft-heading-box { stroke:var(--draft-grid-major); }
 #library-overlay #document-drafting .draft-heading-corner,
-#library-overlay #document-drafting .draft-dimension { stroke:var(--draft-guide); }
+#library-overlay #document-drafting .draft-dimension { stroke:var(--draft-label); stroke-width:2; }
+#library-overlay #document-drafting .draft-rail { stroke-width:1.5; }
 #library-overlay #document-drafting .draft-size {
   font:12px Consolas,"Microsoft YaHei",monospace;
   fill:var(--draft-label);

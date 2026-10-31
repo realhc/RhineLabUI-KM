@@ -15,6 +15,9 @@ contextBridge.exposeInMainWorld("rhine", {
     [
       "list",
       "read",
+      "listHistory",
+      "readHistory",
+      "restoreHistory",
       "create",
       "save",
       "setModelImage",

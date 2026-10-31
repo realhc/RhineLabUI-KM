@@ -346,6 +346,8 @@ else {
       for (const method of [
         "list",
         "read",
+        "listHistory",
+        "readHistory",
         "create",
         "save",
         "reorder",
@@ -359,6 +361,10 @@ else {
       ])
         handle(method, (...args) => repository[method](...args));
       handle("readModelImage", (id, expectedRef) => repository.readModelImage(id, expectedRef));
+      handle("restoreHistory", (id, key, revision) => {
+        if (dirty) throw Object.assign(new Error("请先保存或放弃未保存的修改，再恢复历史。"), { code: "DIRTY" });
+        return repository.restoreHistory(id, key, revision);
+      });
       handle("importDocumentImage", async (id, input) => {
         await repository.locate(id);
         return repository.importDocumentImage(id, verifyDocumentImage(input));

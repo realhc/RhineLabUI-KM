@@ -14,6 +14,9 @@ npm.cmd test
 | --- | --- |
 | 搜索与高亮 | `npm.cmd run check:desktop:search` |
 | 文档链接解析 | `npm.cmd run check:desktop:graph-data` |
+| 引用上下文、未链接提及与局部图谱 | `npm.cmd run check:desktop:relations` |
+| 历史快照、恢复和修订冲突 | `npm.cmd run check:desktop:history` |
+| 内容封面与纹理生命周期 | `npm.cmd run check:desktop:archive-cover` |
 | AI 服务与持久任务 | `npm.cmd run check:desktop:ai` |
 | 阵列拖动与动效 | `node --experimental-strip-types tests/check-archive-drag.mjs`、`node --experimental-strip-types tests/check-motion.mjs` |
 | 模型与解密 | `node --experimental-strip-types tests/check-assembly.mjs`、`node --experimental-strip-types tests/check-decryption.mjs` |
@@ -28,6 +31,7 @@ npm.cmd run check:desktop:package
 npm.cmd run check:desktop:editor
 npm.cmd run check:desktop:graph-ui
 npm.cmd run check:desktop:drafting-ui
+npm.cmd run check:desktop:research-ui
 ```
 
 图片检查使用 `check:desktop:model-images-ui` 和 `check:desktop:document-images-ui`；AI 界面使用 `check:desktop:ai-ui`。启动和界面生命周期使用 `check:desktop:recovery`、`check:desktop:motion`，分类及文件工作流使用 `check:desktop:category-ui`、`check:desktop:workflow`。

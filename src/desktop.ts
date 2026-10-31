@@ -5,6 +5,8 @@ import { mountRichEditor, richToolbar } from "./desktop-rich-editor";
 import { createSearchIndex, highlightText, findTextRanges } from "./desktop-search";
 import { createDocumentResolver } from "./desktop-graph-data";
 import { mountDocumentDrafting } from "./desktop-drafting";
+import { mountReadingNavigation, mountQuickSwitcher } from "./desktop-reading";
+import { archiveIdentity } from "./archive-identity";
 
 const api = window.rhine;
 const overlay = document.createElement("dialog");
@@ -45,6 +47,8 @@ let searchScope = "*", searchRelevance = true, semanticVersion = 0;
 let searchSignature="";
 let aiWorkspace: ReturnType<typeof import("./desktop-ai")["mountAIWorkspace"]> | undefined;
 let graphWorkspace: ReturnType<typeof import("./desktop-graph")["mountGraphWorkspace"]> | undefined;
+let relationsWorkspace: ReturnType<typeof import("./desktop-relations")["mountDocumentRelations"]> | undefined;
+let historyWorkspace: ReturnType<typeof import("./desktop-history")["mountDocumentHistory"]> | undefined;
 let dirty = false,
   saving = false,
   modelImageBusy = false,
@@ -104,6 +108,70 @@ const rich = mountRichEditor($("preview"),$("format"), () => setDirty(true), req
   documents: () => documents,
 });
 mountDocumentDrafting($("preview"));
+const reading = mountReadingNavigation($("preview"), $("panes"));
+const navigation = document.createElement('div'); navigation.className = 'reading-navigation';
+navigation.innerHTML = '<button id="reading-back" title="Alt+← 返回上一文档" aria-label="返回上一文档" disabled>←</button><button id="reading-forward" title="Alt+→ 前进" aria-label="前进到下一文档" disabled>→</button><button id="reading-quick" title="Ctrl+P 快速切换文档">快速切换</button><button id="reading-outline-toggle" aria-expanded="false">文内大纲</button><button id="document-relations-toggle" aria-expanded="false">文档关系</button><button id="document-history-open">历史</button>';
+controls.querySelector('.document-heading')!.after(navigation);
+const quickSwitcher = mountQuickSwitcher(overlay, { documents: () => documents, navigate: id => run(() => navigateInternal(id)) });
+let navigationTrail: string[] = [], navigationCursor = -1;
+function updateNavigation() {
+  $<HTMLButtonElement>('reading-back').disabled = navigationCursor <= 0;
+  $<HTMLButtonElement>('reading-forward').disabled = navigationCursor < 0 || navigationCursor >= navigationTrail.length - 1;
+  for (const id of ['reading-outline-toggle', 'document-relations-toggle', 'document-history-open']) $<HTMLButtonElement>(id).disabled = !selected;
+  for (const id of ['document-relations-toggle', 'document-history-open']) $<HTMLButtonElement>(id).disabled = !selected || trash.some(doc => doc.id === selected!.id);
+}
+function recordNavigation(id: string) {
+  if (navigationTrail[navigationCursor] === id) return;
+  navigationTrail = navigationTrail.slice(0, navigationCursor + 1); navigationTrail.push(id);
+  if (navigationTrail.length > 100) navigationTrail.shift();
+  navigationCursor = navigationTrail.length - 1; updateNavigation();
+}
+async function traverseNavigation(delta: number) {
+  let index = navigationCursor + delta;
+  while (index >= 0 && index < navigationTrail.length) {
+    const id = navigationTrail[index];
+    if ([...documents, ...trash].some(doc => doc.id === id)) {
+      await select(id, false);
+      if (selected?.id === id) { navigationCursor = index; updateNavigation(); }
+      return;
+    }
+    index += delta;
+  }
+}
+$('reading-back').onclick = () => run(() => traverseNavigation(-1));
+$('reading-forward').onclick = () => run(() => traverseNavigation(1));
+$('reading-quick').onclick = () => quickSwitcher.open();
+$('reading-outline-toggle').onclick = () => reading.toggle();
+const relationsHost = document.createElement('section'); relationsHost.id = 'relations-host';
+$('panes').before(relationsHost);
+$('document-relations-toggle').onclick = () => run(async () => {
+  if (!selected || trash.some(doc => doc.id === selected!.id)) return;
+  if (!relationsWorkspace) {
+    const module = await import('./desktop-relations');
+    relationsWorkspace = module.mountDocumentRelations(relationsHost, {
+      documents: () => documents,
+      navigate: id => run(() => navigateInternal(id)) as Promise<void>,
+      expandGraph: (id, depth) => { run(() => openGraph(id, depth)); },
+      changed: open => $('document-relations-toggle').setAttribute('aria-expanded', String(open)),
+    });
+  }
+  relationsWorkspace.toggle(selected.id);
+});
+$('document-history-open').onclick = () => run(async () => {
+  if (!selected) return;
+  if (!historyWorkspace) {
+    const module = await import('./desktop-history');
+    historyWorkspace = module.mountDocumentHistory({
+      host: overlay, getDocument: () => selected, canLeave,
+      onRestored: async doc => {
+        setDirty(false); editing = false; conflict = false;
+        await refresh(); await navigateInternal(doc.id); renderEditor();
+      },
+      onError: error,
+    });
+  }
+  await historyWorkspace.open();
+});
 
 function notify(message: string) {
   $("notice").textContent = message;
@@ -202,8 +270,9 @@ function renderList() {
   const focused = (document.activeElement as HTMLElement)?.dataset.id;
   const previousSelection = el.querySelector<HTMLElement>(".selected")?.dataset.id;
   const documentRow = (d:RhineDocument) => {
+    const identity = archiveIdentity(d);
     const snippet = (searchHits.get(d.id)?.snippet || semanticHits.get(d.id)?.snippet || "").replace(/^#{1,6}\s+/gm, "").replace(/\*\*([^*]+)\*\*/g,"$1").replace(/`([^`]+)`/g,"$1");
-    return `<button role="listitem" class="document ${selected?.id===d.id?"selected":""}" draggable="${view!=="trash"}" title="拖动文档条：归类或排序" data-id="${escape(d.id)}" aria-current="${selected?.id===d.id}"><span class="directory-label"><strong>${saved.has(d.id)?"★ ":""}${query?highlightText(d.title,query):escape(d.title)}</strong><small>${escape(d.modified.slice(0,10))}</small>${query&&snippet?`<span class="search-snippet">${highlightText(snippet,query)}</span>`:""}</span>${view!=="trash"?'<span class="directory-reorder" title="拖动文档条：归类或排序" aria-hidden="true">⋮⋮</span>':""}</button>`;
+    return `<button role="listitem" class="document ${selected?.id===d.id?"selected":""}" draggable="${view!=="trash"}" title="拖动文档条：归类或排序" data-id="${escape(d.id)}" aria-current="${selected?.id===d.id}"><span class="directory-label"><strong>${saved.has(d.id)?"★ ":""}${query?highlightText(d.title,query):escape(d.title)}</strong><small><span class="directory-identity">${escape(identity.mark)} ${escape(identity.code)}</span><span>${escape(d.modified.slice(0,10))}</span></small>${query&&snippet?`<span class="search-snippet">${highlightText(snippet,query)}</span>`:""}</span>${view!=="trash"?'<span class="directory-reorder" title="拖动文档条：归类或排序" aria-hidden="true">⋮⋮</span>':""}</button>`;
   };
   const groupRow = (id:string|null,name:string,items:RhineDocument[]) => {
     const shut = !!id && collapsed.has(id) && !query;
@@ -243,7 +312,7 @@ function renderEditor() {
   $("editor").hidden = !selected;
   $("empty-main").hidden = !!selected;
   updateModelImageButtons();
-  if (!selected) { editing = false; rich.setEditable(false); return; }
+  if (!selected) { editing = false; rich.setEditable(false); reading.update(undefined, true); relationsWorkspace?.update(); updateNavigation(); return; }
   const removed = trash.some((d) => d.id === selected!.id);
   $<HTMLInputElement>("title").value = selected.title;
   rich.load(selected.body,selected.id);
@@ -256,13 +325,19 @@ function renderEditor() {
   for (const id of ["restore", "purge"]) $(id).hidden = !removed;
   $("favorite").textContent = saved.has(selected.id) ? "★ 已收藏" : "☆ 收藏";
   $("document-info").textContent =
-    `${selected.id} · 修改 ${new Date(selected.modified).toLocaleString()}${removed ? " · 回收区（只读）" : ""}`;
+    `${selected.id} / 修改 ${new Date(selected.modified).toLocaleString()}${removed ? " / 回收区（只读）" : ""}`;
+  reading.update(selected, changedDocument);
+  relationsWorkspace?.update(removed ? undefined : selected.id);
+  updateNavigation();
   if (changedDocument) libraryMotion.revealDocument();
   updateSearchHighlights(changedDocument);
 }
-async function select(id: string) {
+async function select(id: string, track = true) {
   if (selected?.id === id) { activeCategory = selected.categoryId ?? null; renderList(); return; }
   if (!(await canLeave())) return;
+  if (![...documents, ...trash].some(doc => doc.id === id)) return;
+  reading.capture();
+  if (track && selected) recordNavigation(selected.id);
   editing = false;
   selected = [...documents, ...trash].find((d) => d.id === id);
   activeCategory = selected?.categoryId ?? null;
@@ -270,6 +345,7 @@ async function select(id: string) {
   if (index >= 0) page = Math.floor(index / 20);
   conflict = false;
   setDirty(false);
+  if (track && selected) recordNavigation(selected.id);
   renderEditor();
   renderList();
 }
@@ -405,6 +481,8 @@ async function save(): Promise<boolean> {
 }
 async function create(options?: {title:string; categoryId:string|null}) {
   if (!(await canLeave())) return;
+  reading.capture();
+  if (selected) recordNavigation(selected.id);
   const previous = selected;
   let title = options?.title || "未命名文档",
     count = 2;
@@ -422,6 +500,7 @@ async function create(options?: {title:string; categoryId:string|null}) {
       categoryId: options ? options.categoryId : activeCategory,
       body: "",
     });
+    recordNavigation(selected.id);
     editing = true;
     view = "all";
     query = "";
@@ -524,7 +603,7 @@ async function navigateInternal(id: string): Promise<boolean> {
   updateNav(); renderList();
   return true;
 }
-graphButton.onclick = () => run(async () => {
+async function openGraph(id?: string, depth: 1 | 2 = 1) {
   if (!graphWorkspace) {
     const module = await import("./desktop-graph");
     graphWorkspace = module.mountGraphWorkspace(overlay, {
@@ -532,8 +611,9 @@ graphButton.onclick = () => run(async () => {
       openDocument: id => run(() => navigateInternal(id)) as Promise<boolean>,
     });
   }
-  graphWorkspace.open();
-});
+  if (id) graphWorkspace.openLocal(id, depth); else graphWorkspace.open();
+}
+graphButton.onclick = () => run(() => openGraph());
 
 // CSS Highlights paint read-only hits without inserting nodes into ProseMirror or its undo history.
 const highlightAPI=(globalThis as any).CSS?.highlights;
@@ -569,8 +649,8 @@ function updateSearchHighlights(scrollToFirst: boolean) {
 }
 function jumpSearch(delta: number) {
   if(!hitRanges.length)return;hitPosition=(hitPosition+delta+hitRanges.length)%hitRanges.length;
-  const rect=hitRanges[hitPosition].getBoundingClientRect(),article=$("preview");
-  article.scrollTop+=rect.top-article.getBoundingClientRect().top-70;
+  const rect=hitRanges[hitPosition].getBoundingClientRect(),panes=$("panes");
+  panes.scrollTop+=rect.top-panes.getBoundingClientRect().top-70;
   $("search-position-label").textContent=`正文命中 ${hitPosition+1} / ${hitRanges.length}`;
 }
 $("search-previous").onclick=()=>jumpSearch(-1);$("search-next").onclick=()=>jumpSearch(1);
@@ -702,6 +782,10 @@ document.addEventListener("keydown", (e) => {
   if ($<HTMLDialogElement>("dialog").open) return;
   if (aiWorkspace?.panel.open) return;
   if (graphWorkspace?.isOpen()) return;
+  if (historyWorkspace?.isOpen()) return;
+  if (quickSwitcher.panel.open) return;
+  if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'p') { e.preventDefault(); quickSwitcher.open(); return; }
+  if (e.altKey && ['ArrowLeft','ArrowRight'].includes(e.key)) { e.preventDefault(); run(() => traverseNavigation(e.key === 'ArrowLeft' ? -1 : 1)); return; }
   if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "s") {
     e.preventDefault();
     run(save);
@@ -757,7 +841,10 @@ overlay.addEventListener("cancel", event => { event.preventDefault(); run(closeL
 async function closeLibrary() {
   if (!overlay.open) return true;
   if (!(await canLeave())) return false;
+  reading.capture();
   graphWorkspace?.close();
+  historyWorkspace?.close();
+  relationsWorkspace?.close();
   directoryWheel.stop();
   if (!(await libraryMotion.hide())) return false;
   window.dispatchEvent(new CustomEvent("rhine-library-visibility", {detail:false}));

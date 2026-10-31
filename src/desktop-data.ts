@@ -1,6 +1,7 @@
 import content from "../content/archives.json" with { type: "json" };
 export interface ArchiveRecord {
   id: string;
+  placeholder?: boolean;
   modelImage?: string;
   title: string;
   en: string;
@@ -38,6 +39,7 @@ function recordFor(
   if (!doc)
     return {
       id: "EMPTY-" + index,
+      placeholder: true,
       title: "空档案位 · 新建文档",
       en: "NEW ARCHIVE",
       department: "本地知识库",

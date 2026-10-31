@@ -1,4 +1,5 @@
-import { buildDocumentGraph } from "./desktop-graph-data";
+import { buildDocumentGraph, localDocumentGraph } from "./desktop-graph-data";
+import { archiveIdentity } from "./archive-identity";
 import "./desktop-graph.css";
 
 type GraphNode = { id: string; title: string; category?: string };
@@ -20,7 +21,7 @@ export function mountGraphWorkspace(overlay: HTMLDialogElement, hooks: Hooks) {
   panel.id = "graph-workspace";
   panel.setAttribute("aria-labelledby", "graph-title");
   panel.innerHTML = `<header class="graph-header"><div><div class="graph-kicker">ARCHIVE DIRECTORY</div><h2 id="graph-title">关系图谱</h2></div><button id="graph-close" type="button" aria-label="关闭关系图谱">CLOSE ×</button></header>
-    <div class="graph-tools"><input id="graph-search" type="search" placeholder="搜索文档" aria-label="搜索图谱中的文档" autocomplete="off"><label class="graph-orphans-label"><input id="graph-orphans" type="checkbox" checked>显示孤点</label><button id="graph-fit" type="button" title="调整视野以显示全部节点">适应画面</button><span id="graph-count" role="status" aria-live="polite"></span></div>
+    <div class="graph-tools"><input id="graph-search" type="search" placeholder="搜索文档" aria-label="搜索图谱中的文档" autocomplete="off"><label class="graph-orphans-label"><input id="graph-orphans" type="checkbox" checked>显示孤点</label><label class="graph-depth-label" hidden>关系范围<select id="graph-depth" aria-label="局部图谱关系层数"><option value="1">一层</option><option value="2">两层</option></select></label><button id="graph-global" type="button" hidden>查看全局</button><button id="graph-fit" type="button" title="调整视野以显示全部节点">适应画面</button><span id="graph-count" role="status" aria-live="polite"></span></div>
     <div class="graph-stage"><svg id="graph-canvas" role="group" aria-label="文档关系图谱"><defs><pattern id="graph-grid-minor" patternUnits="userSpaceOnUse" width="32" height="32"><path d="M32 .5H.5V32"/></pattern><pattern id="graph-grid-major" patternUnits="userSpaceOnUse" width="160" height="160"><path d="M160 .5H.5V160"/></pattern></defs><g class="graph-grid" aria-hidden="true"><rect class="graph-grid-minor" width="100%" height="100%" fill="url(#graph-grid-minor)"/><rect class="graph-grid-major" width="100%" height="100%" fill="url(#graph-grid-major)"/></g><g class="graph-transform"><g class="graph-edges"></g><g class="graph-nodes"></g></g></svg><div id="graph-empty" class="graph-empty" hidden></div></div>`;
   overlay.append(panel);
   const $ = <T extends Element>(id: string) => panel.querySelector<T>(`#${id}`)!;
@@ -36,6 +37,8 @@ export function mountGraphWorkspace(overlay: HTMLDialogElement, hooks: Hooks) {
   const nodeLayer = panel.querySelector<SVGGElement>(".graph-nodes")!;
   const empty = $<HTMLElement>("graph-empty");
   const count = $<HTMLElement>("graph-count");
+  const depthControl = $<HTMLSelectElement>("graph-depth");
+  let localCenter: string | undefined, localDepth: 1 | 2 = 1;
   let nodes: Point[] = [], links: Link[] = [], points = new Map<string, Point>();
   let groups = new Map<string, SVGGElement>();
   let edgesByNode = new Map<string, Link[]>();
@@ -101,6 +104,7 @@ export function mountGraphWorkspace(overlay: HTMLDialogElement, hooks: Hooks) {
       target.vx -= dx / distance * force; target.vy -= dy / distance * force;
     }
     for (const p of nodes) {
+      if (localCenter === p.id) { p.x = p.y = p.vx = p.vy = 0; continue; }
       if (drag?.node === p) { p.vx = p.vy = 0; continue; }
       p.vx = clamp(p.vx * 0.72, -8, 8); p.vy = clamp(p.vy * 0.72, -8, 8);
       p.x += p.vx; p.y += p.vy;
@@ -121,17 +125,19 @@ export function mountGraphWorkspace(overlay: HTMLDialogElement, hooks: Hooks) {
       minX = Math.min(minX, point.x); maxX = Math.max(maxX, point.x);
       minY = Math.min(minY, point.y); maxY = Math.max(maxY, point.y);
     }
-    const width = Math.max(1, maxX - minX + 180), height = Math.max(1, maxY - minY + 120);
+    const center = localCenter ? points.get(localCenter) : undefined;
+    const width = Math.max(1, center ? 2 * Math.max(Math.abs(minX - center.x), Math.abs(maxX - center.x)) + 180 : maxX - minX + 180);
+    const height = Math.max(1, center ? 2 * Math.max(Math.abs(minY - center.y), Math.abs(maxY - center.y)) + 120 : maxY - minY + 120);
     scale = clamp(Math.min(rect.width / width, rect.height / height), .12, 1.5);
-    tx = rect.width / 2 - (minX + maxX) / 2 * scale;
-    ty = rect.height / 2 - (minY + maxY) / 2 * scale;
+    tx = rect.width / 2 - (center ? center.x : (minX + maxX) / 2) * scale;
+    ty = rect.height / 2 - (center ? center.y : (minY + maxY) / 2) * scale;
     applyTransform();
   }
   function setHighlight() {
     const query = search.value.trim().toLocaleLowerCase();
     const matching = new Set<string>();
     if (query) for (const node of nodes)
-      if (`${node.title}\n${node.category || ""}`.toLocaleLowerCase().includes(query)) matching.add(node.id);
+      if (`${node.title}\n${node.category || ""}\n${node.id}`.toLocaleLowerCase().includes(query)) matching.add(node.id);
     const relevant = new Set(matching);
     if (query) for (const link of links) {
       if (matching.has(link.source.id)) relevant.add(link.target.id);
@@ -145,6 +151,7 @@ export function mountGraphWorkspace(overlay: HTMLDialogElement, hooks: Hooks) {
       group.classList.toggle("graph-muted", (!!query && !relevant.has(id)) || (!!hovered && !neighbors.has(id)));
       group.classList.toggle("graph-match", !!query && matching.has(id));
       group.classList.toggle("graph-focus", id === hovered);
+      group.classList.toggle("graph-center", id === localCenter);
     }
     for (const link of links) {
       link.element.classList.toggle("graph-muted", (!!query && !matching.has(link.source.id) && !matching.has(link.target.id)) || (!!hovered && link.source.id !== hovered && link.target.id !== hovered));
@@ -152,7 +159,7 @@ export function mountGraphWorkspace(overlay: HTMLDialogElement, hooks: Hooks) {
     }
     count.textContent = query ? `${matching.size} 个匹配` : `${nodes.length} 篇文档  ${links.length} 条关系`;
     empty.hidden = nodes.length > 0 && (!query || matching.size > 0);
-    empty.textContent = !nodes.length ? (sourceNodes.length ? "没有关联的文档" : "还没有文档") : "没有匹配的文档";
+    empty.textContent = !nodes.length ? (localCenter ? "当前文档已不在知识库中" : sourceNodes.length ? "没有关联的文档" : "还没有文档") : "没有匹配的文档";
   }
   function render() {
     const old = points;
@@ -162,7 +169,7 @@ export function mountGraphWorkspace(overlay: HTMLDialogElement, hooks: Hooks) {
       degrees.set(edge.source, degrees.get(edge.source)! + 1);
       degrees.set(edge.target, degrees.get(edge.target)! + 1);
     }
-    const visible = sourceNodes.filter(node => orphans.checked || (degrees.get(node.id) || 0) > 0);
+    const visible = sourceNodes.filter(node => node.id === localCenter || orphans.checked || (degrees.get(node.id) || 0) > 0);
     nodes = visible.map((node, i) => {
       const previous = old.get(node.id), angle = i * Math.PI * (3 - Math.sqrt(5)), radius = 32 * Math.sqrt(i);
       return { ...node, x: previous?.x ?? Math.cos(angle) * radius, y: previous?.y ?? Math.sin(angle) * radius, vx: 0, vy: 0, degree: degrees.get(node.id) || 0 };
@@ -184,7 +191,8 @@ export function mountGraphWorkspace(overlay: HTMLDialogElement, hooks: Hooks) {
       edgeFragment.append(element);
     }
     for (const point of nodes) {
-      const group = makeSVG("g"), hit = makeSVG("circle"), circle = makeSVG("circle"), label = makeSVG("text"), tooltip = makeSVG("title");
+      const group = makeSVG("g"), hit = makeSVG("circle"), circle = makeSVG("circle"), label = makeSVG("text"), identityLabel = makeSVG("text"), tooltip = makeSVG("title");
+      const identity = archiveIdentity(point);
       group.classList.add("graph-node");
       group.setAttribute("data-graph-id", point.id);
       group.setAttribute("role", "button"); group.setAttribute("tabindex", "0");
@@ -193,8 +201,11 @@ export function mountGraphWorkspace(overlay: HTMLDialogElement, hooks: Hooks) {
       circle.setAttribute("r", String(clamp(5.5 + Math.sqrt(point.degree) * 1.5, 6, 15)));
       label.setAttribute("y", "-14"); label.setAttribute("text-anchor", "middle");
       label.textContent = point.title.length > 26 ? point.title.slice(0, 25) + "…" : point.title;
-      tooltip.textContent = point.category ? `${point.title} / ${point.category}` : point.title;
-      group.append(hit, circle, label, tooltip); groups.set(point.id, group); nodeFragment.append(group);
+      identityLabel.classList.add("graph-identity");
+      identityLabel.setAttribute("y", "28"); identityLabel.setAttribute("text-anchor", "middle");
+      identityLabel.textContent = `${identity.mark} ${identity.code}`;
+      tooltip.textContent = `${point.title} / ${identity.category} / ${point.id}`;
+      group.append(hit, circle, label, identityLabel, tooltip); groups.set(point.id, group); nodeFragment.append(group);
     }
     nodeLayer.classList.toggle("graph-dense", nodes.length > 180);
     edgeLayer.append(edgeFragment); nodeLayer.append(nodeFragment);
@@ -202,7 +213,15 @@ export function mountGraphWorkspace(overlay: HTMLDialogElement, hooks: Hooks) {
   }
   function refresh() {
     if (!panel.open) return;
-    const graph = buildDocumentGraph(hooks.documents());
+    const all = buildDocumentGraph(hooks.documents());
+    const graph = localCenter ? localDocumentGraph(all, localCenter, localDepth) : all;
+    const current = all.nodes.find(node => node.id === localCenter);
+    panel.dataset.graphMode = localCenter ? "local" : "global";
+    $("graph-title").textContent = localCenter ? (current ? `局部关系 / ${current.title}` : "局部关系") : "关系图谱";
+    panel.querySelector<HTMLElement>(".graph-depth-label")!.hidden = !localCenter;
+    $("graph-global").toggleAttribute("hidden", !localCenter);
+    panel.querySelector<HTMLElement>(".graph-orphans-label")!.hidden = !!localCenter;
+    depthControl.value = String(localDepth);
     sourceNodes = graph.nodes; sourceEdges = graph.edges;
     hovered = "";
     render();
@@ -214,7 +233,7 @@ export function mountGraphWorkspace(overlay: HTMLDialogElement, hooks: Hooks) {
     if (opener?.isConnected) opener.focus({ preventScroll: true });
     opener = null;
   }
-  function open() {
+  function show() {
     if (panel.open) { refresh(); return; }
     opener = document.activeElement instanceof HTMLElement ? document.activeElement : null;
     search.value = "";
@@ -222,6 +241,8 @@ export function mountGraphWorkspace(overlay: HTMLDialogElement, hooks: Hooks) {
     refresh();
     search.focus({ preventScroll: true });
   }
+  function open() { localCenter = undefined; show(); }
+  function openLocal(id: string, depth: 1 | 2 = 1) { localCenter = id; localDepth = depth === 2 ? 2 : 1; points.clear(); show(); }
   async function choose(id: string) {
     if (selecting || !points.has(id)) return;
     selecting = true;
@@ -298,5 +319,7 @@ export function mountGraphWorkspace(overlay: HTMLDialogElement, hooks: Hooks) {
   orphans.addEventListener("change", render);
   $("graph-fit").addEventListener("click", fit);
   $("graph-close").addEventListener("click", close);
-  return { open, close, refresh, isOpen: () => panel.open };
+  $("graph-global").addEventListener("click", open);
+  depthControl.addEventListener("change", () => { localDepth = depthControl.value === "2" ? 2 : 1; refresh(); });
+  return { open, openLocal, close, refresh, isOpen: () => panel.open };
 }

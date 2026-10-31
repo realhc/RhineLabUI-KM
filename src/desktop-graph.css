@@ -53,7 +53,7 @@
 #library-overlay #graph-grid-major path { fill:none; stroke-width:1; shape-rendering:crispEdges; }
 #library-overlay #graph-grid-minor path { stroke:var(--draft-grid-minor,color-mix(in srgb,var(--ink) 5%,transparent)); }
 #library-overlay #graph-grid-major path { stroke:var(--draft-grid-major,color-mix(in srgb,var(--ink) 9%,transparent)); }
-#library-overlay .graph-edges line { stroke:var(--glass-stroke); stroke-width:1.6; transition:opacity 160ms ease,stroke-width 160ms ease; }
+#library-overlay .graph-edges line { stroke:var(--muted); stroke-width:2; transition:opacity 160ms ease,stroke-width 160ms ease; }
 #library-overlay .graph-edges line.graph-focus { stroke:var(--theme-accent); stroke-width:2.6; }
 #library-overlay .graph-node { cursor:pointer; pointer-events:bounding-box; transition:opacity 160ms ease; }
 #library-overlay .graph-node .graph-hit { fill:transparent; stroke:none; }
@@ -61,6 +61,12 @@
 #library-overlay .graph-node text { font:12px MiSans,"Microsoft YaHei",sans-serif; fill:var(--ink); paint-order:stroke; stroke:var(--theme-paper); stroke-width:4; stroke-linejoin:round; }
 #library-overlay .graph-node.graph-focus circle,
 #library-overlay .graph-node.graph-match circle { stroke:var(--ink); stroke-width:2.5; }
+#library-overlay .graph-node.graph-center circle { fill:var(--ink); stroke:var(--theme-accent); stroke-width:3; }
+#library-overlay .graph-node .graph-identity { font:12px Consolas,"Microsoft YaHei",monospace; fill:var(--muted); }
+#library-overlay .graph-depth-label { display:inline-flex; align-items:center; gap:8px; }
+#library-overlay .graph-depth-label[hidden], #library-overlay .graph-orphans-label[hidden] { display:none; }
+#library-overlay #graph-depth, #library-overlay #graph-global { font-size:12px; }
+#library-overlay .graph-header h2 { max-width:min(850px,65vw); overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
 #library-overlay .graph-node.graph-muted,
 #library-overlay .graph-edges line.graph-muted { opacity:.12; }
 #library-overlay .graph-node:focus-visible { outline:none; }

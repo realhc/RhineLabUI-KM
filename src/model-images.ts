@@ -2,12 +2,13 @@ import * as THREE from "three";
 import { InstanceUpdates } from "./instance-updates";
 import { records, type ArchiveRecord } from "./desktop-data";
 import { fileAtCell, type ArchiveCell } from "./archive-loop";
+import { archiveCoverKey, createArchiveCover } from "./archive-cover";
 
 // A print on the existing cover. Keep the label, frame and cassette geometry.
 const WIDTH = 2.65, HEIGHT = 3.05;
 const geometry = () => new THREE.PlaneGeometry(WIDTH, HEIGHT).translate(0.625, 1.975, 0.25);
-type Batch = { mesh: THREE.InstancedMesh; updates: InstanceUpdates; used: number };
-type Picture = Pick<ArchiveRecord, "id" | "modelImage">;
+type Batch = { mesh: THREE.InstancedMesh; updates: InstanceUpdates; used: number; generated: boolean };
+type Picture = Pick<ArchiveRecord, "id" | "modelImage" | "title" | "category" | "placeholder">;
 
 function textureFor(image: HTMLImageElement, width: number, anisotropy: number) {
   const canvas = document.createElement("canvas");
@@ -35,6 +36,21 @@ async function loadImage(doc: Picture) {
   await image.decode();
   return image;
 }
+function printKey(doc?: Picture) {
+  if (!doc || doc.placeholder) return "";
+  return doc.modelImage ? doc.id + ":" + doc.modelImage : doc.id + ":generated:" + archiveCoverKey(doc);
+}
+async function textureForDocument(doc: Picture, width: number, anisotropy: number) {
+  if (doc.modelImage) return textureFor(await loadImage(doc), width, anisotropy);
+  // Unicode subsets needed only by this title may not yet have been painted in DOM.
+  // Wait once per cached print so a late font cannot change its identity layout.
+  await document.fonts.load('600 36px "MiSans"', doc.title + (doc.category || "未分类"));
+  await document.fonts.ready;
+  const texture = new THREE.CanvasTexture(createArchiveCover(doc, width));
+  texture.colorSpace = THREE.SRGBColorSpace;
+  texture.anisotropy = Math.min(8, anisotropy);
+  return texture;
+}
 
 export class ModelImages {
   readonly array = new THREE.Group();
@@ -47,12 +63,26 @@ export class ModelImages {
   private selectedReady = false;
   private selectedLoading = false;
   private selectedRequest = 0;
+  private selectedSource: "generated" | "custom" | "none" = "none";
   private disposed = false;
   private frame = 0;
   constructor(private invalidate: () => void, private anisotropy: number) {
     this.array.name = "archive-model-images";
   }
-  private key(doc?: Picture) { return doc?.modelImage ? doc.id + ":" + doc.modelImage : ""; }
+  private key(doc?: Picture) { return printKey(doc); }
+  private releaseBatch(batch: Batch) {
+    this.array.remove(batch.mesh);
+    batch.mesh.dispose();
+    (batch.mesh.material as THREE.MeshBasicMaterial).map?.dispose();
+    (batch.mesh.material as THREE.Material).dispose();
+  }
+  private trimCache() {
+    const unused = [...this.batches].filter(([key]) => !this.wanted.has(key)).sort((a, b) => a[1].used - b[1].used);
+    for (const [key, batch] of unused) {
+      if (this.batches.size <= Math.max(32, this.wanted.size)) break;
+      this.releaseBatch(batch); this.batches.delete(key);
+    }
+  }
   private removePrint(group: THREE.Group) {
     for (const child of [...group.children]) {
       if (!child.userData.modelImage) continue;
@@ -66,19 +96,22 @@ export class ModelImages {
     const key = this.key(doc);
     if (key === this.selectedKey && (this.selectedReady || this.selectedLoading || !key)) return;
     this.selectedKey = key;
+    this.selectedSource = key ? (doc!.modelImage ? "custom" : "generated") : "none";
     this.selectedReady = false;
     this.selectedLoading = !!key;
-    group.userData.modelImageDocument = doc?.modelImage ? { id: doc.id, modelImage: doc.modelImage } : null;
+    // A snapshot must retain the old title/category while the live record changes.
+    group.userData.modelImageDocument = key && doc ? { ...doc } : null;
     const ticket = ++this.selectedRequest;
     this.removePrint(group);
     this.invalidate();
     if (!key || !doc) return;
     try {
-      const image = await loadImage(doc);
-      if (this.disposed || ticket !== this.selectedRequest) return;
-      const print = new THREE.Mesh(this.plane, materialFor(textureFor(image, 1024, this.anisotropy)));
+      const texture = await textureForDocument(doc, 1024, this.anisotropy);
+      if (this.disposed || ticket !== this.selectedRequest) { texture.dispose(); return; }
+      const print = new THREE.Mesh(this.plane, materialFor(texture));
       print.name = "model-image";
       print.userData.modelImage = key;
+      print.userData.generatedCover = !doc.modelImage;
       group.add(print);
       // The existing label remains the last child used by returning snapshots.
       group.children.unshift(group.children.pop()!);
@@ -103,11 +136,12 @@ export class ModelImages {
       mesh.material.map.needsUpdate = true;
     }
     const doc = group.userData.modelImageDocument as Picture | null;
-    if (!found && doc?.modelImage) {
-      void loadImage(doc).then(image => {
-        if (this.disposed || !group.parent) return;
-        const print = new THREE.Mesh(this.plane, materialFor(textureFor(image, 1024, this.anisotropy)));
+    if (!found && doc && this.key(doc)) {
+      void textureForDocument(doc, 1024, this.anisotropy).then(texture => {
+        if (this.disposed || !group.parent) { texture.dispose(); return; }
+        const print = new THREE.Mesh(this.plane, materialFor(texture));
         print.userData.modelImage = this.key(doc);
+        print.userData.generatedCover = !doc.modelImage;
         group.add(print);
         group.children.unshift(group.children.pop()!);
         this.invalidate();
@@ -115,17 +149,20 @@ export class ModelImages {
     }
   }
   async assembly(doc?: Picture) {
-    if (!doc?.modelImage) return;
+    if (!doc || !this.key(doc)) return;
     try {
-      const image = await loadImage(doc);
-      const print = new THREE.Mesh(geometry(), materialFor(textureFor(image, 1024, this.anisotropy)));
+      const texture = await textureForDocument(doc, 1024, this.anisotropy);
+      if (this.disposed) { texture.dispose(); return; }
+      const print = new THREE.Mesh(geometry(), materialFor(texture));
       print.name = "model-image";
       print.userData.modelImage = this.key(doc);
+      print.userData.generatedCover = !doc.modelImage;
       print.userData.assemblyPart = "cover";
       return print;
     } catch (error) { console.warn("模型图片载入失败", error); }
   }
   update(cells: ArchiveCell[], matrices: THREE.InstancedBufferAttribute) {
+    if (this.disposed) return;
     this.frame++;
     const groups = new Map<string, { doc: ArchiveRecord; indices: number[] }>();
     cells.forEach((cell, i) => {
@@ -153,34 +190,41 @@ export class ModelImages {
     }
     for (const [key, { doc }] of groups) {
       if (this.batches.has(key) || this.pending.has(key) || this.failed.has(key)) continue;
+      // Bound both image decoding and first-paint canvas work during rapid panning.
+      if (this.pending.size >= 3) break;
       this.pending.add(key);
-      void loadImage(doc).then(image => {
-        if (this.disposed || !this.wanted.has(key)) return;
-        const mesh = new THREE.InstancedMesh(this.plane, materialFor(textureFor(image, 512, this.anisotropy)), 16);
+      void textureForDocument({ ...doc }, 512, this.anisotropy).then(texture => {
+        if (this.disposed || !this.wanted.has(key)) { texture.dispose(); return; }
+        const mesh = new THREE.InstancedMesh(this.plane, materialFor(texture), 16);
         mesh.instanceMatrix.setUsage(THREE.DynamicDrawUsage);
         mesh.frustumCulled = false;
         mesh.count = 0;
         mesh.name = "array-model-image";
         this.array.add(mesh);
-        this.batches.set(key, { mesh, updates: new InstanceUpdates(mesh.instanceMatrix), used: this.frame });
-        this.invalidate();
-      }).catch(() => this.failed.add(key)).finally(() => this.pending.delete(key));
+        this.batches.set(key, { mesh, updates: new InstanceUpdates(mesh.instanceMatrix), used: this.frame, generated: !doc.modelImage });
+        this.trimCache();
+      }).catch(() => this.failed.add(key)).finally(() => {
+        this.pending.delete(key);
+        // Even a stale or failed request must wake the next bounded queue slot.
+        if (!this.disposed) this.invalidate();
+      });
     }
     // Keep a bounded cache for nearby repeated rows without retaining the library.
-    const unused = [...this.batches].filter(([key]) => !this.wanted.has(key)).sort((a, b) => a[1].used - b[1].used);
-    for (const [key, batch] of unused) {
-      if (this.batches.size <= Math.max(32, groups.size)) break;
-      this.array.remove(batch.mesh);
-      batch.mesh.dispose();
-      (batch.mesh.material as THREE.MeshBasicMaterial).map?.dispose();
-      (batch.mesh.material as THREE.Material).dispose();
-      this.batches.delete(key);
-    }
+    this.trimCache();
   }
-  stats() { return { selected: this.selectedKey, selectedReady: this.selectedReady, batches: this.batches.size, visible: [...this.batches.values()].reduce((sum, b) => sum + b.mesh.count, 0), pending: this.pending.size }; }
+  stats() {
+    const batches = [...this.batches.values()];
+    return { selected: this.selectedKey, selectedSource: this.selectedSource, selectedReady: this.selectedReady,
+      batches: this.batches.size, generatedBatches: batches.filter(batch => batch.generated).length,
+      customBatches: batches.filter(batch => !batch.generated).length,
+      visibleDocuments: batches.filter(batch => batch.mesh.visible && batch.mesh.count > 0).length,
+      maxCachedBatches: Math.max(32, this.wanted.size),
+      visible: batches.reduce((sum, b) => sum + b.mesh.count, 0), pending: this.pending.size };
+  }
   dispose() {
     this.disposed = true;
     this.selectedRequest++;
+    for (const batch of this.batches.values()) this.releaseBatch(batch);
     this.plane.dispose();
     this.batches.clear();
     this.pending.clear();

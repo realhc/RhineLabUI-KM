@@ -5,7 +5,7 @@ import assert from "node:assert/strict";
 
 // Exercise the final portable build with a separate library and Chromium profile.
 const out = resolve("verification/model-images");
-const run = resolve("release/model-images-test", String(Date.now()));
+const run = resolve("release/document-images-test/model-images", String(Date.now()));
 const portable = join(run, "portable");
 await mkdir(out, { recursive: true });
 await mkdir(run, { recursive: true });
@@ -201,7 +201,7 @@ try {
 
   await openDocument(b.id, b.title);
   await closeLibrary();
-  await poll(id => window.rhineReview.stats().selected === id && !window.rhineReview.stats().modelImages.selected, b.id);
+  await poll(id => window.rhineReview.stats().selected === id && window.rhineReview.stats().modelImages.selectedSource === "generated" && window.rhineReview.stats().modelImages.selectedReady, b.id);
   await openDocument(a.id, a.title);
   await chooseFile(blue);
   await p.locator("#model-image").click();
@@ -242,7 +242,7 @@ try {
   assert.equal((await documentById(a.id)).body, body);
   assert.equal(await p.locator("#remove-model-image").isVisible(), false);
   await closeLibrary();
-  await poll(() => !window.rhineReview.stats().modelImages.selected && window.rhineReview.stats().modelImages.visible === 0);
+  await poll(() => window.rhineReview.stats().modelImages.selectedSource === "generated" && window.rhineReview.stats().modelImages.selectedReady && window.rhineReview.stats().modelImages.visible > 0);
   checks.trashRestoreAndRemove = true;
   assert.deepEqual(errors, []);
   assert.deepEqual(requests, []);

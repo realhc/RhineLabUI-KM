@@ -1,0 +1,37 @@
+#library-overlay #relations-host[hidden] { display:none; }
+#library-overlay #relations-host { flex:none; min-height:0; max-height:min(330px,36vh); overflow:auto; border-bottom:2px solid var(--archive-rule,var(--muted)); background:var(--content); font-size:12px; }
+#library-overlay .relations-heading { display:flex; justify-content:space-between; align-items:center; gap:12px; padding:10px 18px; border-bottom:1.5px solid var(--glass-stroke); }
+#library-overlay .relations-heading > div { display:flex; align-items:baseline; gap:12px; min-width:0; }
+#library-overlay .relations-heading strong { overflow:hidden; text-overflow:ellipsis; white-space:nowrap; font-size:14px; }
+#library-overlay .relations-identity { font:12px Consolas,"Microsoft YaHei",monospace; white-space:nowrap; color:var(--muted); }
+#library-overlay .relations-close { border:0; background:transparent; box-shadow:none; }
+#library-overlay .relations-body { display:grid; grid-template-columns:minmax(0,1fr) 300px; }
+#library-overlay .relations-list { min-width:0; padding:10px 18px; }
+#library-overlay .relations-tools { display:flex; flex-wrap:wrap; gap:8px; align-items:center; margin-bottom:8px; }
+#library-overlay .relations-tools [role=group] { display:flex; flex-wrap:wrap; gap:4px; }
+#library-overlay .relations-tools button { background:transparent; border:0; border-radius:0; box-shadow:none; font-size:12px; padding:6px; }
+#library-overlay .relations-tools button[aria-pressed=true] { box-shadow:inset 0 -2px var(--ink); font-weight:600; }
+#library-overlay #relations-filter { font-size:12px; width:min(270px,100%); min-height:30px; }
+#library-overlay .relations-results { max-height:180px; overflow:auto; }
+#library-overlay .relation-document { display:block; text-align:left; width:100%; border:0; border-top:1.5px solid var(--glass-stroke); border-radius:0; box-shadow:none; background:transparent; padding:10px 8px; font-size:12px; }
+#library-overlay .relation-document:hover { background:var(--glass-soft); }
+#library-overlay .relation-document strong { font-size:14px; font-weight:600; display:block; }
+#library-overlay .relation-identity { display:block; margin-top:4px; color:var(--muted); font:12px/1.7 Consolas,"Microsoft YaHei",monospace; }
+#library-overlay .relation-document p { margin:6px 0 0; white-space:normal; overflow-wrap:anywhere; color:var(--muted); font-size:12px; line-height:1.8; }
+#library-overlay .relations-empty { margin:12px 0; color:var(--muted); font-size:12px; }
+#library-overlay .relations-map { min-width:0; padding:10px; border-left:1.5px solid var(--glass-stroke); }
+#library-overlay .relations-map-tools { display:flex; justify-content:space-between; align-items:center; gap:8px; }
+#library-overlay .relations-map-tools label { display:flex; align-items:center; gap:5px; white-space:nowrap; }
+#library-overlay .relations-map-tools :is(button,select) { font-size:12px; padding:5px 7px; border:0; box-shadow:none; background:transparent; }
+#library-overlay #relations-preview { display:block; width:100%; height:150px; overflow:visible; }
+#library-overlay #relations-preview line { stroke:var(--muted); stroke-width:2; opacity:.7; }
+#library-overlay #relations-preview circle { fill:var(--theme-accent); stroke:var(--content); stroke-width:2; }
+#library-overlay #relations-preview .relations-hit { fill:transparent; stroke:none; }
+#library-overlay #relations-preview .relations-center circle:not(.relations-hit) { fill:var(--ink); }
+#library-overlay #relations-preview g { cursor:pointer; }
+#library-overlay #relations-preview g:focus-visible { outline:none; }
+#library-overlay #relations-preview g:focus-visible circle:not(.relations-hit) { stroke:var(--ink); stroke-width:3; }
+#library-overlay #relations-preview text { font:12px MiSans,"Microsoft YaHei",sans-serif; fill:var(--ink); paint-order:stroke; stroke:var(--content); stroke-width:4px; stroke-linejoin:round; }
+#library-overlay .relations-map-count { display:block; color:var(--muted); text-align:right; font-size:12px; }
+@media(max-width:1100px) { #library-overlay .relations-body { grid-template-columns:minmax(0,1fr) 240px; } }
+@media(max-width:850px) { #library-overlay .relations-body { grid-template-columns:minmax(0,1fr); } #library-overlay .relations-map { border-left:0; border-top:1.5px solid var(--glass-stroke); } #library-overlay #relations-preview { height:120px; } #library-overlay .relations-heading > div { flex-wrap:wrap; gap:2px 10px; } }

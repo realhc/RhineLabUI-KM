@@ -18,6 +18,8 @@
 
 `release/` 是本地发行归档与构建输出，`local/` 是本机备注和数据备份，`RhineLabData/` 是开发知识库；这些目录均不进入 Git。`desktop/search.mjs` 和 `desktop/icon.ico` 由构建工具生成。
 
+阅读导航与文档大纲位于 `src/desktop-reading.ts`；文档关系在 `src/desktop-relations.ts`，历史浏览在 `src/desktop-history.ts`。档案身份由 `src/archive-identity.ts` 统一，程序生成封面的排版与几何规则保存在 `src/archive-cover.ts`。这些模块不把视觉装饰写入 Markdown。
+
 ## 开发与构建
 
 需要 Node.js 22.12 或更新版本。Windows 使用 `npm.cmd`，在仓库根目录执行：

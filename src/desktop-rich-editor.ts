@@ -6,6 +6,7 @@ import { Mathematics } from "@tiptap/extension-mathematics";
 import "katex/dist/katex.min.css";
 import { createDocumentImageEditor, type DocumentImageEditorOptions } from "./editor-document-images";
 import { createDocumentResolver } from "./desktop-graph-data";
+import { documentLinkSuggestions } from "./editor-document-links";
 
 // HTML code remains literal, as in the previous Markdown reader.
 const LiteralHTML = Node.create({
@@ -140,6 +141,7 @@ export function mountRichEditor(
           heading: { levels: [1, 2, 3, 4, 5, 6] },
         }),
         images.extension,
+        documentLinkSuggestions(options.documents || (() => [])),
         LiteralHTML,
         TableKit,
         Mathematics.configure({

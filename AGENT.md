@@ -10,7 +10,7 @@
 
 ## 版本与本地目录
 
-版本对应以 [docs/VERSIONS.md](docs/VERSIONS.md) 为准。正式版为 1.0.0（基础客户端）和 1.1.0（搜索与可选 AI）；当前源码及本地程序为 1.2.0-preview.1，包含模型图片、正文图片和关系图谱，暂不发布 Release。历史版本归一提交只修正版本元数据，不能混入后续功能。
+版本对应以 [docs/VERSIONS.md](docs/VERSIONS.md) 为准。正式版为 1.0.0（基础客户端）和 1.1.0（搜索与可选 AI）；当前源码及本地程序为 1.2.0-preview.1，包含图片、阅读定位、反向链接与局部图谱、历史恢复及内容封面，暂不发布 Release。历史版本归一提交只修正版本元数据，不能混入后续功能。
 
 `release/v1.0.0/`、`release/v1.1.0/` 各保留正式 ZIP 和校验清单；`release/local-1.2.0-preview.1/` 保留当前本地 ZIP、校验清单及解压程序。打包中间文件仍由工具在 `release/desktop/`、`release/packages/` 生成，验收和归档后按当前用户授权清理。`local/notes/` 与 `local/data-backups/` 只放本机备注和数据备份，均不进入 Git。目录搬迁前后核对真实 RhineLabData，个人数据绝不进入 ZIP。
 
@@ -29,6 +29,10 @@ Node.js 至少 22.12，Windows PowerShell 使用 npm.cmd，其他平台可用 np
 - src/model-images.ts：三维模型图片；src/document-images.ts、src/editor-document-images.ts：正文图片读取、拖放、粘贴与异步位置跟踪。
 - src/desktop-graph-data.ts：从活动文档的内链派生关系；src/desktop-graph.ts、src/desktop-graph.css：图谱界面和导航。
 - src/desktop-drafting.ts、src/desktop-drafting.css：编辑器外的正文工程网格和标题尺寸定位，不进入 Markdown 或撤销记录。
+- src/desktop-reading.ts/css：文内大纲、章节进度、快速切换与会话阅读位置；src/editor-document-links.ts：[[ 文档候选，输出标准 Markdown 内链。
+- src/desktop-relations.ts/css：反向引用、引用去向与未链接提及；desktop-graph.ts 同时承载全局及一至两层局部关系。
+- src/desktop-history.ts/css：受限历史浏览、差异与恢复；Repository 按稳定 ID 与备份 key 读取旧修订，恢复仍校验当前 revision。
+- src/archive-identity.ts、src/archive-cover.ts：目录、正文、图谱及模型共享的档案身份与 Canvas 字排封面；用户自选图片优先。
 - src/desktop-library-motion.ts、src/desktop-directory.ts：界面生命周期与原生 scrollTop 惯性。
 - scripts/prepare-desktop.mjs、scripts/desktop-resources.mjs、forge.config.cjs：离线资源、许可及打包白名单。
 - src/desktop-search.ts：无 I/O 的中文/英文关键词索引、相关性、上下文与安全高亮；构建时生成 desktop/search.mjs，供主进程工具复用。
@@ -91,5 +95,5 @@ Forge 的退出码不能单独证明打包完成。曾出现本机 Node 的 ZIP 
 ## 下一步开发顺序
 
 1. 按实际问题继续覆盖不同显卡、多 DPI/显示器、睡眠恢复与只读目录，特别是启动/跳过开场和未保存编辑期间的恢复。
-2. 模型图片、正文图片和关系图谱已在当前预览版实现。文档历史恢复与跨设备同步仍需按明确需求设计目录、迁移、冲突及恢复。
+2. 当前预览版包含图片、全局/局部图谱、阅读导航、反向引用、历史恢复与生成封面。跨设备同步仍需按明确需求设计目录、迁移和冲突处理。
 3. 在明确发布需求后考虑 Windows 签名和更新机制，保留便携目录及数据迁移能力。当前没有自动更新、云同步或安装器。

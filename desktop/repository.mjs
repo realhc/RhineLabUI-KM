@@ -541,6 +541,82 @@ export class Repository {
     );
     await this.atomic(target, bytes, null);
   }
+  historyName(id, key) {
+    this.assertId(id);
+    if (typeof key !== "string" || key.length > 230)
+      throw fail("INPUT", "历史修订标识无效。");
+    const prefix = `${id}-`;
+    if (!key.startsWith(prefix)) throw fail("INPUT", "历史修订不属于该文档。");
+    const match = /^(\d{10,16})-([a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12})\.md@([a-f0-9]{64})$/.exec(key.slice(prefix.length));
+    if (!match || !Number.isFinite(new Date(Number(match[1])).getTime()))
+      throw fail("INPUT", "历史修订标识无效。");
+    return { filename: key.slice(0, key.lastIndexOf("@")), revision: match[3], savedAt: new Date(Number(match[1])).toISOString() };
+  }
+  async historySnapshot(entry, filename, expected) {
+    const target = path.join(this.root, "backups", filename);
+    await this.safe(target);
+    const stat = await fs.stat(target);
+    if (!stat.isFile() || stat.size > 16 * 1024 * 1024)
+      throw fail("FORMAT", "历史修订不是普通文件或超过 16 MB。");
+    const raw = await fs.readFile(target, "utf8");
+    if (expected && hash(raw) !== expected)
+      throw fail("CONFLICT", "历史修订已被外部修改，请重新打开历史。");
+    // Legacy external Markdown can lack front matter. Its stable ID derives from
+    // the original document filename, never the backup filename.
+    const doc = decode(raw, path.basename(entry.target), stat);
+    if (doc.id !== entry.doc.id) throw fail("HISTORY", "历史修订的文档 ID 不匹配。");
+    return { doc, bytes: stat.size };
+  }
+  async listHistory(id) {
+    const entry = await this.locate(id);
+    const folder = path.join(this.root, "backups");
+    await this.safe(folder);
+    const prefix = `${id}-`;
+    const items = [];
+    for (const filename of await fs.readdir(folder)) {
+      if (!filename.startsWith(prefix)) continue;
+      const match = /^(\d{10,16})-[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}\.md$/.exec(filename.slice(prefix.length));
+      if (!match || !Number.isFinite(new Date(Number(match[1])).getTime())) continue;
+      try {
+        const { doc, bytes } = await this.historySnapshot(entry, filename);
+        items.push({ key: `${filename}@${doc.revision}`, savedAt: new Date(Number(match[1])).toISOString(), title: doc.title, revision: doc.revision, bytes });
+      } catch (error) {
+        // A malformed single snapshot must not hide all other recoverable work.
+        if (!["ENOENT", "FORMAT", "HISTORY", "INVALID_ID", "SYMLINK"].includes(error.code)) throw error;
+      }
+    }
+    return items.sort((a, b) => b.savedAt.localeCompare(a.savedAt) || a.key.localeCompare(b.key));
+  }
+  async readHistory(id, key) {
+    const { filename, revision } = this.historyName(id, key);
+    const entry = await this.locate(id);
+    const { doc } = await this.historySnapshot(entry, filename, revision);
+    // Existing, content-addressed assets are kept for history and undo. Reading a
+    // validated snapshot authorizes only its exact local image references.
+    let available = this.documentImageImports.get(id);
+    if (!available) this.documentImageImports.set(id, available = new Set());
+    for (const reference of doc.body.match(/\.\.\/assets\/document-images\/[a-f0-9]{64}\.(?:png|jpg)/g) || []) available.add(reference);
+    return doc;
+  }
+  restoreHistory(id, key, revision) {
+    return this.serialize(async () => {
+      const selected = this.historyName(id, key);
+      if (typeof revision !== "string" || !/^[a-f0-9]{64}$/.test(revision))
+        throw fail("INPUT", "恢复需要有效的当前文档版本。");
+      const entry = await this.locate(id);
+      if (entry.doc.revision !== revision) throw fail("CONFLICT", "文件已被修改，请重新载入后恢复。");
+      const { doc: snapshot } = await this.historySnapshot(entry, selected.filename, selected.revision);
+      this.validateInput({ ...entry.doc, title: snapshot.title, body: snapshot.body });
+      this.assertUniqueTitle((await this.list()).documents, snapshot.title, id);
+      const doc = { ...entry.doc, title: snapshot.title, body: snapshot.body,
+        modified: new Date(Math.max(Date.now(), Date.parse(entry.doc.modified) + 1)).toISOString() };
+      if (snapshot.modelImage) doc.modelImage = snapshot.modelImage;
+      else delete doc.modelImage;
+      await this.backup(entry);
+      await this.atomic(entry.target, encode(doc), revision);
+      return this.read(id);
+    });
+  }
   create(input) {
     return this.serialize(async () => {
       this.validateInput(input);

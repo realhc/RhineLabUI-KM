@@ -3,7 +3,7 @@ import { cp, mkdir, writeFile } from "node:fs/promises";
 import { resolve, join } from "node:path";
 import assert from "node:assert/strict";
 const out = resolve("verification/rich-editor"),
-  run = resolve("release/rich-test", Date.now().toString()),
+  run = resolve("release/document-images-test/rich-editor", Date.now().toString()),
   portable = join(run, "portable");
 await mkdir(out, { recursive: true });
 await mkdir(run, { recursive: true });

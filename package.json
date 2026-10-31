@@ -43,7 +43,11 @@
     "check:desktop:document-images-ui": "node tests/check-desktop-document-images-ui.mjs",
     "check:desktop:graph-data": "node --experimental-strip-types --test tests/check-desktop-graph-data.mjs",
     "check:desktop:graph-ui": "node tests/check-desktop-graph-ui.mjs",
-    "check:desktop:drafting-ui": "node tests/check-desktop-drafting-ui.mjs"
+    "check:desktop:drafting-ui": "node tests/check-desktop-drafting-ui.mjs",
+    "check:desktop:relations": "node --experimental-strip-types --test tests/check-desktop-relations.mjs",
+    "check:desktop:history": "node tests/check-desktop-history.mjs && node --experimental-strip-types --test tests/check-desktop-history-diff.mjs",
+    "check:desktop:research-ui": "node tests/check-desktop-research-ui.mjs",
+    "check:desktop:archive-cover": "node --experimental-strip-types tests/check-desktop-archive-cover.mjs"
   },
   "dependencies": {
     "@kitlangton/rolling-number": "0.4.1",

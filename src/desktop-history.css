@@ -1,0 +1,40 @@
+#library-overlay #document-history { width:min(1160px,calc(100vw - 48px)); height:min(800px,calc(100dvh - 48px)); max-width:none; max-height:none; margin:auto; padding:0; overflow:hidden; color:var(--ink); background:var(--content); border:2px solid var(--archive-rule,#8d8d86); border-radius:18px; }
+#library-overlay #document-history[open] { display:flex; flex-direction:column; }
+#library-overlay #document-history::backdrop { background:color-mix(in srgb,var(--ink) 38%,transparent); backdrop-filter:blur(8px); }
+#library-overlay .history-header { display:flex; flex:none; align-items:center; justify-content:space-between; padding:18px 24px; gap:20px; border-bottom:2px solid var(--glass-stroke); }
+#library-overlay .history-kicker { font-size:12px; letter-spacing:.12em; color:var(--muted); }
+#library-overlay #history-title { margin:4px 0; font-size:22px; }
+#library-overlay #history-document { margin:0; color:var(--muted); font-size:12px; overflow-wrap:anywhere; }
+#library-overlay .history-header button { flex:none; font-size:12px; }
+#library-overlay .history-body { display:grid; grid-template-columns:240px minmax(0,1fr); min-height:0; flex:1; }
+#library-overlay .history-timeline { min-height:0; overflow:auto; border-right:2px solid var(--glass-stroke); padding:14px; }
+#library-overlay #history-list button { display:flex; flex-direction:column; align-items:flex-start; width:100%; gap:7px; padding:12px 10px; margin-bottom:8px; border:0; border-left:3px solid transparent; border-radius:0; text-align:left; background:transparent; box-shadow:none; font-size:12px; }
+#library-overlay #history-list button[aria-current="true"] { border-left-color:var(--ink); background:var(--glass-soft); }
+#library-overlay #history-list strong { font-size:12px; font-weight:600; }
+#library-overlay #history-list span { overflow-wrap:anywhere; }
+#library-overlay #history-list small { color:var(--muted); font:12px Consolas,monospace; }
+#library-overlay .history-detail { display:flex; flex-direction:column; min-height:0; min-width:0; }
+#library-overlay .history-tools { display:flex; flex-wrap:wrap; align-items:center; gap:8px; padding:12px 18px; border-bottom:1px solid var(--glass-stroke); }
+#library-overlay .history-tools button { font-size:12px; }
+#library-overlay .history-tools button[aria-pressed="true"] { box-shadow:inset 0 -2px var(--ink); }
+#library-overlay #history-date { margin-left:auto; color:var(--muted); font-size:12px; }
+#library-overlay #history-status { color:var(--muted); padding:0 22px; font-size:12px; }
+#library-overlay #history-status:not(:empty) { padding-top:16px; padding-bottom:16px; }
+#library-overlay #history-preview, #library-overlay #history-diff { overflow:auto; flex:1; min-height:0; padding:22px 28px; overflow-wrap:anywhere; font-size:14px; line-height:1.8; }
+#library-overlay #history-preview[hidden], #library-overlay #history-diff[hidden] { display:none; }
+#library-overlay #history-preview :is(h1,h2) { font-size:22px; line-height:1.5; }
+#library-overlay #history-preview :is(h3,h4,h5,h6) { font-size:18px; }
+#library-overlay #history-preview table { border-collapse:collapse; width:100%; }
+#library-overlay #history-preview :is(td,th) { border:1px solid var(--glass-stroke); padding:7px; }
+#library-overlay #history-preview pre { overflow:auto; padding:14px; background:var(--theme-field); font:12px/1.8 Consolas,monospace; white-space:pre-wrap; }
+#library-overlay #history-preview blockquote { margin-left:0; padding-left:14px; border-left:3px solid var(--archive-rule,#8d8d86); }
+#library-overlay #history-preview a { color:var(--theme-accent); }
+#library-overlay .history-actions { display:flex; align-items:center; justify-content:flex-end; flex-wrap:wrap; gap:10px; padding:14px 18px; border-top:2px solid var(--glass-stroke); }
+#library-overlay .history-actions span { margin-right:auto; font-size:12px; color:var(--muted); }
+#library-overlay .history-actions button { font-size:12px; }
+#library-overlay .history-diff-legend { color:var(--muted); font-size:12px; margin-top:0; }
+#library-overlay .history-diff-line { display:flex; gap:10px; min-height:1.8em; font:12px/1.8 Consolas,"Microsoft YaHei",monospace; white-space:pre-wrap; }
+#library-overlay .history-diff-line > span:first-child { width:12px; flex:none; user-select:none; }
+#library-overlay .history-diff-line.removed { background:var(--theme-field); color:var(--muted); text-decoration:line-through; border-left:2px dashed var(--archive-rule,#8d8d86); padding-left:8px; }
+#library-overlay .history-diff-line.added { border-left:3px solid var(--ink); padding-left:7px; background:var(--glass-soft); }
+@media(max-width:700px) { #library-overlay #document-history { width:calc(100vw - 24px); height:calc(100dvh - 24px); border-radius:12px; } #library-overlay .history-body { grid-template-columns:150px minmax(0,1fr); } #library-overlay .history-header { padding:14px 16px; } #library-overlay .history-timeline { padding:8px; } #library-overlay #history-preview,#library-overlay #history-diff { padding:16px; } #library-overlay .history-actions span { flex-basis:100%; } }

@@ -1,0 +1,14 @@
+{
+  "checks": {
+    "recoveryWithRevisionAndUndoPath": true,
+    "opaqueKeysAndDocumentScope": true,
+    "externalCurrentAndSnapshotConflict": true,
+    "invalidSnapshotsIsolated": true,
+    "legacyMarkdownCompatible": true,
+    "historyImageAuthorization": true,
+    "historyCopyImagesAndIndependentAuthorization": true,
+    "restoreHistoricalModelImage": true,
+    "historyFolderSymlinkRejected": true,
+    "restartPreservesHistory": true
+  }
+}
