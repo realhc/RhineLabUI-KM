@@ -53,17 +53,6 @@
   margin: 12px 0 20px;
   font-variant-numeric: tabular-nums;
 }
-.quality-advanced summary {
-  cursor: pointer;
-  font-size: 13px;
-  padding: 15px 0;
-  border-top: 1px solid #c1b8a7;
-}
-.quality-advanced summary span {
-  margin-left: 16px;
-  font-size: 11px;
-  color: #807866;
-}
 .quality-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -117,7 +106,7 @@
   color: #807866;
   margin: 12px 0 18px;
 }
-.quality-settings :is(select, input, summary):focus-visible {
+.quality-settings :is(select, input):focus-visible {
   outline: 2px solid #a67d48;
   outline-offset: 4px;
 }

@@ -22,8 +22,10 @@ export class DocumentDecryption {
     if (!this.root || this.progress === 1) return;
     // Measure text fragments, including wrapped lines, without splitting or
     // replacing the actual text. Stage scaling cancels out in local coordinates.
+    // Navigation labels and Markdown headings belong to the same reveal as the
+    // body copy; otherwise the overview title is readable through the redaction.
     const targets = this.root.querySelectorAll<HTMLElement>(
-      "h2, .detail-title-cn, .metadata dd, .tab-panel p, .research-notes li, .log-row",
+      "h2, .detail-title-cn, .metadata dd, .detail-tabs button, .panel-label, .tab-panel :is(h1, h3, h4, h5, h6), .tab-panel p, .research-notes li, .log-row",
     );
     targets.forEach((target) => {
       target.classList.add("document-redacted");

@@ -1075,7 +1075,7 @@ let settingsPage = "general";
 function settingsMarkup() {
   const pages = [["general","通用"],["appearance","外观"],["audio","声音"],["motion","动态"],["quality","画质"],["data","数据"]];
   const panel = (id: string, title: string, content: string) => `<section class="settings-page" id="settings-${id}" aria-label="${title}" ${settingsPage !== id ? "hidden" : ""}><h2>${title}</h2>${content}</section>`;
-  return `<div class="settings-layout"><nav class="settings-nav" aria-label="设置分类">${pages.map(([id,label])=>`<button data-settings-page="${id}" aria-pressed="${settingsPage===id}" aria-controls="settings-${id}">${label}</button>`).join("")}<span class="settings-version">版本 1.2.1</span></nav><div class="settings-content">
+  return `<div class="settings-layout"><nav class="settings-nav" aria-label="设置分类">${pages.map(([id,label])=>`<button data-settings-page="${id}" aria-pressed="${settingsPage===id}" aria-controls="settings-${id}">${label}</button>`).join("")}<span class="settings-version">版本 1.2.2</span></nav><div class="settings-content">
   ${panel("general","通用",`<div class="settings-section"><h3>应用内名称</h3><div class="settings-name-row"><input id="app-display-name" type="text" maxlength="48" aria-label="应用内名称" value="${appNameHtml()}"/><button data-action="save-app-name">保存并重新载入</button></div><div class="settings-name-footer"><span>仅更改程序内显示，最多 48 字。</span><button data-action="reset-app-name">恢复默认名称</button></div></div><div class="settings-section"><h3>主题</h3>${themeSettingsMarkup(prefs.colorTheme === "dark")}</div><div class="settings-section settings-utilities"><button data-action="fullscreen">切换全屏 ↗</button><button data-action="restart">重播开场 ↻</button></div>`)}
   ${panel("appearance","外观",modelLookMarkup(prefs.modelLook)+`<p class="settings-hint">单篇文档的模型颜色可在知识库文档工具区指定。</p>`)}
   ${panel("audio","声音",`<div class="settings-list">${audioSettingsMarkup(prefs)}</div>`)}
@@ -1144,19 +1144,13 @@ document.addEventListener("change", (e) => {
     prefs.motionPreset = motionPresetFor(prefs.motion);
     savePrefs();
     const motionRoot = $("#motion-settings");
-    const advancedOpen =
-      motionRoot.querySelector<HTMLDetailsElement>(".motion-advanced")?.open ??
-      false;
-    const settingsPanel = motionRoot.closest<HTMLElement>(".settings-modal");
+    const settingsPanel = motionRoot.closest<HTMLElement>(".settings-content");
     const scrollTop = settingsPanel?.scrollTop ?? 0;
     motionRoot.outerHTML = motionSettingsMarkup(
       prefs.motion,
       prefs.motionPreset,
     );
     $("#motion-preference-note").outerHTML = motionPreferenceNoteMarkup();
-    $("#motion-settings").querySelector<HTMLDetailsElement>(
-      ".motion-advanced",
-    )!.open = advancedOpen;
     requestAnimationFrame(() => {
       if (settingsPanel) settingsPanel.scrollTop = scrollTop;
       document

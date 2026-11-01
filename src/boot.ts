@@ -1,6 +1,6 @@
-import { appName, appNameHtml } from "./app-name";
+import { appName } from "./app-name";
 import { bootMotion } from "./boot-motion";
-import { bootMarkContour } from "./brand";
+import { bootMarkContour, fitLogoWordmark } from "./brand";
 import { themeAmount } from "./theme-ui";
 import { BootLettering } from "./boot-lettering";
 
@@ -16,6 +16,8 @@ export class BootSequence {
   private nodes: Map<string, HTMLElement> = new Map();
   private contour: SVGPathElement;
   private letters: SVGTextElement;
+  private logoName: string[] = [];
+  private logoFrame = 0;
   private plus: SVGPathElement;
   private minus: SVGPathElement;
   private brandLines: HTMLElement[];
@@ -66,8 +68,21 @@ export class BootSequence {
     });
     symbols.remove();
     this.letters = mark.querySelector("text")!;
-    this.letters.setAttribute("text-anchor", "start");
-    this.letters.setAttribute("x", "20");
+    const wordmarks = Array.from(stage.querySelectorAll<SVGTextElement>(".boot-logo text, .welcome-logo text, .loading-mark text"));
+    const fitWordmarks = () => {
+      for (const wordmark of wordmarks) {
+        const fitted = fitLogoWordmark(wordmark, appName());
+        if (wordmark === this.letters) {
+          this.logoName = Array.from(fitted.text);
+          wordmark.setAttribute("text-anchor", "start");
+          wordmark.setAttribute("x", String(155 - fitted.width / 2));
+        }
+      }
+      this.updateLogoName();
+    };
+    fitWordmarks();
+    // Refit once after the actual font is ready, never during the render loop.
+    void document.fonts.ready.then(() => { if (stage.isConnected) fitWordmarks(); });
     this.brandLines = Array.from(
       stage.querySelector(".brand")!.children,
     ) as HTMLElement[];
@@ -127,6 +142,12 @@ export class BootSequence {
   private opacity(selector: string, value: number | boolean) {
     this.el(selector).style.opacity = String(Number(value));
   }
+  private updateLogoName() {
+    const count = this.logoFrame < 232 ? 0 : Math.min(this.logoName.length,
+      1 + Math.floor((this.logoFrame - 232) * (this.logoName.length - 1) / (255 - 232)));
+    const value = this.logoName.slice(0, count).join("");
+    if (this.letters.textContent !== value) this.letters.textContent = value;
+  }
   update(time: number) {
     const s = bootMotion(time),
       t = s.t;
@@ -141,8 +162,8 @@ export class BootSequence {
     this.contour.setAttribute("stroke-width", String(s.logo.strokeWidth));
     // Preserve the SVG text node once each revealed letter is in place. Replacing
     // it every frame invalidates glyph rasterization under the moving HUD.
-    if (this.letters.textContent !== s.logoLetters)
-      this.letters.textContent = s.logoLetters;
+    this.logoFrame = s.f;
+    this.updateLogoName();
     this.plus.style.opacity = this.minus.style.opacity =
       s.logo.symbolScale > 0 ? "1" : "0";
     this.plus.setAttribute(

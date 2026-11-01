@@ -19,6 +19,12 @@
   will-change: transform;
 }
 
+/* Tab labels style every span; keep that spacing off the decorative covers. */
+.document-redacted .document-redaction-window,
+.document-redacted .document-redaction-ink {
+  margin: 0;
+}
+
 .reduce-motion .document-redaction-window {
   display: none;
 }

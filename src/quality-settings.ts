@@ -46,7 +46,7 @@ export function qualityMarkup(quality: RenderQuality) {
       ]),
     )}</div>
     <p class="quality-summary" id="quality-summary" aria-live="polite"></p>
-    <details class="quality-advanced"><summary>精细设置 <span>清晰度 / 材质 / 阴影</span></summary><div class="quality-grid">
+    <div class="quality-grid">
     ${range(quality, "scale", "渲染比例", "相对屏幕像素，受密度上限限制；高比例改善细线", 50, 200)}
     ${select(
       quality,
@@ -105,7 +105,7 @@ export function qualityMarkup(quality: RenderQuality) {
       [0.5, 0.75, 1].map((v) => [v, `${v * 100}%`]),
     )}
     ${range(quality, "depthOfField", "景深强度 · 阵列", "0% 关闭；100% 保留原始镜头虚化", 0, 150)}
-    </div></details><p class="quality-note">即时生效并自动保存。清晰度与材质设置同步至 360° 查看器。高渲染比例更适合静态观察；缓冲上限为 829 万像素，硬件限制时自动收敛。</p>
+    </div><p class="quality-note">即时生效并自动保存。清晰度与材质设置同步至 360° 查看器。高渲染比例更适合静态观察；缓冲上限为 829 万像素，硬件限制时自动收敛。</p>
   </section>`;
 }
 

@@ -1,0 +1,31 @@
+{
+  "version": "1.2.2",
+  "overviewTitleCovered": true,
+  "overviewTitleAnimated": true,
+  "markdownHeadingCovered": true,
+  "clearRemovesMasks": true,
+  "reducedMotionClear": true,
+  "motionControlsExpanded": 14,
+  "qualityControlsExpanded": true,
+  "wordmark": {
+    "text": "RHINE LAB",
+    "fontSize": "24",
+    "lengthAdjust": null,
+    "textLength": null,
+    "bbox": {
+      "width": 163.994384765625,
+      "height": 31.849315643310547
+    }
+  },
+  "customWordmark": {
+    "text": "星河人工智能研究实验室",
+    "lengthAdjust": null,
+    "width": 258.99090576171875,
+    "height": 29.266939163208008
+  },
+  "pageErrors": 0,
+  "shaderErrors": 0,
+  "frameErrors": 0,
+  "userDataFiles": 59,
+  "userDataUnchanged": true
+}
