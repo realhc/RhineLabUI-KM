@@ -1,0 +1,22 @@
+{
+  "version": "1.2.0",
+  "finalPathLaunch": true,
+  "ready": true,
+  "appearanceControls": {
+    "modes": 3,
+    "palette": 5,
+    "coatings": 4
+  },
+  "security": {
+    "sandbox": true,
+    "contextIsolation": true,
+    "nodeIntegration": false
+  },
+  "pageErrors": 0,
+  "shaderErrors": 0,
+  "frameErrors": 0,
+  "preferencesUnchanged": true,
+  "dataFiles": 88,
+  "dataUnchanged": true,
+  "windowBytesRestored": true
+}

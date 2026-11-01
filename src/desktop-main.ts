@@ -16,6 +16,8 @@ import {
   type RenderQuality,
 } from "./render-quality";
 import { qualityMarkup, syncQualityUI } from "./quality-settings";
+import { defaultModelLook, normalizeModelLook, type ModelLookPreferences } from "./model-look";
+import { modelLookMarkup, syncModelLookUI } from "./model-look-settings";
 import { superPerformanceQuality } from "./super-performance-quality";
 import "@kitlangton/rolling-number/styles.css";
 import "./style.css";
@@ -198,6 +200,7 @@ const storedPrefs = readLocal<
     rendering: RenderQuality;
     superPerformance: boolean;
     colorTheme: "light" | "dark";
+    modelLook: ModelLookPreferences;
     motion: StoredMotion;
     motionPreset: MotionPreset;
   }>
@@ -224,6 +227,7 @@ const prefs = {
     storedPrefs.quality !== false,
   ),
   colorTheme: storedPrefs.colorTheme === "dark" ? "dark" : "light",
+  modelLook: normalizeModelLook(storedPrefs.modelLook),
 };
 const motionActive = (key: MotionKey) => motionEnabled(prefs.motion, key);
 function exportPreferences() {
@@ -445,6 +449,7 @@ async function recoverGraphics() {
     scene = next;
     watchGraphics(next);
     next.setTheme(prefs.colorTheme === "dark", true);
+    next.setModelLook(prefs.modelLook, saved);
     next.setMotion(prefs.motion);
     await next.load();
     next.setQuality(effectiveRenderQuality());
@@ -494,6 +499,33 @@ function superPerformanceEnabled() {
 function effectiveRenderQuality() {
   return superPerformanceEnabled() ? superPerformanceQuality : prefs.rendering;
 }
+function syncModelLook() {
+  scene?.setModelLook(prefs.modelLook, saved);
+  viewer?.refreshModelLook();
+  syncModelLookUI(document, prefs.modelLook);
+}
+function saveModelLook(value: unknown) {
+  prefs.modelLook = normalizeModelLook(value);
+  try { localStorage.setItem("rhine-settings", JSON.stringify(prefs)); } catch {}
+  syncModelLook();
+}
+function handleModelLookInput(el: HTMLInputElement) {
+  if (el.dataset.modelLookColor) {
+    const key = el.dataset.modelLookColor;
+    if (key === "color") saveModelLook({ ...prefs.modelLook, color: el.value, mode: "solid" });
+    else if (key === "favoriteColor") saveModelLook({ ...prefs.modelLook, favoriteColor: el.value, favoriteEnabled: true });
+  } else if (el.dataset.modelLookPalette !== undefined) {
+    const index = Number(el.dataset.modelLookPalette), palette = [...prefs.modelLook.palette];
+    if (Number.isInteger(index) && index >= 0 && index < palette.length) {
+      palette[index] = el.value; saveModelLook({ ...prefs.modelLook, palette, mode: "palette" });
+    }
+  } else if (el.hasAttribute("data-model-look-strength")) {
+    saveModelLook({ ...prefs.modelLook, strength: Number(el.value) / 100 });
+  } else if (el.hasAttribute("data-model-look-favorites")) {
+    saveModelLook({ ...prefs.modelLook, favoriteEnabled: el.checked });
+  } else return false;
+  return true;
+}
 function savePrefs() {
   saveAudioPrefs();
   window.dispatchEvent(new Event("rhine-motion-preferences"));
@@ -522,6 +554,7 @@ function savePrefs() {
         String(button.dataset.colorTheme === prefs.colorTheme),
       ),
     );
+  syncModelLook();
   scene?.setSuperPerformance(superPerformanceEnabled());
   viewer?.setSuperPerformance(superPerformanceEnabled());
   scene?.setQuality(effectiveRenderQuality());
@@ -793,6 +826,7 @@ function updateSelection(navigation?: ArchiveNavigation) {
     button.classList.toggle("selected", index === selected);
     button.setAttribute("aria-pressed", String(index === selected));
   });
+  syncModelLook();
   $("#saved-count").textContent = String(saved.size).padStart(2, "0");
 }
 function replayBoot(forcePreview = false) {
@@ -828,6 +862,7 @@ function toggleSaved() {
   try {
     localStorage.setItem("rhine-saved", JSON.stringify([...saved]));
   } catch {}
+  syncModelLook();
   $("#saved-count").textContent = String(saved.size).padStart(2, "0");
   const button = $<HTMLButtonElement>('[data-action="bookmark"]');
   const added = saved.has(id);
@@ -1032,10 +1067,11 @@ function motionPreferenceNoteMarkup() {
   return `<div id="motion-preference-note" class="motion-preference-note"><p>${motionSummary(prefs.motion)}</p><span>预设：${preset === "full" ? "完整动画" : preset === "reduced" ? "减少动画" : "自定义"} · 选择会保存在此客户端</span>${allEnabled ? "" : '<button data-action="enable-motion">启用完整动画并重播 ↻</button>'}</div>`;
 }
 function settingsMarkup() {
-  return `<h2>SYSTEM SETTINGS<small>终端偏好设置</small></h2><p class="settings-intro">JOYCE MOORE <span>·</span> SESSION AUTHORIZED</p><div class="settings-list">${themeSettingsMarkup(prefs.colorTheme === "dark")}<label><div><strong>SUPER PERFORMANCE</strong><span>降低三维画质和渲染分辨率，保留完整动效；关闭后恢复原画质</span></div><input type="checkbox" data-pref="superPerformance" ${prefs.superPerformance ? "checked" : ""}/><i class="toggle"></i></label>${audioSettingsMarkup(prefs)}</div>${motionPreferenceNoteMarkup()}${motionSettingsMarkup(prefs.motion, prefs.motionPreset)}${qualityMarkup(prefs.rendering)}${preferencesTransferMarkup()}<div class="settings-shortcuts"><span>KEYBOARD CONTROLS</span><p><kbd>←</kbd><kbd>→</kbd> 切列 <kbd>↑</kbd><kbd>↓</kbd> 选档 <kbd>ENTER</kbd> 读取 <kbd>/</kbd> 检索 <kbd>ESC</kbd> 返回</p></div><div class="settings-bottom"><button data-action="fullscreen">FULLSCREEN <span>↗</span></button><button data-action="restart">REINITIALIZE SYSTEM <span>↻</span></button></div><div class="modal-bottom"><span>ANALYSIS OS / 1.0 · 使用 MiSans 字体（小米） <a href="${assetUrl("fonts/MiSans-license.pdf")}" target="_blank" rel="noopener">字体许可</a></span><span>POWERED BY RHINE LAB</span></div>`;
+  return `<h2>SYSTEM SETTINGS<small>终端偏好设置</small></h2><p class="settings-intro">JOYCE MOORE <span>·</span> SESSION AUTHORIZED</p><div class="settings-list">${themeSettingsMarkup(prefs.colorTheme === "dark")}<label><div><strong>SUPER PERFORMANCE</strong><span>降低三维画质和渲染分辨率，保留完整动效；关闭后恢复原画质</span></div><input type="checkbox" data-pref="superPerformance" ${prefs.superPerformance ? "checked" : ""}/><i class="toggle"></i></label>${audioSettingsMarkup(prefs)}</div>${modelLookMarkup(prefs.modelLook)}${motionPreferenceNoteMarkup()}${motionSettingsMarkup(prefs.motion, prefs.motionPreset)}${qualityMarkup(prefs.rendering)}${preferencesTransferMarkup()}<div class="settings-shortcuts"><span>KEYBOARD CONTROLS</span><p><kbd>←</kbd><kbd>→</kbd> 切列 <kbd>↑</kbd><kbd>↓</kbd> 选档 <kbd>ENTER</kbd> 读取 <kbd>/</kbd> 检索 <kbd>ESC</kbd> 返回</p></div><div class="settings-bottom"><button data-action="fullscreen">FULLSCREEN <span>↗</span></button><button data-action="restart">REINITIALIZE SYSTEM <span>↻</span></button></div><div class="modal-bottom"><span>ANALYSIS OS / 1.0 · 使用 MiSans 字体（小米） <a href="${assetUrl("fonts/MiSans-license.pdf")}" target="_blank" rel="noopener">字体许可</a></span><span>POWERED BY RHINE LAB</span></div>`;
 }
 
 document.addEventListener("input", (e) => {
+  if (handleModelLookInput(e.target as HTMLInputElement)) return;
   const slider = e.target as HTMLInputElement;
   if (slider.dataset.quality) {
     const output = document.querySelector<HTMLOutputElement>(
@@ -1062,6 +1098,7 @@ document.addEventListener("input", (e) => {
 });
 document.addEventListener("change", (e) => {
   const el = e.target as HTMLInputElement;
+  if (handleModelLookInput(el)) return;
   if (el.id === "quality-preset" && Object.hasOwn(qualityPresets, el.value)) {
     prefs.rendering = { ...qualityPresets[el.value as QualityPreset] };
     savePrefs();
@@ -1142,6 +1179,18 @@ document.addEventListener("click", (e) => {
   if (modalClosing) return;
   const el = (e.target as Element).closest<HTMLElement>("button");
   if (!el) return;
+  if (el.dataset.modelLookMode) {
+    saveModelLook({ ...prefs.modelLook, mode: el.dataset.modelLookMode });
+    return;
+  }
+  if (el.dataset.modelLookCoating) {
+    saveModelLook({ ...prefs.modelLook, coating: el.dataset.modelLookCoating });
+    return;
+  }
+  if (el.dataset.modelLookAction === "reset") {
+    saveModelLook(defaultModelLook());
+    return;
+  }
   if (el.dataset.action === "motion-preset") {
     const preset = el.dataset.preset;
     if (preset !== "full" && preset !== "reduced") return;
@@ -1524,6 +1573,7 @@ async function start() {
     scene = new ArchiveScene($("#three-scene"));
     watchGraphics(scene);
     scene.setTheme(prefs.colorTheme === "dark", true);
+    scene.setModelLook(prefs.modelLook, saved);
     await Promise.all([
       scene?.load(),
       // With unicode-range faces, preload the opening's actual characters,
@@ -1659,6 +1709,7 @@ Object.assign(window, {
           : null,
       selected: records[selected].id,
       saved: [...saved],
+      modelLookPreferences: { ...prefs.modelLook, palette: [...prefs.modelLook.palette] },
       audio: audio.stats(),
     }),
   },
@@ -1671,6 +1722,7 @@ window.addEventListener("rhine-library-visibility", (event) => {
   if (!libraryVisible) {
     saved.clear();
     readLocal<string[]>("rhine-saved", []).forEach((id) => saved.add(id));
+    syncModelLook();
     updateSelection();
   }
 });
@@ -1721,4 +1773,12 @@ window.rhine.onChanged(() => {
       if (request === diskRefresh) refreshExhibit(result);
     })
     .catch((error) => notify(String(error)));
+});
+
+window.addEventListener("rhine-model-image-style", () => scene?.refreshModelImage());
+
+window.addEventListener("rhine-saved-changed", () => {
+  saved.clear();
+  readLocal<string[]>("rhine-saved", []).filter(id => typeof id === "string").forEach(id => saved.add(id));
+  syncModelLook();
 });

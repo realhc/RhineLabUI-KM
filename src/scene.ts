@@ -19,6 +19,10 @@ import { normalizeQuality, type RenderQuality } from "./render-quality";
 import { applyTextureQuality, resizeQuality } from "./quality-renderer";
 import { CardAppearance } from "./appearance";
 import { configureInternalOptics } from "./internal-optics";
+import { finishMaterial } from "./material-finish";
+import { applyModelLookMaterial, type ModelLookMaterialState } from "./model-look-material";
+import { ModelLookRuntime } from "./model-look-runtime";
+import type { ModelLookPreferences } from "./model-look";
 import { DecryptionController } from "./decryption";
 import { records, fileAtSlot, fileLocation, archiveColumns as desktopColumnNames, columnFiles as desktopColumnFiles } from "./desktop-data";
 import {
@@ -117,6 +121,21 @@ export class ArchiveScene {
   }
   setSelectedIndexAccent(onlySelected: boolean) { this.selectedIndexOnly = onlySelected; }
   private themeAttribute?: THREE.InstancedBufferAttribute;
+  private lookColorAttribute?: THREE.InstancedBufferAttribute;
+  private lookAmountAttribute?: THREE.InstancedBufferAttribute;
+  private lookColorUpdates?: InstanceUpdates;
+  private lookAmountUpdates?: InstanceUpdates;
+  private modelLook = new ModelLookRuntime();
+  setModelLook(config: ModelLookPreferences, saved: Iterable<string>) {
+    if (!this.modelLook.configure(config, saved)) return;
+    this.modelLook.applyGroup(this.model);
+    for (const outgoing of this.outgoing) this.modelLook.applyGroup(outgoing.group);
+    for (const inst of this.instances) {
+      const state = inst.userData.modelLook as ModelLookMaterialState | undefined;
+      if (state) state.coating.value = this.modelLook.coating;
+    }
+    this.renderState.invalidate();
+  }
   get themeAmount() { return this.theme.background(performance.now() / 1000); }
   setTheme(dark: boolean, immediate = false) { this.theme.set(dark, performance.now() / 1000, this.selectedCell, immediate); }
   private playfield = { enabled: false, bands: quietBands(), strength: 1, flatten: 0, target: null as string | null, breathing: true };
@@ -463,10 +482,18 @@ export class ArchiveScene {
       this.appearance.register(name, mat, arrayMat);
       this.themeAttribute ??= new THREE.InstancedBufferAttribute(new Float32Array(count), 1).setUsage(THREE.DynamicDrawUsage);
       geom.setAttribute("archiveTheme", this.themeAttribute);
+      this.lookColorAttribute ??= new THREE.InstancedBufferAttribute(new Float32Array(count * 3), 3).setUsage(THREE.DynamicDrawUsage);
+      this.lookAmountAttribute ??= new THREE.InstancedBufferAttribute(new Float32Array(count), 1).setUsage(THREE.DynamicDrawUsage);
+      geom.setAttribute("modelLookColor", this.lookColorAttribute);
+      geom.setAttribute("modelLookAmount", this.lookAmountAttribute);
       themeMaterial(arrayMat, name, true, this.subduedIndex);
+      finishMaterial(arrayMat, name, { value: 0.2 });
+      const lookState = applyModelLookMaterial(arrayMat, name, true);
+      if (lookState) lookState.coating.value = this.modelLook.coating;
       const inst = new THREE.InstancedMesh(geom, arrayMat, count);
       // All surfaces move rigidly together; share the transform buffer on the GPU.
       inst.instanceMatrix = this.instances[0]?.instanceMatrix ?? inst.instanceMatrix.setUsage(THREE.DynamicDrawUsage);
+      inst.userData.modelLook = lookState;
       inst.castShadow = name === "Optical_Diffuser";
       inst.receiveShadow = true;
       inst.frustumCulled = false;
@@ -492,6 +519,7 @@ export class ArchiveScene {
     this.model.add(label);
     this.appearance.prepare(this.model);
     this.appearance.apply(this.model, 0);
+    this.modelLook.applyGroup(this.model, records[fileAtCell(this.selectedCell)]);
     this.drawLabel(0);
     this.scene.add(this.model);
     this.model.position.copy(this.cellPosition(poolCell(this.selectedSlot)));
@@ -533,6 +561,7 @@ export class ArchiveScene {
     this.appearance.apply(model, 1);
     this.appearance.setClarity(model, this.modelClarity());
     this.appearance.setTheme(model, this.themeAmount);
+    this.modelLook.applyGroup(model, picture);
     const canvas = document.createElement("canvas");
     canvas.width = this.labelCanvas.width;
     canvas.height = this.labelCanvas.height;
@@ -560,6 +589,7 @@ export class ArchiveScene {
     return {
       model,
       setClarity: (value: number) => this.appearance.setClarity(model, value),
+      refreshModelLook: () => this.modelLook.applyGroup(model, picture),
       dispose: () => {
         for (const mesh of meshes) {
           mesh.geometry.dispose();
@@ -737,6 +767,7 @@ export class ArchiveScene {
       this.appearance.prepare(group);
       this.appearance.apply(group, ease(this.lift.value / 0.4));
       this.appearance.setClarity(group, this.modelClarity());
+      this.modelLook.applyGroup(group);
       this.scene.add(group);
       this.outgoing.push({
         group,
@@ -773,6 +804,11 @@ export class ArchiveScene {
     this.targetRotation = 0;
     this.drawLabel(index);
     void this.modelImages.select(this.model, records[index]);
+    this.modelLook.applyGroup(this.model, records[index]);
+  }
+  refreshModelImage() {
+    void this.modelImages.select(this.model, records[fileAtCell(this.selectedCell)]);
+    this.renderState.invalidate();
   }
   private emitPulse(cell: ArchiveCell) {
     this.pulses.push({ ...cell, time: this.clock });
@@ -817,6 +853,17 @@ export class ArchiveScene {
     this.themeAttribute = new THREE.InstancedBufferAttribute(new Float32Array(capacity), 1).setUsage(THREE.DynamicDrawUsage);
     if (previousTheme) this.themeAttribute.array.set(previousTheme.array);
     for (const inst of this.instances) inst.geometry.setAttribute("archiveTheme", this.themeAttribute);
+    const oldLookColor = this.lookColorAttribute, oldLookAmount = this.lookAmountAttribute;
+    this.lookColorAttribute = new THREE.InstancedBufferAttribute(new Float32Array(capacity * 3), 3).setUsage(THREE.DynamicDrawUsage);
+    this.lookAmountAttribute = new THREE.InstancedBufferAttribute(new Float32Array(capacity), 1).setUsage(THREE.DynamicDrawUsage);
+    if (oldLookColor) this.lookColorAttribute.array.set(oldLookColor.array);
+    if (oldLookAmount) this.lookAmountAttribute.array.set(oldLookAmount.array);
+    for (const inst of this.instances) {
+      inst.geometry.setAttribute("modelLookColor", this.lookColorAttribute);
+      inst.geometry.setAttribute("modelLookAmount", this.lookAmountAttribute);
+    }
+    this.lookColorUpdates = new InstanceUpdates(this.lookColorAttribute);
+    this.lookAmountUpdates = new InstanceUpdates(this.lookAmountAttribute);
     this.matrixUpdates = new InstanceUpdates(matrix);
     this.themeUpdates = new InstanceUpdates(this.themeAttribute);
     this.instanceCapacity = capacity;
@@ -1661,6 +1708,8 @@ export class ArchiveScene {
     this.relayPoints.clear();
     this.matrixUpdates ??= new InstanceUpdates(this.instances[0].instanceMatrix);
     if (this.themeAttribute) this.themeUpdates ??= new InstanceUpdates(this.themeAttribute);
+    if (this.lookColorAttribute) this.lookColorUpdates ??= new InstanceUpdates(this.lookColorAttribute);
+    if (this.lookAmountAttribute) this.lookAmountUpdates ??= new InstanceUpdates(this.lookAmountAttribute);
     for (const cell of this.cells) {
       const { row, lane } = cell;
       if (hidden.has(cellKey(cell))) continue;
@@ -1672,6 +1721,11 @@ export class ArchiveScene {
       this.ensureInstanceCapacity(i + 1);
       this.drawnCells.push(cell);
       this.themeUpdates?.scalar(i, this.theme.sample(cell, time));
+      const look = this.modelLook.resolve(records[fileAtCell(cell)]);
+      this.lookColorUpdates?.scalar(i * 3, look.color.r);
+      this.lookColorUpdates?.scalar(i * 3 + 1, look.color.g);
+      this.lookColorUpdates?.scalar(i * 3 + 2, look.color.b);
+      this.lookAmountUpdates?.scalar(i, look.amount);
       const slope = field(row + .5, lane) - field(row - .5, lane);
       this.dummy.position.set(x, y, z);
       this.dummy.rotation.set(slope * .024 * (1 - detail), 0, 0);
@@ -1689,6 +1743,8 @@ export class ArchiveScene {
     // renderer culling and do not need an O(n) bound recomputation each frame.
     if (matricesChanged || countChanged || !this.instances[0].boundingSphere) this.instances[0].computeBoundingSphere();
     this.themeUpdates?.commit();
+    this.lookColorUpdates?.commit();
+    this.lookAmountUpdates?.commit();
     this.modelImages.update(this.drawnCells, this.instances[0].instanceMatrix);
     let neighborTop = -Infinity;
     const lane = selectedLane,
@@ -1762,8 +1818,10 @@ export class ArchiveScene {
           mat.attenuationColor?.r ?? 0, mat.attenuationColor?.g ?? 0, mat.attenuationColor?.b ?? 0);
         for (const name of ['appearance', 'glassClarity', 'themeAmount', 'subduedIndex'])
           state.floats(object.userData[name]?.value ?? 0);
+        const look = object.userData.modelLook as ModelLookMaterialState | undefined;
+        if (look) state.floats(look.amount.value, look.coating.value, look.color.value.r, look.color.value.g, look.color.value.b);
         if (object instanceof THREE.InstancedMesh)
-          state.add(object.count, object.instanceMatrix.version, this.themeAttribute?.version ?? 0);
+          state.add(object.count, object.instanceMatrix.version, this.themeAttribute?.version ?? 0, this.lookColorAttribute?.version ?? 0, this.lookAmountAttribute?.version ?? 0);
       });
       if (!state.end()) { this.reusedFrames++; return; }
     }
@@ -1807,6 +1865,7 @@ export class ArchiveScene {
       fieldOfView: this.camera.fov,
       loaded: this.loaded,
       modelImages: this.modelImages.stats(),
+      modelLook: { key: this.modelLook.key, coating: this.modelLook.coating, selectedAmount: this.modelLook.resolve(records[fileAtCell(this.selectedCell)]).amount, selectedColor: this.modelLook.resolve(records[fileAtCell(this.selectedCell)]).color.getHexString(), instanceColors: [...(this.lookColorAttribute?.array.slice(0, Math.min(12, this.drawnCells.length) * 3) ?? [])] },
       drawCalls: this.renderer.info.render.calls,
       renderedFrames: this.renderedFrames,
       reusedFrames: this.reusedFrames,

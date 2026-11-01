@@ -3,14 +3,22 @@ import { InstanceUpdates } from "./instance-updates";
 import { records, type ArchiveRecord } from "./desktop-data";
 import { fileAtCell, type ArchiveCell } from "./archive-loop";
 import { archiveCoverKey, createArchiveCover } from "./archive-cover";
+import { applyModelImageStyle, getModelImageStyle, type ModelImageStyle } from "./model-image-style";
 
-// A print on the existing cover. Keep the label, frame and cassette geometry.
+// The print sits in the gap between the inner details (z <= 0.168) and
+// the frosted cover (z = 0.174..0.206), so the existing glass refracts it.
+// Keep the label, frame and cassette geometry unchanged.
 const WIDTH = 2.65, HEIGHT = 3.05;
-const geometry = () => new THREE.PlaneGeometry(WIDTH, HEIGHT).translate(0.625, 1.975, 0.25);
+const geometry = () => new THREE.PlaneGeometry(WIDTH, HEIGHT).translate(0.625, 1.975, 0.17);
 type Batch = { mesh: THREE.InstancedMesh; updates: InstanceUpdates; used: number; generated: boolean };
-type Picture = Pick<ArchiveRecord, "id" | "modelImage" | "title" | "category" | "placeholder">;
+type Picture = Pick<ArchiveRecord, "id" | "modelImage" | "title" | "category" | "placeholder"> & { modelImageStyle?: ModelImageStyle };
+// Capture a preference before any asynchronous decode. Returning snapshots and
+// queued array work must retain the style that belongs to their own request.
+function capturePicture(doc?: Picture): Picture | undefined {
+  return doc ? { ...doc, modelImageStyle: doc.modelImage ? (doc.modelImageStyle ?? getModelImageStyle(doc.id)) : "original" } : undefined;
+}
 
-function textureFor(image: HTMLImageElement, width: number, anisotropy: number) {
+function textureFor(image: HTMLImageElement, width: number, anisotropy: number, style: ModelImageStyle) {
   const canvas = document.createElement("canvas");
   canvas.width = width;
   canvas.height = Math.round(width * HEIGHT / WIDTH);
@@ -19,6 +27,7 @@ function textureFor(image: HTMLImageElement, width: number, anisotropy: number) 
   // Align to the top of the print window: the upper edge remains visible
   // between tightly packed rows, while the original label stays unobstructed.
   canvas.getContext("2d")!.drawImage(image, (canvas.width - w) / 2, 0, w, h);
+  applyModelImageStyle(canvas, style);
   const texture = new THREE.CanvasTexture(canvas);
   texture.colorSpace = THREE.SRGBColorSpace;
   texture.anisotropy = Math.min(8, anisotropy);
@@ -38,10 +47,12 @@ async function loadImage(doc: Picture) {
 }
 function printKey(doc?: Picture) {
   if (!doc || doc.placeholder) return "";
-  return doc.modelImage ? doc.id + ":" + doc.modelImage : doc.id + ":generated:" + archiveCoverKey(doc);
+  if (!doc.modelImage) return doc.id + ":generated:" + archiveCoverKey(doc);
+  const style = doc.modelImageStyle ?? getModelImageStyle(doc.id);
+  return doc.id + ":" + doc.modelImage + (style === "original" ? "" : ":style:" + style);
 }
 async function textureForDocument(doc: Picture, width: number, anisotropy: number) {
-  if (doc.modelImage) return textureFor(await loadImage(doc), width, anisotropy);
+  if (doc.modelImage) return textureFor(await loadImage(doc), width, anisotropy, doc.modelImageStyle ?? "original");
   // Unicode subsets needed only by this title may not yet have been painted in DOM.
   // Wait once per cached print so a late font cannot change its identity layout.
   await document.fonts.load('600 36px "MiSans"', doc.title + (doc.category || "未分类"));
@@ -93,6 +104,7 @@ export class ModelImages {
     }
   }
   async select(group: THREE.Group, doc?: Picture) {
+    doc = capturePicture(doc);
     const key = this.key(doc);
     if (key === this.selectedKey && (this.selectedReady || this.selectedLoading || !key)) return;
     this.selectedKey = key;
@@ -135,7 +147,7 @@ export class ModelImages {
       mesh.material.map = mesh.material.map!.clone();
       mesh.material.map.needsUpdate = true;
     }
-    const doc = group.userData.modelImageDocument as Picture | null;
+    const doc = capturePicture(group.userData.modelImageDocument as Picture | undefined);
     if (!found && doc && this.key(doc)) {
       void textureForDocument(doc, 1024, this.anisotropy).then(texture => {
         if (this.disposed || !group.parent) { texture.dispose(); return; }
@@ -149,13 +161,15 @@ export class ModelImages {
     }
   }
   async assembly(doc?: Picture) {
+    doc = capturePicture(doc);
     if (!doc || !this.key(doc)) return;
+    const key = this.key(doc);
     try {
       const texture = await textureForDocument(doc, 1024, this.anisotropy);
       if (this.disposed) { texture.dispose(); return; }
       const print = new THREE.Mesh(geometry(), materialFor(texture));
       print.name = "model-image";
-      print.userData.modelImage = this.key(doc);
+      print.userData.modelImage = key;
       print.userData.generatedCover = !doc.modelImage;
       print.userData.assemblyPart = "cover";
       return print;
@@ -164,12 +178,12 @@ export class ModelImages {
   update(cells: ArchiveCell[], matrices: THREE.InstancedBufferAttribute) {
     if (this.disposed) return;
     this.frame++;
-    const groups = new Map<string, { doc: ArchiveRecord; indices: number[] }>();
+    const groups = new Map<string, { doc: Picture; indices: number[] }>();
     cells.forEach((cell, i) => {
       const doc = records[fileAtCell(cell)], key = this.key(doc);
-      if (!key) return;
+      if (!key || !doc) return;
       let group = groups.get(key);
-      if (!group) groups.set(key, group = { doc, indices: [] });
+      if (!group) groups.set(key, group = { doc: capturePicture(doc)!, indices: [] });
       group.indices.push(i);
     });
     this.wanted = new Set(groups.keys());

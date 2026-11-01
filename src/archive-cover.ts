@@ -1,5 +1,7 @@
 import { archiveIdentity, archiveSeed, type ArchiveIdentitySource } from "./archive-identity.ts";
+import { archivePatternFamily, archivePatternPalettes, drawArchivePattern } from "./archive-patterns.ts";
 
+export { archivePatternFamily } from "./archive-patterns.ts";
 export type ArchiveCoverSource = ArchiveIdentitySource & { title: string };
 
 /** The print is derived in memory; it never becomes document metadata or an asset. */
@@ -32,9 +34,8 @@ export function coverTextLines(
   return lines;
 }
 
-// Physical ink and paper use Radix Sand. The cover remains a print under the
-// existing glass in both themes, just like a user's photograph.
-const ink = "#21201c", paper = "#f1f0ef", rule = "#bcbbb5", secondary = "#63635e";
+// Printed Radix Sand remains physical ink and paper beneath the existing glass.
+const ink = "#21201c", paper = "#f1f0ef", secondary = "#63635e";
 const font = '"MiSans", "Microsoft YaHei", sans-serif';
 
 export function createArchiveCover(source: ArchiveCoverSource, width = 1024) {
@@ -46,56 +47,46 @@ export function createArchiveCover(source: ArchiveCoverSource, width = 1024) {
   context.fillStyle = paper;
   context.fillRect(0, 0, 512, 590);
   const identity = archiveIdentity(source), seed = archiveSeed(source.id);
+  const family = archivePatternFamily(identity.category), palette = archivePatternPalettes[family];
   context.textBaseline = "top";
+  // The tightly packed array mainly exposes this existing upper print region.
+  context.fillStyle = palette.tint; context.fillRect(21, 21, 470, 50);
+  drawArchivePattern(context, family, seed, { x: 394, y: 33, width: 82, height: 27 });
   context.strokeStyle = ink;
   context.lineWidth = 2;
   context.strokeRect(20, 20, 472, 550);
+  context.strokeStyle = palette.accent;
   context.beginPath(); context.moveTo(20, 72); context.lineTo(492, 72); context.stroke();
   context.fillStyle = ink;
   context.font = `600 14px ${font}`;
   context.fillText("RHINE LAB / ARCHIVE", 36, 39);
   context.font = `500 18px ${font}`;
-  const category = coverTextLines(context, identity.category, 400, 1)[0] || "未分类";
+  const category = coverTextLines(context, identity.category, 352, 1)[0] || "未分类";
   context.fillText(category, 36, 95);
   context.font = `600 36px ${font}`;
-  coverTextLines(context, source.title || "未命名档案", 432, 4)
-    .forEach((line, index) => context.fillText(line, 36, 145 + index * 48));
+  const title = coverTextLines(context, source.title || "未命名档案", 432, 4);
+  title.forEach((line, index) => context.fillText(line, 36, 145 + index * 48));
 
-  // Category shape echoes the directory and graph mark. Document ID determines
-  // the modular tiles, so the geometry has a repeatable connection to content.
-  context.save();
-  context.translate(36, 375);
-  context.strokeStyle = rule;
-  context.lineWidth = 1.5;
-  const cell = 26;
-  for (let row = 0; row < 4; row++) for (let col = 0; col < 6; col++) {
-    context.strokeRect(col * cell, row * cell, cell, cell);
-    if ((seed >>> ((row * 6 + col) % 32)) & 1) {
-      context.fillStyle = ink;
-      context.fillRect(col * cell + 4, row * cell + 4, cell - 8, cell - 8);
-    }
-  }
-  context.restore();
-  context.save();
-  context.translate(374, 427);
-  context.strokeStyle = ink;
-  context.lineWidth = 5;
+  // Longer titles reserve their real line area; no generated marks overlap text.
+  const top = Math.min(359, 145 + title.length * 48 + 16);
+  drawArchivePattern(context, family, seed, { x: 36, y: top, width: 432, height: 489 - top });
+  // Keep the category's shared identity glyph outside the changing pattern field.
+  context.save(); context.translate(450, 104);
+  context.strokeStyle = palette.accent; context.lineWidth = 2;
   context.beginPath();
-  if (identity.mark === "○") context.arc(0, 0, 47, 0, Math.PI * 2);
-  else if (identity.mark === "□") context.rect(-43, -43, 86, 86);
+  if (identity.mark === "○") context.arc(0, 0, 16, 0, Math.PI * 2);
+  else if (identity.mark === "□") context.rect(-14, -14, 28, 28);
   else {
     const corners = identity.mark === "△" ? 3 : identity.mark === "⬡" ? 6 : 4;
     for (let index = 0; index < corners; index++) {
       const angle = -Math.PI / 2 + index * Math.PI * 2 / corners;
-      const x = Math.cos(angle) * 52, y = Math.sin(angle) * 52;
+      const x = Math.cos(angle) * 17, y = Math.sin(angle) * 17;
       if (!index) context.moveTo(x, y); else context.lineTo(x, y);
     }
     context.closePath();
   }
-  context.stroke();
-  context.restore();
-  context.strokeStyle = ink;
-  context.lineWidth = 2;
+  context.stroke(); context.restore();
+  context.strokeStyle = ink; context.lineWidth = 2;
   context.beginPath(); context.moveTo(20, 511); context.lineTo(492, 511); context.stroke();
   context.fillStyle = secondary;
   context.font = `500 12px ${font}`;

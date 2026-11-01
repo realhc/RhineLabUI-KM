@@ -1,0 +1,44 @@
+{
+  "typescript": true,
+  "unitTests": [
+    "check-appearance.mjs",
+    "check-decryption.mjs",
+    "check-assembly.mjs",
+    "check-render-updates.mjs",
+    "check-material-finish.mjs",
+    "check-model-image-style.mjs"
+  ],
+  "coverLifecycle": true,
+  "artwork": {
+    "styles": 4,
+    "pixelSignatures": [
+      2459437234,
+      4251046877,
+      3840231897,
+      1749707140
+    ],
+    "snapshotStyleFrozen": true,
+    "staleRequestIgnored": true,
+    "originalDimensionsAndAlpha": true,
+    "localPreference": true
+  },
+  "browserErrors": [],
+  "geometry": [
+    {
+      "name": "archive-assembly",
+      "sha256": "d411170676f55a327c286e67e462f98b446667811c725318bab85657eaee06ec",
+      "unchanged": true
+    },
+    {
+      "name": "archive-cassette",
+      "sha256": "dda42b9b3b471d11c69820a64084d254a64b27761287ab0e35dd8387ec0a0bed",
+      "unchanged": true
+    }
+  ],
+  "production": {
+    "sha256": "869531049fb777de1679f305fb9ab178aa96052ba18624b4dac0801523dff6d5",
+    "bytes": 38057771,
+    "files": 863,
+    "version": "1.2.0-preview.1"
+  }
+}

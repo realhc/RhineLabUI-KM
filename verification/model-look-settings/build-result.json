@@ -1,0 +1,31 @@
+{
+  "typescript": true,
+  "unitTests": [
+    "check-model-look.mjs",
+    "check-model-look-material.mjs",
+    "check-model-look-runtime.mjs",
+    "check-appearance.mjs",
+    "check-material-finish.mjs",
+    "check-decryption.mjs",
+    "check-assembly.mjs",
+    "check-render-updates.mjs"
+  ],
+  "geometry": [
+    {
+      "name": "archive-assembly",
+      "sha256": "d411170676f55a327c286e67e462f98b446667811c725318bab85657eaee06ec",
+      "unchanged": true
+    },
+    {
+      "name": "archive-cassette",
+      "sha256": "dda42b9b3b471d11c69820a64084d254a64b27761287ab0e35dd8387ec0a0bed",
+      "unchanged": true
+    }
+  ],
+  "production": {
+    "sha256": "76602c0afc293677ff21a542f16fe25f58ef59932a853b9eca5a9b244cd5808f",
+    "bytes": 38077781,
+    "files": 863,
+    "version": "1.2.0-preview.1"
+  }
+}

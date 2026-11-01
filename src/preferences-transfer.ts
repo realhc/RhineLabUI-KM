@@ -1,5 +1,6 @@
-import { fullMotion } from "./motion-preferences";
-import { normalizeQuality } from "./render-quality";
+import { fullMotion } from "./motion-preferences.ts";
+import { normalizeQuality } from "./render-quality.ts";
+import { parseModelLook } from "./model-look.ts";
 
 export const PREFERENCES_MAX_BYTES = 1024 * 1024;
 export type PreferencesTransfer = {
@@ -97,5 +98,6 @@ export function parsePreferencesTransfer(text: string): PreferencesTransfer {
     }
     settings.rendering = normalized;
   }
+  if ("modelLook" in source) settings.modelLook = parseModelLook(source.modelLook);
   return { version: 1, settings, saved: [...new Set(value.saved as string[])] };
 }

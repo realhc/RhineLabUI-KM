@@ -1,0 +1,49 @@
+.model-look-settings {
+  --model-look-ink:#21201c; --model-look-muted:#63635e;
+  --model-look-line:#cfceca; --model-look-field:#e9e8e6;
+  --model-look-paper:#fdfdfc; --model-look-accent:#ab6400;
+  margin-top:24px; border-bottom:1px solid var(--model-look-line);
+  color:var(--model-look-ink);
+}
+[data-dark-surface="true"] .model-look-settings {
+  --model-look-ink:#eeeeec; --model-look-muted:#b5b3ad;
+  --model-look-line:#494844; --model-look-field:#2a2a28;
+  --model-look-paper:#111110; --model-look-accent:#ffca16;
+}
+.model-look-settings .model-look-heading,
+.model-look-settings .model-look-row { display:flex; align-items:center; justify-content:space-between; gap:18px; }
+.model-look-settings .model-look-heading { margin-bottom:4px; }
+.model-look-settings .model-look-heading h3 { margin:0; font-size:12px; font-weight:400; letter-spacing:.8px; }
+.model-look-settings .model-look-heading h3 span { margin-left:18px; color:var(--model-look-muted); letter-spacing:0; }
+.model-look-settings .model-look-row { min-height:54px; margin:0; padding:10px 0; border-top:1px solid var(--model-look-line); font-size:12px; }
+.model-look-settings .model-look-row > span:first-child { flex:none; }
+.model-look-settings .model-look-choices,
+.model-look-settings .model-look-palette,
+.model-look-settings .model-look-color-value,
+.model-look-settings .model-look-range,
+.model-look-settings .model-look-favorites { display:flex; align-items:center; gap:8px; }
+.model-look-settings .model-look-choices { flex-wrap:wrap; justify-content:flex-end; }
+.model-look-settings button { min-height:34px; padding:7px 12px; border:1px solid var(--model-look-line); border-radius:4px; background:transparent; color:var(--model-look-ink); font:inherit; font-size:12px; letter-spacing:0; transition:background 150ms ease-out,color 150ms ease-out; }
+.model-look-settings button:hover { background:var(--model-look-field); }
+.model-look-settings button[aria-pressed="true"] { background:var(--model-look-ink); border-color:var(--model-look-ink); color:var(--model-look-paper); }
+.model-look-settings .model-look-heading button { border-color:transparent; color:var(--model-look-muted); }
+.model-look-settings input[type="color"] { position:static; opacity:1; width:38px; min-width:38px; height:34px; padding:3px; border:1px solid var(--model-look-line); border-radius:4px; background:var(--model-look-field); }
+.model-look-settings input[type="color"]::-webkit-color-swatch-wrapper { padding:0; }
+.model-look-settings input[type="color"]::-webkit-color-swatch { border:0; border-radius:1px; }
+.model-look-settings output { min-width:70px; font-size:12px; color:var(--model-look-muted); font-variant-numeric:tabular-nums; }
+.model-look-settings .model-look-palette { flex-wrap:wrap; justify-content:flex-end; gap:6px; }
+.model-look-settings .model-look-swatch { position:relative; display:block; margin:0; padding:0; border:0; }
+.model-look-settings .model-look-swatch-index { position:absolute; left:4px; bottom:3px; width:15px; height:15px; display:grid; place-items:center; pointer-events:none; background:var(--model-look-paper); color:var(--model-look-ink); border-radius:2px; font-size:12px; }
+.model-look-settings .model-look-range { min-width:0; gap:12px; }
+.model-look-settings .model-look-range input { position:static; opacity:1; width:220px; max-width:100%; min-width:60px; height:24px; margin:0; accent-color:var(--model-look-accent); }
+.model-look-settings .model-look-range output { min-width:42px; text-align:right; }
+.model-look-settings .model-look-favorites { margin:0; padding:0; border:0; justify-content:flex-start; font-size:12px; }
+.model-look-settings .model-look-favorites input { position:static; opacity:1; width:18px; height:18px; margin:0; accent-color:var(--model-look-accent); }
+.model-look-settings :is(button,input):focus-visible { outline:2px solid var(--model-look-accent); outline-offset:3px; }
+@media(max-width:640px) {
+  .model-look-settings .model-look-row { flex-wrap:wrap; gap:10px; }
+  .model-look-settings .model-look-choices { gap:5px; }
+  .model-look-settings button { padding:7px 9px; }
+  .model-look-settings .model-look-range input { width:160px; }
+}
+@media(prefers-reduced-motion:reduce) { .model-look-settings button { transition:none; } }

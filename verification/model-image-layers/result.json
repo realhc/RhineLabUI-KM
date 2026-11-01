@@ -1,0 +1,24 @@
+{
+  "typescript": true,
+  "layers": {
+    "depth": 0.17000000178813934,
+    "belowGlass": true,
+    "aboveOptics": true,
+    "selectedSnapshotViewerAndArray": true,
+    "opaqueCapture": true
+  },
+  "pixelDifferences": {
+    "generated-frosted": 5.212258403361345,
+    "generated-clear": 5.6408152427637726,
+    "custom-frosted": 22.49504201680672,
+    "custom-clear": 10.954885037348273
+  },
+  "browserErrors": [],
+  "productionBuild": 76,
+  "asar": {
+    "path": "release/local-1.2.0-preview.1/RhineLab-win32-x64/resources/app.asar",
+    "sha256": "a61b857b0a0478beeaab6694c07824ed5ae58085514befdfe121a6376dede9cd",
+    "bytes": 38393556,
+    "files": 863
+  }
+}

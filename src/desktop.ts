@@ -7,6 +7,7 @@ import { createDocumentResolver } from "./desktop-graph-data";
 import { mountDocumentDrafting } from "./desktop-drafting";
 import { mountReadingNavigation, mountQuickSwitcher } from "./desktop-reading";
 import { archiveIdentity } from "./archive-identity";
+import { getModelImageStyle, setModelImageStyle, isModelImageStyle } from "./model-image-style";
 
 const api = window.rhine;
 const overlay = document.createElement("dialog");
@@ -67,7 +68,7 @@ const saved = new Set<string>(
 overlay.innerHTML =
   `<header><div class="library-brand">RHINE LAB<small>ARCHIVE DIRECTORY / 本地知识库</small></div><div class="header-actions"><button id="refresh" title="刷新磁盘索引">刷新</button><button id="folder">打开知识库文件夹 ↗</button><button id="preferences">设置</button><button id="fullscreen" title="F11 全屏 / Esc 退出">⛶</button><button id="library-close" aria-label="关闭知识库">CLOSE ×</button></div></header>
 <div class="shell"><aside><div class="row" style="justify-content:space-between"><span class="eyebrow">ARCHIVE DIRECTORY</span><div class="directory-add"><button id="new" class="solid" aria-label="新建分类或文档" aria-expanded="false">＋</button><div id="new-menu" hidden><button id="new-category">新建分类</button><button id="new-document">新建文档</button></div></div></div><input id="search" type="search" placeholder="搜索标题、分类和正文…" aria-label="全文搜索"/><div class="nav"><button data-view="all" class="active">全部</button><button data-view="saved">收藏</button><button data-view="trash">回收区</button></div><div class="filters"><select id="sort" aria-label="排序"><option value="manual">手动顺序</option><option value="title">标题 A–Z</option><option value="modified">最近修改</option></select></div><div class="directory-wheel"><div id="documents" role="list" aria-label="文档刻度目录"></div></div><div class="side-footer"><span id="count"></span><br>本地 Markdown · 数据位于程序旁<br>上下拖动 / 滚轮浏览 · 拖动文档条归类 / 排序</div></aside>
-<main><div id="notice" role="alert"></div><section id="empty-main" class="empty"><div class="eyebrow">NO ARCHIVE SELECTED</div><h2>从一份记录开始</h2><p>选择左侧档案，或新建一篇文档。</p></section><section id="editor" hidden><div class="metadata"><input id="title" aria-label="文档标题" placeholder="文档标题" maxlength="240"/></div><div class="toolbar"><div class="row"><button id="save" class="solid" title="E 编辑 / Ctrl+S 保存">编辑</button><button id="favorite">☆ 收藏</button><button id="model-image" title="为当前文档的三维模型选择本地图片">模型图片</button><button id="remove-model-image" hidden>移除图片</button><button id="remove" class="danger">移入回收区</button><button id="restore" hidden>恢复</button><button id="purge" class="danger" hidden>永久删除</button></div></div><div id="format" class="row" role="toolbar" aria-label="正文编辑工具">${richToolbar}</div><div id="panes" class="preview"><article id="preview" aria-label="文档正文"></article></div><div id="document-info"></div></section></main></div><footer><span>RHINE LAB · OFFLINE WORKSPACE</span><span id="state" role="status" aria-live="polite">正在读取知识库…</span></footer><dialog id="dialog"><h2 id="dialog-title"></h2><p id="dialog-copy"></p><div class="row" id="dialog-actions"></div></dialog><input id="import-file" type="file" accept="application/json,.json" hidden/>`;
+<main><div id="notice" role="alert"></div><section id="empty-main" class="empty"><div class="eyebrow">NO ARCHIVE SELECTED</div><h2>从一份记录开始</h2><p>选择左侧档案，或新建一篇文档。</p></section><section id="editor" hidden><div class="metadata"><input id="title" aria-label="文档标题" placeholder="文档标题" maxlength="240"/></div><div class="toolbar"><div class="row"><button id="save" class="solid" title="E 编辑 / Ctrl+S 保存">编辑</button><button id="favorite">☆ 收藏</button><button id="model-image" title="为当前文档的三维模型选择本地图片">模型图片</button><select id="model-image-style" aria-label="模型图片风格" title="模型图片风格，仅在本机显示" hidden><option value="original">原图</option><option value="duotone">双色</option><option value="halftone">网点</option><option value="linework">线稿</option></select><button id="remove-model-image" hidden>移除图片</button><button id="remove" class="danger">移入回收区</button><button id="restore" hidden>恢复</button><button id="purge" class="danger" hidden>永久删除</button></div></div><div id="format" class="row" role="toolbar" aria-label="正文编辑工具">${richToolbar}</div><div id="panes" class="preview"><article id="preview" aria-label="文档正文"></article></div><div id="document-info"></div></section></main></div><footer><span>RHINE LAB · OFFLINE WORKSPACE</span><span id="state" role="status" aria-live="polite">正在读取知识库…</span></footer><dialog id="dialog"><h2 id="dialog-title"></h2><p id="dialog-copy"></p><div class="row" id="dialog-actions"></div></dialog><input id="import-file" type="file" accept="application/json,.json" hidden/>`;
 
 // Regroup existing nodes without changing document operations.
 const controls = document.createElement("section");
@@ -304,6 +305,10 @@ function updateModelImageButtons() {
   remove.hidden = removed || !selected?.modelImage;
   choose.disabled = remove.disabled = modelImageBusy;
   choose.textContent = selected?.modelImage ? "更换模型图片" : "模型图片";
+  const style = $<HTMLSelectElement>("model-image-style");
+  style.hidden = removed || !selected?.modelImage;
+  style.disabled = modelImageBusy;
+  style.value = selected ? getModelImageStyle(selected.id) : "original";
 }
 function renderEditor() {
   const changedDocument = displayedDocumentId !== selected?.id;
@@ -685,6 +690,7 @@ $("favorite").onclick = () => {
   if (!selected) return;
   saved.has(selected.id) ? saved.delete(selected.id) : saved.add(selected.id);
   localStorage.setItem("rhine-saved", JSON.stringify([...saved]));
+  window.dispatchEvent(new Event("rhine-saved-changed"));
   $("favorite").textContent = saved.has(selected.id) ? "★ 已收藏" : "☆ 收藏";
   renderList();
 };
@@ -714,6 +720,12 @@ function changeModelImage(remove: boolean) {
 }
 $("model-image").onclick = () => changeModelImage(false);
 $("remove-model-image").onclick = () => changeModelImage(true);
+$("model-image-style").onchange = () => {
+  if (!selected?.modelImage || modelImageBusy || trash.some(doc => doc.id === selected!.id)) return;
+  const value = $<HTMLSelectElement>("model-image-style").value;
+  if (isModelImageStyle(value)) setModelImageStyle(selected.id, value);
+  updateModelImageButtons();
+};
 $("remove").onclick = () =>
   run(async () => {
     if (!selected || !(await canLeave())) return;

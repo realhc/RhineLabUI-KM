@@ -401,3 +401,6 @@
 #library-overlay #search-position { display:flex; align-items:center; justify-content:flex-end; gap:5px; padding:5px 16px; border-bottom:1px solid var(--glass-stroke); font-size:10px; color:var(--muted); }
 #library-overlay #search-position button { padding:2px 8px; background:transparent; box-shadow:none; }
 #library-overlay #preview ::highlight(rhine-search) { color:var(--ink); background:color-mix(in srgb,var(--theme-accent) 30%,transparent); }
+
+/* Display-only model image treatment, beside the existing image controls. */
+#library-overlay .library-controls #model-image-style { width:auto; min-height:34px; padding:6px 8px; border-color:transparent; border-radius:8px; background:var(--glass-soft); box-shadow:none; font-size:12px; }

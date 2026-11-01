@@ -1,0 +1,24 @@
+{
+  "phase": "baseline",
+  "idleAdditionalFrames": 0,
+  "original": {
+    "projection": [
+      465,
+      313
+    ],
+    "position": [
+      0,
+      -1.9963,
+      -2.17
+    ],
+    "drawCalls": 0,
+    "triangles": 0
+  },
+  "pageErrors": [],
+  "shaderErrors": [],
+  "frameErrors": 0,
+  "originalPreferencesRestored": true,
+  "libraryUnchanged": true,
+  "libraryFiles": 88,
+  "asarSha256": "869531049fb777de1679f305fb9ab178aa96052ba18624b4dac0801523dff6d5"
+}

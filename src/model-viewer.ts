@@ -27,10 +27,11 @@ const PARTS = [
   { id: "carrier", label: "背板与框架", en: "CARRIER", depth: -2.05 },
 ] as const;
 
-type ModelSource = { model: THREE.Group; dispose: () => void; setClarity?: (value: number) => void };
+type ModelSource = { model: THREE.Group; dispose: () => void; setClarity?: (value: number) => void; refreshModelLook?: () => void };
 export class ModelViewer {
   private themeAmount = 0;
   setTheme(value: number) { this.themeAmount = value; }
+  refreshModelLook() { this.source?.refreshModelLook?.(); }
   readonly root: HTMLElement;
   private canvasHost: HTMLElement;
   private renderer: THREE.WebGLRenderer;
@@ -263,6 +264,7 @@ export class ModelViewer {
         return;
       }
       this.source = source;
+      source.refreshModelLook?.();
       for (const part of PARTS) {
         const group = new THREE.Group();
         group.name = part.id;

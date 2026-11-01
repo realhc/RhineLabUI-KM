@@ -12,10 +12,10 @@ const bundle = await build({
   stdin: { contents: `
     import * as THREE from 'three';
     import {ModelImages} from './src/model-images.ts';
-    import {createArchiveCover,archiveCoverKey,coverTextLines} from './src/archive-cover.ts';
+    import {createArchiveCover,archiveCoverKey,coverTextLines,archivePatternFamily} from './src/archive-cover.ts';
     import {archiveIdentity} from './src/archive-identity.ts';
     import {setDesktopDocuments,records} from './src/desktop-data.ts';
-    window.coverCheck={THREE,ModelImages,createArchiveCover,archiveCoverKey,coverTextLines,archiveIdentity,setDesktopDocuments,records};
+    window.coverCheck={THREE,ModelImages,createArchiveCover,archiveCoverKey,coverTextLines,archivePatternFamily,archiveIdentity,setDesktopDocuments,records};
   `, resolveDir: process.cwd(), sourcefile: 'cover-check.ts', loader: 'ts' },
   bundle: true, write: false, platform: 'browser', format: 'iife', target: 'es2022', logLevel: 'silent',
 });
@@ -26,7 +26,7 @@ try {
   await page.setContent('<!doctype html><html lang="zh-CN"><meta charset="utf-8"><style>body{margin:0;padding:24px;background:#fdfdfc;color:#21201c;font:14px "Microsoft YaHei",sans-serif}h1{font-size:18px;margin:0 0 20px}.samples{display:flex;gap:24px}figure{margin:0;width:360px}canvas{width:360px;height:auto;display:block}figcaption{margin-top:12px}</style><h1>脚本生成封面 / 验收样片</h1><div class="samples"></div></html>');
   await page.addScriptTag({ content: bundle.outputFiles[0].text });
   const checks = await page.evaluate(async () => {
-    const { THREE, ModelImages, createArchiveCover, archiveCoverKey, coverTextLines, archiveIdentity, setDesktopDocuments } = window.coverCheck;
+    const { THREE, ModelImages, createArchiveCover, archiveCoverKey, coverTextLines, archivePatternFamily, archiveIdentity, setDesktopDocuments } = window.coverCheck;
     const ok = (value, message) => { if (!value) throw Error(message); };
     const result = {};
     const base = { id: 'research-a-0123456789', title: '空间中的知识如何连接', category: '研究方法' };
@@ -42,6 +42,15 @@ try {
     ok(lines.length === 4 && lines.at(-1).endsWith('…') && lines.every(line => ctx.measureText(line).width <= 432), 'long titles fit and truncate');
     ok(archiveIdentity(base).mark === archiveIdentity({ ...base, id: 'different' }).mark, 'category mark is consistent across documents');
     result.deterministicIdentityAndTypography = true;
+    const patternCategories = ['材料研究', '生命系统', '工程系统'];
+    ok(JSON.stringify(patternCategories.map(archivePatternFamily)) === JSON.stringify(['contour', 'flow', 'circuit']), 'approved category families are stable');
+    const headerColors = patternCategories.map(category => {
+      const sample = createArchiveCover({ ...base, category }, 512);
+      return Array.from(sample.getContext('2d').getImageData(30, 30, 1, 1).data).join(',');
+    });
+    ok(new Set(headerColors).size === 3, 'array-visible upper print region distinguishes the three families');
+    ok(archivePatternFamily(' 生命系统 ') === archivePatternFamily('生命系统'), 'family ignores category boundary whitespace');
+    result.threeProceduralFamiliesAndVisibleHeader = true;
 
     let reads = 0, invalidations = 0, resolveSlow;
     const custom = document.createElement('canvas'); custom.width = custom.height = 32;
@@ -123,7 +132,7 @@ try {
     ok(failureModel.stats().generatedBatches === 1, 'valid cover after failed images is not starved'); failureModel.dispose();
     result.failureDoesNotStarveQueue = true;
 
-    for (const [source, caption] of [[base, '文档标题、分类与稳定编号'], [{ ...base, id: 'archive-042', category: '实验记录', title: '研究日志与材料分析' }, '同一套网格与分类符号'], [{ ...base, id: 'archive-043', title: '面向复杂问题的长期研究与知识关联记录' }, '长标题自动换行']]) {
+    for (const [source, caption] of [[{ ...base, category: '材料研究' }, '科学等值线'], [{ ...base, id: 'archive-042', category: '生命系统' }, '生长流场'], [{ ...base, id: 'archive-043', category: '工程系统', title: '面向复杂问题的长期研究与知识关联记录' }, '精密线路与长标题']]) {
       const figure = document.createElement('figure'), canvas = createArchiveCover(source, 512), label = document.createElement('figcaption');
       label.textContent = caption; figure.append(canvas, label); document.querySelector('.samples').append(figure);
     }

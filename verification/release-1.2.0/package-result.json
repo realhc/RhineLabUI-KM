@@ -1,0 +1,12 @@
+{
+  "version": "1.2.0",
+  "asarFiles": 863,
+  "asarSha256": "a8f387aba09e9d143f5b9b0dbed71c7539ee8d96927ed7c46093a97b70957abb",
+  "asarHeaderSha256": "5565ad238d16317139430a3ff6ba2944777af07b8fa738f35c253a7e8a3aae49",
+  "exeSha256": "0e0ded968f89c9576517d3045c326c2fee3b50cfcb26c4d209d09d1f1452cf7a",
+  "dataFiles": 88,
+  "dataUnchanged": true,
+  "asarReadback": true,
+  "exeResourceVersion": "1.2.0",
+  "embeddedAsarIntegrity": true
+}

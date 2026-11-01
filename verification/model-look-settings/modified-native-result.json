@@ -1,0 +1,30 @@
+{
+  "phase": "modified",
+  "idleAdditionalFrames": 0,
+  "original": {
+    "projection": [
+      465,
+      313
+    ],
+    "position": [
+      0,
+      -1.9963,
+      -2.17
+    ],
+    "drawCalls": 0,
+    "triangles": 0
+  },
+  "paletteColors": 5,
+  "savedPriorityAndBothFavoriteControls": true,
+  "darkThemeAndViewer": true,
+  "persistedAfterRestart": true,
+  "resetAppearanceOnly": true,
+  "finalIdleAdditionalFrames": 0,
+  "pageErrors": [],
+  "shaderErrors": [],
+  "frameErrors": 0,
+  "originalPreferencesRestored": true,
+  "libraryUnchanged": true,
+  "libraryFiles": 88,
+  "asarSha256": "76602c0afc293677ff21a542f16fe25f58ef59932a853b9eca5a9b244cd5808f"
+}

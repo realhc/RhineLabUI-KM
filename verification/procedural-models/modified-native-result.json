@@ -1,0 +1,25 @@
+{
+  "phase": "modified",
+  "array": {
+    "visible": 37,
+    "geometry": [
+      465,
+      313
+    ],
+    "modelPosition": [
+      0,
+      -1.9963,
+      -2.17
+    ],
+    "frameErrors": 0
+  },
+  "idleAdditionalFrames": 0,
+  "artStylesAndLocalPreference": true,
+  "darkTheme": true,
+  "pageErrors": [],
+  "shaderErrors": [],
+  "finalFrameErrors": 0,
+  "userDataUnchanged": true,
+  "libraryFiles": 88,
+  "asarSha256": "869531049fb777de1679f305fb9ab178aa96052ba18624b4dac0801523dff6d5"
+}

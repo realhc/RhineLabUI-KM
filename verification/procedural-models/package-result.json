@@ -1,0 +1,8 @@
+{
+  "version": "1.2.0-preview.1",
+  "files": 76,
+  "sha256": "8dce60119039004032bf181a3db5149969e7af29c2c35b6ad5107a2b01010b3c",
+  "bytes": 188887013,
+  "zipMatchesRuntime": true,
+  "excludesUserData": true
+}

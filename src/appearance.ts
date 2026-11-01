@@ -2,6 +2,8 @@ import * as THREE from "three";
 import { glassRevealGLSL, frostedTransmissionGLSL, FROSTED_ROUGHNESS } from "./glass-reveal.ts";
 import { internalOpticsFragment } from "./internal-optics.ts";
 import { themeMaterial } from "./theme-material.ts";
+import { finishMaterial } from "./material-finish.ts";
+import { applyModelLookMaterial } from "./model-look-material.ts";
 
 type Surface = THREE.MeshPhysicalMaterial;
 type Palette = { high: Surface; low?: Surface };
@@ -88,6 +90,8 @@ export class CardAppearance {
         `archive-surface-clarity-${name}-${Boolean(palette.low)}`;
       mesh.userData.subduedIndex = { value: 0 };
       mesh.userData.themeAmount = themeMaterial(mat, name, false, mesh.userData.subduedIndex);
+      finishMaterial(mat, name, amount, clarity);
+      mesh.userData.modelLook = applyModelLookMaterial(mat, name, false, clarity);
     }
   }
 

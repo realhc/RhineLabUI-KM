@@ -17,6 +17,7 @@ npm.cmd test
 | 引用上下文、未链接提及与局部图谱 | `npm.cmd run check:desktop:relations` |
 | 历史快照、恢复和修订冲突 | `npm.cmd run check:desktop:history` |
 | 内容封面与纹理生命周期 | `npm.cmd run check:desktop:archive-cover` |
+| 程序化材料与图片显示风格 | `node --experimental-strip-types tests/check-material-finish.mjs`、`node --experimental-strip-types tests/check-model-image-style.mjs` |
 | AI 服务与持久任务 | `npm.cmd run check:desktop:ai` |
 | 阵列拖动与动效 | `node --experimental-strip-types tests/check-archive-drag.mjs`、`node --experimental-strip-types tests/check-motion.mjs` |
 | 模型与解密 | `node --experimental-strip-types tests/check-assembly.mjs`、`node --experimental-strip-types tests/check-decryption.mjs` |
@@ -37,3 +38,5 @@ npm.cmd run check:desktop:research-ui
 图片检查使用 `check:desktop:model-images-ui` 和 `check:desktop:document-images-ui`；AI 界面使用 `check:desktop:ai-ui`。启动和界面生命周期使用 `check:desktop:recovery`、`check:desktop:motion`，分类及文件工作流使用 `check:desktop:category-ui`、`check:desktop:workflow`。
 
 GUI 检查默认从 `release/packages/RhineLab-win32-x64/` 复制程序到隔离目录，并使用独立配置和虚构文档。不要把保留用户数据的本地预览目录当作测试数据源；复制必须排除真实 `RhineLabData`。验收结果和截图保存在 `verification/`，生成目录的清理遵守当前用户授权。历史验收记录中的 `scripts/check-*` 是移动前的路径，当前脚本位于 `tests/`。
+
+模型外观设置使用 `node --experimental-strip-types tests/check-model-look.mjs`、`node --experimental-strip-types tests/check-model-look-material.mjs` 和 `node --experimental-strip-types tests/check-model-look-runtime.mjs`，分别检查偏好导入与安全配色、材质 hook 和实例/返回副本的外观状态。

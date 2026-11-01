@@ -1,0 +1,23 @@
+{
+  "phase": "baseline",
+  "array": {
+    "visible": 37,
+    "geometry": [
+      465,
+      313
+    ],
+    "modelPosition": [
+      0,
+      -1.9963,
+      -2.17
+    ],
+    "frameErrors": 0
+  },
+  "idleAdditionalFrames": 0,
+  "pageErrors": [],
+  "shaderErrors": [],
+  "finalFrameErrors": 0,
+  "userDataUnchanged": true,
+  "libraryFiles": 88,
+  "asarSha256": "a61b857b0a0478beeaab6694c07824ed5ae58085514befdfe121a6376dede9cd"
+}
