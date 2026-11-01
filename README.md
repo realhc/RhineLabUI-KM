@@ -2,7 +2,7 @@
 
 **把莱茵生命的三维终端，变成可以阅读、编辑和整理的本地知识库。**
 
-**[下载 Windows 客户端 →](https://github.com/realhc/RhineLabUI-KM/releases/tag/v1.2.0)** | [使用教程](#快速开始) | [操作说明](#操作说明) | [源码开发](docs/DEVELOPMENT.md)
+**[下载 Windows 客户端 →](https://github.com/realhc/RhineLabUI-KM/releases/tag/v1.2.1)** | [使用教程](#快速开始) | [操作说明](#操作说明) | [源码开发](docs/DEVELOPMENT.md)
 
 ![三维档案阵列](docs/media/array.jpg)
 
@@ -10,18 +10,24 @@ Rhine Lab 是一个 Windows 便携客户端。实时渲染的档案阵列、玻�
 
 文档保存在程序旁的文件夹中。无需账户、API Key、开发服务器或另外安装 Node.js，解压即可离线使用。
 
-**当前正式版是 [1.2.0](https://github.com/realhc/RhineLabUI-KM/releases/tag/v1.2.0)**，新增模型与正文图片、阅读导航、关系图谱、反向引用、文档历史，以及生成封面和可配置模型外观。保留搜索增强、可选 AI 助手和定时文档；AI 能力需要自行配置兼容的模型接口，未接入时基础功能与关键词搜索照常使用。
+**当前正式版是 [1.2.1](https://github.com/realhc/RhineLabUI-KM/releases/tag/v1.2.1)**，新增模型与正文图片、阅读导航、关系图谱、反向引用、文档历史，以及生成封面和可配置模型外观。保留搜索增强、可选 AI 助手和定时文档；AI 能力需要自行配置兼容的模型接口，未接入时基础功能与关键词搜索照常使用。
 
-[1.2.0 更新说明](docs/RELEASE-1.2.0.md) | [版本对应与本地包目录](docs/VERSIONS.md)
+[1.2.1 更新说明](docs/RELEASE-1.2.1.md) | [版本对应与本地包目录](docs/VERSIONS.md)
+
+## 1.2.1 设置与个性化
+
+设置按通用、外观、声音、动态、画质、数据分类，右侧独立滚动。通用页可修改应用内名称，保存并重载后生效；外部程序名称保持不变。知识库的文档工具区可指定“模型颜色”，点击“跟随全局”恢复。单篇指定色优先于收藏色和全局配色，颜色强度仍由全局外观控制。名称和文档颜色随设置导出文件迁移。
+
+全新知识库首次启动提供 6 篇教程，涵盖分类、图片、阅读关联、历史、外观和备份/AI。已使用过的知识库删空后不会重复导入。
 
 ## 快速开始
 
-1. 从 [Releases](https://github.com/realhc/RhineLabUI-KM/releases/tag/v1.2.0) 下载 **RhineLab-win32-x64-1.2.0.zip**，完整解压到有写入权限的文件夹。
+1. 从 [Releases](https://github.com/realhc/RhineLabUI-KM/releases/tag/v1.2.1) 下载 **RhineLab-win32-x64-1.2.1.zip**，完整解压到有写入权限的文件夹。
 2. 运行其中的 **RhineLab.exe**。保留同目录的 `resources` 等运行文件，不能只复制 EXE。
 3. 等待资源就绪，点击进入；可以点击 `ENTER SYSTEM` 跳过开场。
 4. 点击 `ARCHIVE INDEX` 打开知识库，或从档案详情进入对应文档。
 
-首次启动会建立 `RhineLabData`，导入 40 份示例档案。删除全部文档后也不会重新导入。当前提供 Windows x64 便携版，尚未签名；发布附件同时提供 SHA-256 校验清单。
+首次启动会建立 `RhineLabData`，导入 6 篇使用教程。删除全部文档后也不会重新导入。当前提供 Windows x64 便携版，尚未签名；发布附件同时提供 SHA-256 校验清单。
 
 ## 界面与功能
 

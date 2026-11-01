@@ -1,3 +1,4 @@
+import { appName, appNameHtml } from "./app-name";
 import * as THREE from "three";
 import { ArchiveVisibility } from "./archive-visibility";
 import { InstanceUpdates } from "./instance-updates";
@@ -823,7 +824,7 @@ export class ArchiveScene {
     c.fillRect(12, 12, 1000, 6);
     c.fillRect(12, 419, 1000, 3);
     c.font = "bold 81px MiSans";
-    c.fillText("RHINE LAB, LLC.", 22, 116);
+    c.fillText(appName(), 22, 116, 270);
     c.font = "32px MiSans";
     c.fillStyle = "#878476";
     c.fillText("INTERNAL DATABASE", 25, 174);

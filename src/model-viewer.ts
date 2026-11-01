@@ -1,3 +1,4 @@
+import { appName, appNameHtml } from "./app-name";
 import * as THREE from "three";
 import { disposeThreeTree } from "./three-resources";
 import { themeEnvironment } from "./theme-material";
@@ -102,7 +103,7 @@ export class ModelViewer {
       <div class="scene-atmosphere viewer-atmosphere" aria-hidden="true"></div>
       <header class="viewer-header">
         <button class="viewer-back" data-viewer="close">← <span>返回档案</span><kbd>ESC</kbd></button>
-        <div class="viewer-heading"><span>RHINE LAB / OBJECT STUDY</span><h2 id="viewer-title">档案模型</h2><p id="viewer-file"></p></div>
+        <div class="viewer-heading"><span>${appNameHtml()} / OBJECT STUDY</span><h2 id="viewer-title">档案模型</h2><p id="viewer-file"></p></div>
         <span class="viewer-index">360<span>°</span></span>
       </header>
       <div class="viewer-surface" role="group" aria-label="玻璃模式"><button data-viewer="clear" aria-pressed="true">清晰</button><button data-viewer="frosted" aria-pressed="false">磨砂</button></div>

@@ -1,3 +1,5 @@
+import { normalizeAppName, DEFAULT_APP_NAME } from "./app-name";
+import { appName, appNameHtml } from "./app-name";
 // Local desktop terminal: calibrated scene, opening, and Markdown knowledge library.
 import { createRollingClock } from "./rolling-clock";
 import { DesktopInspectionOverlay as InspectionOverlay } from "./desktop-inspection";
@@ -84,6 +86,7 @@ import {
 import { StartupGate } from "./startup";
 import "./startup.css";
 import { paintTheme, themeSettingsMarkup } from "./theme-ui";
+import "./settings-layout.css";
 const $ = <T extends HTMLElement = HTMLElement>(selector: string) =>
   document.querySelector<T>(selector)!;
 import { logo, brandHeading } from "./brand";
@@ -104,7 +107,7 @@ $("#stage").innerHTML = `
     <div class="boot-logo">${logo}</div>
     <div class="auth-status"><span>▪</span> <span id="auth-message"></span><i></i></div>
     <div class="scan"><svg viewBox="0 0 1920 1080" aria-hidden="true"><g fill="none" stroke="#080a08" stroke-width="2" stroke-linecap="round"><path/><path stroke="#fff"/><path/><path/><path/><path/><circle class="orbit-dot" r="8" fill="#ed821b" stroke="none"/><circle class="orbit-dot" r="8" fill="#ed821b" stroke="none"/><circle class="scan-core" cx="960" cy="540" r="5" fill="#080a08" stroke="none"/></g></svg><span>PERMISSION AUTHORIZED</span></div>
-    <div class="welcome"><div class="welcome-panel"></div><div class="welcome-heading">WELCOME TO</div><div class="welcome-company"><strong>RHINE LAB.LLC.</strong><strong class="welcome-highlight" aria-hidden="true">RHINE LAB.LLC.</strong></div><div class="welcome-database">INTERNAL DATABASE</div><div class="welcome-logo">${logo}</div></div>
+    <div class="welcome"><div class="welcome-panel"></div><div class="welcome-heading">WELCOME TO</div><div class="welcome-company"><strong>${appNameHtml()}</strong><strong class="welcome-highlight" aria-hidden="true">${appNameHtml()}</strong></div><div class="welcome-database">INTERNAL DATABASE</div><div class="welcome-logo">${logo}</div></div>
   </section>
   <svg id="inspection-marks" viewBox="0 0 1920 1080" aria-hidden="true"><path id="inspection-lines"/><g id="inspection-corners"></g><circle id="inspection-point" r="1.8"/></svg>
   <div id="inspection-text" aria-hidden="true">CONFIDENTIALITY:<strong>GENERAL BUSINESS USE</strong></div>
@@ -121,7 +124,7 @@ $("#stage").innerHTML = `
     <div class="object-caption"><span id="object-id">NO.001</span><div>INTERNAL DATABASE</div><small>DRAG TO INSPECT <span>↔</span></small><button class="viewer-open" data-action="model-viewer">360° 查看文档模型 <span>↗</span></button></div>
     <article id="detail-content" class="detail-content"></article>
   </section>
-  <div class="powered">POWERED BY <b>RHINE LAB</b><i></i></div>
+  <div class="powered">POWERED BY <b>${appNameHtml()}</b><i></i></div>
   <footer class="system-footer"><span><i class="status-light"></i> SESSION AUTHORIZED</span><span>JOYCE MOORE <i>／</i> <span id="clock">00:00:00</span></span><button data-action="replay" title="重播启动流程">REINITIALIZE ↗</button></footer>
   <div id="modal-root"></div><div id="toast" class="toast" role="status"></div>
   <div id="loading" class="loading"><div class="loading-mark">${logo}</div><span>CONNECTING TO INTERNAL DATABASE</span><i></i></div>
@@ -201,6 +204,7 @@ const storedPrefs = readLocal<
     superPerformance: boolean;
     colorTheme: "light" | "dark";
     modelLook: ModelLookPreferences;
+    displayName: string;
     motion: StoredMotion;
     motionPreset: MotionPreset;
   }>
@@ -228,6 +232,7 @@ const prefs = {
   ),
   colorTheme: storedPrefs.colorTheme === "dark" ? "dark" : "light",
   modelLook: normalizeModelLook(storedPrefs.modelLook),
+  displayName: normalizeAppName(storedPrefs.displayName),
 };
 const motionActive = (key: MotionKey) => motionEnabled(prefs.motion, key);
 function exportPreferences() {
@@ -822,7 +827,7 @@ function updateSelection(navigation?: ArchiveNavigation) {
       record = records[index];
     button.dataset.select = String(index);
     button.setAttribute("aria-label", `选择档案 ${record.id} ${record.title}`);
-    button.title = `${record.id} · ${record.title}`;
+    button.title = `${record.id} / ${record.title}`;
     button.classList.toggle("selected", index === selected);
     button.setAttribute("aria-pressed", String(index === selected));
   });
@@ -888,7 +893,7 @@ function renderDetail() {
   <div class="detail-kicker"><span>FILE ${escapeHtml(r.id)}</span><span>${escapeHtml(r.clearance)}</span></div>
   <h2>${escapeHtml(r.en)}</h2><div class="detail-title-cn">${escapeHtml(r.title)}<span>${escapeHtml(r.category)}</span></div>
   <div class="detail-rule"></div>
-  <dl class="metadata"><div><dt>DEPARTMENT / 科室</dt><dd>${escapeHtml(r.department)}</dd></div><div><dt>COLLECTION / 编目范围</dt><dd>${escapeHtml(r.date)}</dd></div><div><dt>RELATED / 相关人物</dt><dd>${escapeHtml(r.lead)}</dd></div><div><dt>STATUS / 状态</dt><dd><i></i>${r.clearance === "RESTRICTED" ? "目录访问" : "已归档 · 可读取"}</dd></div></dl>
+  <dl class="metadata"><div><dt>DEPARTMENT / 科室</dt><dd>${escapeHtml(r.department)}</dd></div><div><dt>COLLECTION / 编目范围</dt><dd>${escapeHtml(r.date)}</dd></div><div><dt>RELATED / 相关人物</dt><dd>${escapeHtml(r.lead)}</dd></div><div><dt>STATUS / 状态</dt><dd><i></i>${r.clearance === "RESTRICTED" ? "目录访问" : "已归档 / 可读取"}</dd></div></dl>
   <div class="detail-tabs" role="tablist"><button id="tab-overview" class="active" role="tab" aria-controls="tab-panel" aria-selected="true" data-tab="overview">01 <span>概述</span></button><button id="tab-notes" role="tab" aria-controls="tab-panel" aria-selected="false" data-tab="notes">02 <span>研究记录</span></button><button id="tab-history" role="tab" aria-controls="tab-panel" aria-selected="false" data-tab="history">03 <span>访问日志</span></button><i class="tab-indicator" aria-hidden="true"></i></div>
   <div id="tab-panel" class="tab-panel" role="tabpanel">${overview()}</div>
   <div class="detail-actions"><button class="solid-button" data-action="bookmark">${saved.has(r.id) ? "− REMOVE FROM SAVED" : "＋ SAVE ARCHIVE"}<span>${saved.has(r.id) ? "已收藏" : "收藏档案"}</span></button><button class="export-button" data-action="edit-local" aria-label="编辑本地文档">EDIT <span>编辑 ↗</span></button></div>
@@ -1004,7 +1009,7 @@ function renderModal() {
   if (!modal) return;
   modalTransition?.dispose();
   $("#modal-root").innerHTML =
-    `<div class="modal-backdrop"><section class="terminal-modal ${modal === "settings" ? "settings-modal" : ""}" role="dialog" aria-modal="true" aria-label="${modal === "settings" ? "系统设置" : modal === "saved" ? "收藏档案" : "档案检索"}"><div class="modal-top"><span>RHINE LAB / ${modal === "settings" ? "SYSTEM PREFERENCES" : "ARCHIVE DIRECTORY"}</span><button data-action="close-modal" aria-label="关闭窗口">CLOSE <span>×</span></button></div>${modal === "settings" ? settingsMarkup() : `<h2>${modal === "saved" ? "SAVED ARCHIVES" : "ARCHIVE INDEX"}<small>${modal === "saved" ? "收藏档案" : "内部档案检索"}</small></h2><div class="search-field"><span>⌕</span><input id="archive-search" type="search" autocomplete="off" placeholder="输入档案编号、名称或科室" aria-label="检索档案"/><span class="key">ESC</span></div><div class="category-filters">${categories.map((c, i) => `<button data-filter="${escapeHtml(c)}" class="${i === 0 ? "active" : ""}">${escapeHtml(c)}</button>`).join("")}</div><div class="result-header"><span>FILE / 档案</span><span>DEPARTMENT / 科室</span><span>ACCESS</span></div><div id="search-results" class="search-results"></div><div class="modal-bottom"><span id="result-count"></span><span>INTERNAL DATABASE <i>●</i> CONNECTED</span></div>`}</section></div>`;
+    `<div class="modal-backdrop"><section class="terminal-modal ${modal === "settings" ? "settings-modal" : ""}" role="dialog" aria-modal="true" aria-label="${modal === "settings" ? "系统设置" : modal === "saved" ? "收藏档案" : "档案检索"}"><div class="modal-top"><span>${appNameHtml()} / ${modal === "settings" ? "SYSTEM PREFERENCES" : "ARCHIVE DIRECTORY"}</span><button data-action="close-modal" aria-label="关闭窗口">CLOSE <span>×</span></button></div>${modal === "settings" ? settingsMarkup() : `<h2>${modal === "saved" ? "SAVED ARCHIVES" : "ARCHIVE INDEX"}<small>${modal === "saved" ? "收藏档案" : "内部档案检索"}</small></h2><div class="search-field"><span>⌕</span><input id="archive-search" type="search" autocomplete="off" placeholder="输入档案编号、名称或科室" aria-label="检索档案"/><span class="key">ESC</span></div><div class="category-filters">${categories.map((c, i) => `<button data-filter="${escapeHtml(c)}" class="${i === 0 ? "active" : ""}">${escapeHtml(c)}</button>`).join("")}</div><div class="result-header"><span>FILE / 档案</span><span>DEPARTMENT / 科室</span><span>ACCESS</span></div><div id="search-results" class="search-results"></div><div class="modal-bottom"><span id="result-count"></span><span>INTERNAL DATABASE <i>●</i> CONNECTED</span></div>`}</section></div>`;
   const backdrop = $(".modal-backdrop");
   backdrop.hidden = true;
   modalTransition = new SurfaceTransition(backdrop, $(".terminal-modal"));
@@ -1052,22 +1057,32 @@ function updateQualitySummary() {
   const summary = document.querySelector("#quality-summary");
   if (!summary) return;
   if (!scene) {
-    summary.textContent = "3D 已关闭 · 三维模型与渲染资源已释放";
+    summary.textContent = "3D 已关闭 / 三维模型与渲染资源已释放";
     return;
   }
   const canvas = scene.renderer.domElement;
   const metrics = JSON.parse(
     canvas.parentElement?.dataset.renderQuality ?? "{}",
   );
-  summary.textContent = `${superPerformanceEnabled() ? "超级性能模式已启用 · 画质设置暂被覆盖，关闭后恢复 · " : ""}实际渲染 ${canvas.width} × ${canvas.height} · ${effectiveRenderQuality().antialias === "smaa" ? "SMAA" : "原始抗锯齿"} · 纹理 ${metrics.anisotropy ?? 1}×${metrics.limited ? " · 已达到缓冲上限" : ""}`;
+  summary.textContent = `${superPerformanceEnabled() ? "超级性能模式已启用 / 画质设置暂被覆盖，关闭后恢复 / " : ""}实际渲染 ${canvas.width} × ${canvas.height} / ${effectiveRenderQuality().antialias === "smaa" ? "SMAA" : "原始抗锯齿"} / 纹理 ${metrics.anisotropy ?? 1}×${metrics.limited ? " / 已达到缓冲上限" : ""}`;
 }
 function motionPreferenceNoteMarkup() {
   const preset = prefs.motionPreset;
   const allEnabled = Object.values(prefs.motion).every(Boolean);
-  return `<div id="motion-preference-note" class="motion-preference-note"><p>${motionSummary(prefs.motion)}</p><span>预设：${preset === "full" ? "完整动画" : preset === "reduced" ? "减少动画" : "自定义"} · 选择会保存在此客户端</span>${allEnabled ? "" : '<button data-action="enable-motion">启用完整动画并重播 ↻</button>'}</div>`;
+  return `<div id="motion-preference-note" class="motion-preference-note"><p>${motionSummary(prefs.motion)}</p><span>预设：${preset === "full" ? "完整动画" : preset === "reduced" ? "减少动画" : "自定义"} / 选择会保存在此客户端</span>${allEnabled ? "" : '<button data-action="enable-motion">启用完整动画并重播 ↻</button>'}</div>`;
 }
+let settingsPage = "general";
 function settingsMarkup() {
-  return `<h2>SYSTEM SETTINGS<small>终端偏好设置</small></h2><p class="settings-intro">JOYCE MOORE <span>·</span> SESSION AUTHORIZED</p><div class="settings-list">${themeSettingsMarkup(prefs.colorTheme === "dark")}<label><div><strong>SUPER PERFORMANCE</strong><span>降低三维画质和渲染分辨率，保留完整动效；关闭后恢复原画质</span></div><input type="checkbox" data-pref="superPerformance" ${prefs.superPerformance ? "checked" : ""}/><i class="toggle"></i></label>${audioSettingsMarkup(prefs)}</div>${modelLookMarkup(prefs.modelLook)}${motionPreferenceNoteMarkup()}${motionSettingsMarkup(prefs.motion, prefs.motionPreset)}${qualityMarkup(prefs.rendering)}${preferencesTransferMarkup()}<div class="settings-shortcuts"><span>KEYBOARD CONTROLS</span><p><kbd>←</kbd><kbd>→</kbd> 切列 <kbd>↑</kbd><kbd>↓</kbd> 选档 <kbd>ENTER</kbd> 读取 <kbd>/</kbd> 检索 <kbd>ESC</kbd> 返回</p></div><div class="settings-bottom"><button data-action="fullscreen">FULLSCREEN <span>↗</span></button><button data-action="restart">REINITIALIZE SYSTEM <span>↻</span></button></div><div class="modal-bottom"><span>ANALYSIS OS / 1.0 · 使用 MiSans 字体（小米） <a href="${assetUrl("fonts/MiSans-license.pdf")}" target="_blank" rel="noopener">字体许可</a></span><span>POWERED BY RHINE LAB</span></div>`;
+  const pages = [["general","通用"],["appearance","外观"],["audio","声音"],["motion","动态"],["quality","画质"],["data","数据"]];
+  const panel = (id: string, title: string, content: string) => `<section class="settings-page" id="settings-${id}" aria-label="${title}" ${settingsPage !== id ? "hidden" : ""}><h2>${title}</h2>${content}</section>`;
+  return `<div class="settings-layout"><nav class="settings-nav" aria-label="设置分类">${pages.map(([id,label])=>`<button data-settings-page="${id}" aria-pressed="${settingsPage===id}" aria-controls="settings-${id}">${label}</button>`).join("")}<span class="settings-version">版本 1.2.1</span></nav><div class="settings-content">
+  ${panel("general","通用",`<div class="settings-section"><h3>应用内名称</h3><div class="settings-name-row"><input id="app-display-name" type="text" maxlength="48" aria-label="应用内名称" value="${appNameHtml()}"/><button data-action="save-app-name">保存并重新载入</button></div><div class="settings-name-footer"><span>仅更改程序内显示，最多 48 字。</span><button data-action="reset-app-name">恢复默认名称</button></div></div><div class="settings-section"><h3>主题</h3>${themeSettingsMarkup(prefs.colorTheme === "dark")}</div><div class="settings-section settings-utilities"><button data-action="fullscreen">切换全屏 ↗</button><button data-action="restart">重播开场 ↻</button></div>`)}
+  ${panel("appearance","外观",modelLookMarkup(prefs.modelLook)+`<p class="settings-hint">单篇文档的模型颜色可在知识库文档工具区指定。</p>`)}
+  ${panel("audio","声音",`<div class="settings-list">${audioSettingsMarkup(prefs)}</div>`)}
+  ${panel("motion","动态",motionSettingsMarkup(prefs.motion,prefs.motionPreset)+motionPreferenceNoteMarkup())}
+  ${panel("quality","画质",`<div class="settings-list"><label><div><strong>超级性能模式</strong><span>降低渲染开销，关闭后恢复原画质。</span></div><input type="checkbox" data-pref="superPerformance" ${prefs.superPerformance?"checked":""}/><i class="toggle"></i></label></div>`+qualityMarkup(prefs.rendering))}
+  ${panel("data","数据",preferencesTransferMarkup()+`<div class="settings-section"><h3>知识库备份</h3><p>关闭程序后，备份程序旁的整个 RhineLabData 文件夹。</p></div><div class="settings-section"><h3>字体许可</h3><a href="${assetUrl("fonts/MiSans-license.pdf")}" target="_blank" rel="noopener">MiSans 字体许可 ↗</a></div>`)}
+  </div></div>`;
 }
 
 document.addEventListener("input", (e) => {
@@ -1179,6 +1194,18 @@ document.addEventListener("click", (e) => {
   if (modalClosing) return;
   const el = (e.target as Element).closest<HTMLElement>("button");
   if (!el) return;
+  if (el.dataset.settingsPage) {
+    settingsPage = el.dataset.settingsPage;
+    document.querySelectorAll<HTMLElement>(".settings-page").forEach(page => { page.hidden = page.id !== "settings-" + settingsPage; });
+    document.querySelectorAll<HTMLElement>("[data-settings-page]").forEach(button => button.setAttribute("aria-pressed", String(button.dataset.settingsPage === settingsPage)));
+    document.querySelector(".settings-content")?.scrollTo(0,0);
+    return;
+  }
+  if (el.dataset.action === "save-app-name" || el.dataset.action === "reset-app-name") {
+    prefs.displayName = el.dataset.action === "reset-app-name" ? DEFAULT_APP_NAME : normalizeAppName(document.querySelector<HTMLInputElement>("#app-display-name")?.value);
+    try { localStorage.setItem("rhine-settings",JSON.stringify(prefs)); location.reload(); } catch { notify("名称保存失败，请检查本机存储空间。"); }
+    return;
+  }
   if (el.dataset.modelLookMode) {
     saveModelLook({ ...prefs.modelLook, mode: el.dataset.modelLookMode });
     return;
@@ -1188,7 +1215,7 @@ document.addEventListener("click", (e) => {
     return;
   }
   if (el.dataset.modelLookAction === "reset") {
-    saveModelLook(defaultModelLook());
+    saveModelLook({ ...defaultModelLook(), documentColors: prefs.modelLook.documentColors });
     return;
   }
   if (el.dataset.action === "motion-preset") {
@@ -1725,6 +1752,10 @@ window.addEventListener("rhine-library-visibility", (event) => {
     syncModelLook();
     updateSelection();
   }
+});
+window.addEventListener("rhine-document-color-changed", () => {
+  const current = readLocal<{modelLook?:unknown}>("rhine-settings", {});
+  prefs.modelLook = normalizeModelLook(current.modelLook); syncModelLook();
 });
 window.addEventListener("rhine-open-settings", () => openModal("settings"));
 window.addEventListener("rhine-library-changed", (event) =>

@@ -1,6 +1,6 @@
 # 源码与开发
 
-当前 `main` 对应正式 1.2.0，包含关系图谱、图片夹层与可配置模型外观。正式版本与本地归档见 [VERSIONS.md](VERSIONS.md)；使用说明见 [README.md](../README.md)，维护边界见 [AGENT.md](../AGENT.md)。
+当前 `main` 对应正式 1.2.1，包含关系图谱、图片夹层与可配置模型外观。正式版本与本地归档见 [VERSIONS.md](VERSIONS.md)；使用说明见 [README.md](../README.md)，维护边界见 [AGENT.md](../AGENT.md)。
 
 ## 目录地图
 

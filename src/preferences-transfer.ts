@@ -1,3 +1,4 @@
+import { normalizeAppName } from "./app-name.ts";
 import { fullMotion } from "./motion-preferences.ts";
 import { normalizeQuality } from "./render-quality.ts";
 import { parseModelLook } from "./model-look.ts";
@@ -36,6 +37,10 @@ export function parsePreferencesTransfer(text: string): PreferencesTransfer {
   }
   const source = value.settings;
   const settings: Record<string, unknown> = {};
+  if ("displayName" in source) {
+    if (typeof source.displayName !== "string" || Array.from(source.displayName).length > 48) throw new Error("应用内名称须为 48 字以内的文本。");
+    settings.displayName = normalizeAppName(source.displayName);
+  }
   for (const key of [
     "sound",
     "music",

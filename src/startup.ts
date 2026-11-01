@@ -1,3 +1,4 @@
+import { appName, appNameHtml } from "./app-name";
 type EntryOptions = {
   root: HTMLElement;
   unlock: () => Promise<boolean>;
@@ -16,7 +17,7 @@ export class StartupGate {
     const { root } = options;
     root.setAttribute("role", "dialog");
     root.setAttribute("aria-modal", "true");
-    root.setAttribute("aria-label", "进入莱茵生命档案终端");
+    root.setAttribute("aria-label", "进入 " + appName() + " 档案终端");
     root.insertAdjacentHTML("beforeend", '<div class="entry-controls"><button class="entry-start" disabled>正在准备终端…</button><button class="entry-silent" hidden>关闭声音并进入</button><p class="entry-status" role="status">资源就绪后即可进入</p></div>');
     this.button = root.querySelector<HTMLButtonElement>(".entry-start")!;
     this.silent = root.querySelector<HTMLButtonElement>(".entry-silent")!;

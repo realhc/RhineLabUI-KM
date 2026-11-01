@@ -18,19 +18,17 @@ export let desktopCategories: RhineCategory[] = [];
 export let desktopNextLane = 5;
 let canonicalSlots = new Map<number, number>();
 export let desktopDocuments: RhineDocument[] = [];
-export const records: ArchiveRecord[] = content.records.map((record) => ({
-  ...record,
-}));
+// Exhibit geometry is independent of the bundled onboarding document count.
+const exhibitLanes = [2,0,1,3,1,2,0,4,0,1,0,4,2,2,2,2,2,2,0,0,0,0,1,1,1,1,1,3,3,3,3,3,3,3,4,4,4,4,4,4];
+export const records: ArchiveRecord[] = exhibitLanes.map((lane,index) => {
+  const row=exhibitLanes.slice(0,index).filter(value=>value===lane).length;
+  const sample=content.records.filter(record=>content.columns.indexOf(record.category)===lane)[row];
+  return sample ? {...sample} : {id:"EMPTY-"+index,placeholder:true,title:"空档案位",category:content.columns[lane]||"空分类",en:"NEW ARCHIVE",department:"本地知识库",date:"—",lead:"—",clearance:"AVAILABLE",abstract:"新建文档，开始记录。",findings:[],source:""};
+});
 export const categories = ["全部档案", ...content.categories];
 export const archiveColumns = [...content.columns];
-// Forty exhibit slots preserve the exact original camera and array geometry.
-// They are a view of the library; the editor indexes every Markdown document.
-let slotLanes = content.records.map((record) =>
-  content.columns.indexOf(record.category),
-);
-let slots = content.columns.map((_, lane) =>
-  slotLanes.flatMap((value, index) => (value === lane ? [index] : [])),
-);
+let slotLanes = [...exhibitLanes];
+let slots = content.columns.map((_,lane)=>slotLanes.flatMap((value,index)=>value===lane?[index]:[]));
 const original = new Map(content.records.map((record) => [record.id, record]));
 function recordFor(
   doc: RhineDocument | undefined,
@@ -144,9 +142,7 @@ export function setDesktopDocuments(
     "全部档案",
     ...desktopCategories.map((c) => c.name),
   );
-  const baseLanes = content.records.map((record) =>
-    content.columns.indexOf(record.category),
-  );
+  const baseLanes = exhibitLanes;
   slots = Array.from({ length: laneCount }, (_, lane) =>
     lane < 5
       ? baseLanes.flatMap((value, index) => (value === lane ? [index] : []))

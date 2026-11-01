@@ -1,0 +1,11 @@
+{
+  "version": "1.2.1",
+  "typecheck": true,
+  "productionBuild": true,
+  "bundleEntries": 76,
+  "asarFiles": 863,
+  "asarReadback": true,
+  "asarSha256": "f084173977a3b9c3d76e478446eb4bf4084f9bf2b220f0914dc48b8cc52ef88d",
+  "modelsUnchanged": true,
+  "seedTutorials": 6
+}

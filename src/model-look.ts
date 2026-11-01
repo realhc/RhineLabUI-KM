@@ -10,6 +10,7 @@ export type ModelLookPreferences = {
   coating: ModelLookCoating;
   favoriteEnabled: boolean;
   favoriteColor: string;
+  documentColors: Record<string,string>;
 };
 export type ModelLookDocument = { id: string; category?: string; placeholder?: boolean };
 
@@ -22,7 +23,7 @@ const object = (value: unknown): value is Record<string, unknown> =>
 
 export function defaultModelLook(): ModelLookPreferences {
   return { mode: "original", color: "#12a594", palette: [...palette], strength: .65,
-    coating: "natural", favoriteEnabled: false, favoriteColor: "#ffc53d" };
+    coating: "natural", favoriteEnabled: false, favoriteColor: "#ffc53d", documentColors: {} };
 }
 
 /** Only opaque hexadecimal colors can reach a shader or an inline swatch style. */
@@ -48,6 +49,12 @@ export function normalizeModelLook(input?: unknown): ModelLookPreferences {
   if (typeof input.coating === "string" && coatings.includes(input.coating)) result.coating = input.coating as ModelLookCoating;
   if (typeof input.favoriteEnabled === "boolean") result.favoriteEnabled = input.favoriteEnabled;
   result.favoriteColor = normalizeModelLookColor(input.favoriteColor) ?? result.favoriteColor;
+  if (object(input.documentColors)) {
+    for (const [id,color] of Object.entries(input.documentColors).slice(-512)) {
+      const hex = normalizeModelLookColor(color);
+      if (/^[a-zA-Z0-9][a-zA-Z0-9_-]{0,95}$/.test(id) && hex) Object.defineProperty(result.documentColors,id,{value:hex,enumerable:true,writable:true,configurable:true});
+    }
+  }
   return result;
 }
 
@@ -67,17 +74,19 @@ export function parseModelLook(input: unknown): ModelLookPreferences {
     throw new Error("模型颜色强度须在 0 到 1 之间。");
   if ("favoriteEnabled" in input && typeof input.favoriteEnabled !== "boolean")
     throw new Error("收藏专属颜色设置必须为布尔值。");
+  if ("documentColors" in input && (!object(input.documentColors) || Object.keys(input.documentColors).length > 512 || Object.entries(input.documentColors).some(([id,color]) => !/^[a-zA-Z0-9][a-zA-Z0-9_-]{0,95}$/.test(id) || !normalizeModelLookColor(color)))) throw new Error("单篇文档颜色设置无效，最多 512 篇。");
   return normalizeModelLook(input);
 }
 
 export function modelLookKey(config: ModelLookPreferences): string {
   const value = normalizeModelLook(config);
-  return JSON.stringify([value.mode, value.color, value.palette, value.strength, value.coating, value.favoriteEnabled, value.favoriteColor]);
+  return JSON.stringify([value.mode, value.color, value.palette, value.strength, value.coating, value.favoriteEnabled, value.favoriteColor, Object.entries(value.documentColors).sort(([a],[b])=>a.localeCompare(b))]);
 }
 
 /** Stable identity only; model position, array slot and document order play no role. */
 export function modelLookColor(config: ModelLookPreferences, doc: ModelLookDocument, isSaved = false): string | null {
   if (!doc || doc.placeholder || typeof doc.id !== "string" || !doc.id) return null;
+  if (Object.hasOwn(config.documentColors,doc.id)) return config.documentColors[doc.id];
   if (config.favoriteEnabled && isSaved) return config.favoriteColor;
   if (config.mode === "solid") return config.color;
   if (config.mode !== "palette") return null;

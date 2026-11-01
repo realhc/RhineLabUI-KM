@@ -1,3 +1,4 @@
+import { appName, appNameHtml } from "./app-name";
 import { archiveIdentity, archiveSeed, type ArchiveIdentitySource } from "./archive-identity.ts";
 import { archivePatternFamily, archivePatternPalettes, drawArchivePattern } from "./archive-patterns.ts";
 
@@ -59,7 +60,7 @@ export function createArchiveCover(source: ArchiveCoverSource, width = 1024) {
   context.beginPath(); context.moveTo(20, 72); context.lineTo(492, 72); context.stroke();
   context.fillStyle = ink;
   context.font = `600 14px ${font}`;
-  context.fillText("RHINE LAB / ARCHIVE", 36, 39);
+  context.fillText(appName() + " / ARCHIVE", 36, 39, 330);
   context.font = `500 18px ${font}`;
   const category = coverTextLines(context, identity.category, 352, 1)[0] || "未分类";
   context.fillText(category, 36, 95);

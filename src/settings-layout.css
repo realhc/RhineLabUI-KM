@@ -1,0 +1,60 @@
+.terminal-modal.settings-modal {
+  --s-ink:#21201c; --s-muted:#63635e; --s-line:#cfceca; --s-paper:#fdfdfc; --s-fill:#eeeeec; --s-accent:#008573;
+  width:1040px;height:770px;max-height:940px;padding:24px;display:flex;flex-direction:column;overflow:hidden;
+  color:var(--s-ink);background:var(--s-paper);border:1px solid var(--s-line);border-radius:16px;box-shadow:0 24px 72px #21201c26;
+}
+[data-dark-surface="true"] .terminal-modal.settings-modal {--s-ink:#eeeeec;--s-muted:#b5b3ad;--s-line:#3b3a37;--s-paper:#191918;--s-fill:#2a2a28;--s-accent:#0bd8b6;}
+.settings-modal .modal-top {flex:none;margin:0;padding:0 0 16px;border-color:var(--s-line);font-size:12px;letter-spacing:.04em;gap:24px;}
+.settings-modal .modal-top>span {max-width:82%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.settings-modal .modal-top button {font-size:12px;gap:12px;}
+.settings-modal .settings-layout {display:grid;grid-template-columns:154px minmax(0,1fr);gap:24px;min-height:0;flex:1;padding-top:20px;}
+.settings-modal .settings-nav {display:flex;flex-direction:column;align-items:stretch;gap:6px;border-right:1px solid var(--s-line);padding-right:18px;}
+.settings-modal .settings-nav button {text-align:left;padding:12px 16px;border-radius:8px;color:var(--s-muted);font-size:13px;border:1px solid transparent;transition:background 150ms ease-out,color 150ms ease-out;}
+.settings-modal .settings-nav button[aria-pressed="true"] {background:var(--s-fill);color:var(--s-ink);font-weight:600;}
+.settings-modal .settings-nav button:hover {background:var(--s-fill);}
+.settings-modal .settings-version {margin-top:auto;padding:12px 16px;font-size:12px;color:var(--s-muted);}
+.settings-modal .settings-content {overflow:auto;overscroll-behavior:contain;scrollbar-gutter:stable;min-width:0;padding:0 10px 16px 0;}
+.settings-modal .settings-page[hidden] {display:none!important;}
+.settings-modal .settings-page>h2 {font-size:22px;font-weight:600;letter-spacing:0;margin:2px 0 28px;}
+.settings-modal .settings-page h3 {font-size:15px;font-weight:600;letter-spacing:0;margin:0 0 16px;}
+.settings-modal .settings-section {padding:22px 0;border-bottom:1px solid var(--s-line);}
+.settings-modal .settings-section:first-of-type {padding-top:0;}
+.settings-modal .settings-name-row {display:flex;gap:10px;}
+.settings-modal #app-display-name {flex:1;min-width:0;height:40px;padding:8px 12px;font:inherit;font-size:13px;background:var(--s-fill);border:1px solid var(--s-line);border-radius:8px;color:var(--s-ink);}
+.settings-modal .settings-page button:not([data-color-theme]) {min-height:34px;font-size:12px;letter-spacing:0;border-radius:6px;}
+.settings-modal .settings-name-row button,.settings-modal .settings-utilities button {padding:8px 12px;border:1px solid var(--s-line);background:var(--s-fill);}
+.settings-modal .settings-name-footer {display:flex;justify-content:space-between;align-items:center;gap:12px;margin-top:10px;color:var(--s-muted);font-size:12px;}
+.settings-modal .settings-name-footer button {color:var(--s-muted);}
+.settings-modal .settings-utilities {display:flex;gap:10px;}
+.settings-modal .settings-shortcuts {margin-top:24px;border:0;padding:0;}
+.settings-modal .settings-shortcuts p {line-height:2.4;font-size:12px;color:var(--s-muted);}
+.settings-modal .settings-page :is(p,small,summary,output,.quality-note,.quality-summary,.quality-control>span,.quality-control small,.motion-settings-head span,.motion-preference-note,.settings-list label span) {font-size:12px;line-height:1.65;letter-spacing:0;color:var(--s-muted);}
+.settings-modal .settings-page .settings-list {border:0;}
+.settings-modal .settings-page .settings-list label {padding:18px 0;border-color:var(--s-line);}
+.settings-modal .settings-page .settings-list strong {font-size:13px;font-weight:500;letter-spacing:0;}
+.settings-modal .settings-page .audio-settings {grid-template-columns:1fr;gap:16px;}
+.settings-modal .settings-page .audio-volume {border:0;padding:8px 0 18px;}
+.settings-modal .settings-page .audio-volume span {min-width:64px;margin:0;}
+.settings-modal .settings-page .audio-volume output {font-size:12px;}
+.settings-modal .settings-page :is(.quality-settings,.model-look-settings,.motion-settings) {margin-top:0;border-top:0;}
+.settings-modal .settings-page .quality-heading {padding-top:0;flex-wrap:wrap;gap:12px;}
+.settings-modal .settings-page .quality-heading h3 span,.settings-modal .model-look-heading h3 span {display:none;}
+.settings-modal .settings-page .quality-heading h3,.settings-modal .model-look-heading h3 {font-size:13px;color:var(--s-muted);font-weight:500;}
+.settings-modal .model-look-row {min-height:62px;border-color:var(--s-line);}
+.settings-modal .model-look-choices {gap:6px;}
+.settings-modal .model-look-heading {margin-bottom:14px;}
+.settings-modal .model-look-settings {--model-look-ink:var(--s-ink);--model-look-muted:var(--s-muted);--model-look-line:var(--s-line);--model-look-field:var(--s-fill);--model-look-paper:var(--s-paper);--model-look-accent:var(--s-accent);}
+.settings-modal .settings-page :is(button,input,select,summary,a):focus-visible {outline:2px solid var(--s-accent);outline-offset:3px;}
+.settings-modal .settings-hint {margin:18px 0 0;}
+.settings-modal .settings-page .motion-preference-note {margin-top:20px;}
+.settings-modal .settings-page .quality-grid {grid-template-columns:1fr;}
+.settings-modal .settings-page .settings-bottom {margin-top:16px;gap:12px;display:flex;justify-content:flex-start;}
+.settings-modal .settings-page :is(.quality-control,.motion-settings label) {border-color:var(--s-line);}
+.settings-modal .settings-page .toggle {border-radius:20px;background:var(--s-line);transition:background 150ms ease-out;}
+.settings-modal .settings-page .toggle:after {border-radius:50%;background:var(--s-paper);transition:transform 150ms ease-out;}
+.settings-modal .settings-page input:checked+.toggle {background:var(--s-accent);}
+.settings-modal .settings-page input[type="range"] {accent-color:var(--s-accent);}
+@media(prefers-reduced-motion:reduce) {.settings-modal :is(button,.toggle,.toggle:after) {transition:none!important;}}
+
+[data-custom-app-name="true"] .brand h1 {max-width:620px;font-size:32px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+[data-custom-app-name="true"] .welcome-company strong {max-width:1100px;font-size:48px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}

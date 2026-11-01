@@ -50,3 +50,12 @@ for (const invalid of [null, [], { mode: "invalid" }, { coating: "invalid" }, { 
   assert.throws(() => parsePreferencesTransfer(JSON.stringify({ version: 1, settings: { modelLook: invalid }, saved: [] })), "malformed imported look preferences are rejected");
 }
 console.log("Model look: unchanged defaults, safe colors, stable multicolor assignment, saved-file priority, owned palettes and strict/legacy preference import passed.");
+
+const perDocument=normalizeModelLook({...solid,documentColors:{"archive-a":"#0090ff"}});
+assert.equal(modelLookColor(perDocument,{id:"archive-a"},true),"#0090ff");
+assert.equal(modelLookColor(perDocument,{id:"archive-b"},true),solid.favoriteColor);
+assert.notEqual(modelLookKey(perDocument),modelLookKey(solid));
+assert.throws(()=>parseModelLook({documentColors:{"archive-a":"red"}}));
+const named=parsePreferencesTransfer(JSON.stringify({version:1,settings:{displayName:"智识工作室",modelLook:perDocument},saved:[]}));
+assert.equal(named.settings.displayName,"智识工作室");
+assert.equal(named.settings.modelLook.documentColors["archive-a"],"#0090ff");

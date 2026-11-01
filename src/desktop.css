@@ -404,3 +404,10 @@
 
 /* Display-only model image treatment, beside the existing image controls. */
 #library-overlay .library-controls #model-image-style { width:auto; min-height:34px; padding:6px 8px; border-color:transparent; border-radius:8px; background:var(--glass-soft); box-shadow:none; font-size:12px; }
+
+#library-overlay .document-model-color { display:flex; align-items:center; gap:10px; flex-wrap:wrap; margin-top:8px; font-size:12px; }
+#library-overlay .document-model-color[hidden] {display:none;}
+#library-overlay .document-model-color label {display:flex;align-items:center;gap:8px;}
+#library-overlay .document-model-color input {width:32px;height:28px;padding:2px;border:1px solid currentColor;background:transparent;border-radius:4px;}
+#library-overlay .document-model-color span {opacity:.7;font-variant-numeric:tabular-nums;}
+#library-overlay .library-brand>span {display:block;max-width:300px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
