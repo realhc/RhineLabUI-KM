@@ -1,6 +1,6 @@
 # 源码与开发
 
-当前 `main` 对应正式 1.2.2，包含关系图谱、图片夹层、可配置模型外观，以及简介标题遮蔽动画与开场字标修复。正式版本与本地归档见 [VERSIONS.md](VERSIONS.md)；使用说明见 [README.md](../README.md)，维护边界见 [AGENT.md](../AGENT.md)。
+当前 `main` 对应正式 1.2.3，包含本地用户名、关系图谱、图片夹层、模型外观，以及简介标题遮蔽和开场字标修复。正式版本与本地归档见 [VERSIONS.md](VERSIONS.md)；使用说明见 [README.md](../README.md)，维护边界见 [AGENT.md](../AGENT.md)。
 
 ## 目录地图
 
@@ -20,6 +20,8 @@
 
 阅读导航与文档大纲位于 `src/desktop-reading.ts`；文档关系在 `src/desktop-relations.ts`，历史浏览在 `src/desktop-history.ts`。档案身份由 `src/archive-identity.ts` 统一，程序生成封面的排版与几何规则保存在 `src/archive-cover.ts`。这些模块不把视觉装饰写入 Markdown。
 
+首次用户名在载入终端前完成，存入与设置相同的本机偏好；启动身份、界面和会话访问日志共用规范化后的名字。它不改变 Markdown 文件、知识库位置或模型结构。
+
 ## 开发与构建
 
 需要 Node.js 22.12 或更新版本。Windows 使用 `npm.cmd`，在仓库根目录执行：
@@ -36,7 +38,7 @@ npm.cmd run package:desktop
 npm.cmd run check:desktop:package
 ```
 
-构建资源在 `release/desktop/`，Forge 程序和 ZIP 在 `release/packages/`。这些是可再生的中间输出，完成验收后将干净程序、ZIP 与校验清单归档到 [版本说明](VERSIONS.md) 约定的目录，再按授权清理中间输出。当前预览版只作本地交付，源码更新不触发 Release。
+构建资源在 `release/desktop/`，Forge 程序和 ZIP 在 `release/packages/`。这些是可再生的中间输出，完成验收后将干净程序、ZIP 与校验清单归档到 [版本说明](VERSIONS.md) 约定的目录，再按授权清理中间输出。发布需要明确的版本任务；普通源码更新不自动触发 Release。发布包不携带本机用户名、偏好或知识库。
 
 ## 检查与资料
 

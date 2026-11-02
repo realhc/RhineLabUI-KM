@@ -1,0 +1,11 @@
+{
+  "version": "1.2.3",
+  "exeVersion": "1.2.3",
+  "zipBytes": 191684830,
+  "zipSha256": "32de1e923e10fa2000aa93db5ba6d39d565769d8933e0fa9dc44bc7369b49f8a",
+  "zipEntries": 76,
+  "everyEntryMatchesRuntime": true,
+  "crcPassed": true,
+  "noUserData": true,
+  "noPersonalSettings": true
+}

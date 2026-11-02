@@ -1,3 +1,4 @@
+import { localUserName } from "./local-user";
 import { appName } from "./app-name";
 import { bootMotion } from "./boot-motion";
 import { bootMarkContour, fitLogoWordmark } from "./brand";
@@ -18,6 +19,7 @@ export class BootSequence {
   private letters: SVGTextElement;
   private logoName: string[] = [];
   private logoFrame = 0;
+  private username = localUserName();
   private plus: SVGPathElement;
   private minus: SVGPathElement;
   private brandLines: HTMLElement[];
@@ -149,7 +151,7 @@ export class BootSequence {
     if (this.letters.textContent !== value) this.letters.textContent = value;
   }
   update(time: number) {
-    const s = bootMotion(time),
+    const s = bootMotion(time, this.username),
       t = s.t;
     this.stage.dataset.bootFrame = String(s.f);
     this.accessLettering.setText(s.access);

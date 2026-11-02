@@ -1,0 +1,17 @@
+{
+  "version": "1.2.3",
+  "firstRunAsksUsername": true,
+  "usernameFields": 1,
+  "passwordFields": 0,
+  "noUsernamePrefilled": true,
+  "blankRejected": true,
+  "terminalWaitsForUsername": true,
+  "footerUsesUsername": true,
+  "accessLogUsesUsername": true,
+  "settingsCanRename": true,
+  "persistsAfterRestart": true,
+  "legacyIdentityNotShown": true,
+  "pageErrors": 0,
+  "userDataFiles": 59,
+  "userDataUnchanged": true
+}

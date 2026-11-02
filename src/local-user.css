@@ -1,0 +1,16 @@
+#local-user-gate { position:fixed; inset:0; z-index:10001; display:grid; place-items:center; padding:24px; box-sizing:border-box; background:#eeeeec; color:#21201c; font:14px/1.5 "MiSans","Microsoft YaHei",sans-serif; }
+#local-user-gate * { box-sizing:border-box; }
+#local-user-form { width:min(100%,380px); padding:32px; background:#fdfdfc; border:1px solid #cfceca; border-radius:16px; box-shadow:0 18px 54px #21201c0d; }
+#local-user-form h1 { margin:0 0 30px; font-size:24px; font-weight:600; }
+#local-user-form label { display:block; margin-bottom:8px; font-size:14px; }
+#local-username { width:100%; min-height:44px; padding:10px 12px; border:1px solid #b5b3ad; border-radius:8px; color:#21201c; background:#f9f9f8; font:inherit; }
+#local-user-status { min-height:20px; margin:8px 0 18px; color:#63635e; font-size:12px; }
+#local-user-form button { width:100%; min-height:42px; border:1px solid #21201c; border-radius:8px; background:#21201c; color:#fdfdfc; font:inherit; cursor:pointer; transition:background 150ms ease-out; }
+#local-user-form button:hover { background:#3b3a37; }
+#local-user-form button:disabled { opacity:.5; cursor:default; }
+#local-user-form [hidden] { display:none; }
+#local-user-form :is(input,button):focus-visible { outline:2px solid #008573; outline-offset:3px; }
+.settings-modal #settings-username { flex:1; min-width:0; height:40px; padding:8px 12px; font:inherit; font-size:13px; background:var(--s-fill); border:1px solid var(--s-line); border-radius:8px; color:var(--s-ink); }
+.system-footer .session-user { display:inline-block; max-width:32em; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.auth-status #auth-message { max-width:40em; overflow:hidden; text-overflow:ellipsis; }
+@media(prefers-reduced-motion:reduce) { #local-user-form button { transition:none; } }

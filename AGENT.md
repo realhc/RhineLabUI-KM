@@ -10,9 +10,9 @@
 
 ## 版本与本地目录
 
-版本对应以 [docs/VERSIONS.md](docs/VERSIONS.md) 为准。GitHub 正式 Release 为 1.0.0、1.1.0 和 1.2.2，当前源码及本地程序为正式 1.2.2，发布已获用户明确授权。按用户要求移除 1.2.0、1.2.1 Release，保留源码标签、本地 ZIP 及历史验收。历史版本归一提交只修正版本元数据，不能混入后续功能。
+版本对应以 [docs/VERSIONS.md](docs/VERSIONS.md) 为准。GitHub 正式 Release 为 1.0.0、1.1.0 和 1.2.3，当前源码及本地程序为正式 1.2.3，发布已获用户明确授权。按用户要求移除 1.2.0、1.2.1、1.2.2 Release，保留源码标签、本地 ZIP 及历史验收。历史版本归一提交只修正版本元数据，不能混入后续功能。
 
-`release/v1.0.0/`、`release/v1.1.0/`、`release/v1.2.0/`、`release/v1.2.1/` 各保留历史 ZIP 和校验清单；`release/v1.2.2/` 保留 `RhineLab-win32-x64-1.2.2.zip`、`SHA256SUMS.txt` 及 `RhineLab-win32-x64/` 解压程序，迁移时完整保留原有知识库。打包中间文件仍由工具在 `release/desktop/`、`release/packages/` 生成，验收和归档后按当前用户授权清理。`local/notes/` 与 `local/data-backups/` 只放本机备注和数据备份，均不进入 Git。目录搬迁前后核对真实 RhineLabData，个人数据绝不进入 ZIP。
+`release/v1.0.0/`、`release/v1.1.0/`、`release/v1.2.0/`、`release/v1.2.1/`、`release/v1.2.2/` 各保留历史 ZIP 和校验清单；`release/v1.2.3/` 保留 `RhineLab-win32-x64-1.2.3.zip`、`SHA256SUMS.txt` 及 `RhineLab-win32-x64/` 解压程序，迁移时完整保留原有知识库。打包中间文件仍由工具在 `release/desktop/`、`release/packages/` 生成，验收和归档后按当前用户授权清理。`local/notes/` 与 `local/data-backups/` 只放本机备注和数据备份，均不进入 Git。目录搬迁前后核对真实 RhineLabData，个人数据绝不进入 ZIP。
 
 ## 环境与入口
 
@@ -21,7 +21,7 @@ Node.js 至少 22.12，Windows PowerShell 使用 npm.cmd，其他平台可用 np
 - desktop/main.mjs：安全应用协议、窗口、IPC 与退出保护。
 - desktop/preload.cjs：window.rhine 受限 API，不能覆盖该属性。
 - desktop/repository.mjs、desktop/directory.mjs：Markdown 文件、分类、事务、回收与监控。
-- src/desktop-entry.ts、src/desktop-main.ts：启动、阵列、详情、设置与图形恢复。
+- src/desktop-entry.ts、src/desktop-main.ts：首次用户名、启动、阵列、详情、设置与图形恢复。
 - src/scene.ts、src/model-viewer.ts：真实三维模型、材质、镜头与查看器。
 - src/desktop-data.ts：动态分类与展陈映射；稳定文档 ID 与可见槽位分开。
 - src/desktop.ts、src/desktop.css：知识库 DOM、功能区与布局。
@@ -55,7 +55,7 @@ Node.js 至少 22.12，Windows PowerShell 使用 npm.cmd，其他平台可用 np
 
 ## 数据与安全边界
 
-Markdown 文件是文档事实来源，localStorage 只保存偏好。按稳定 ID 定位，渲染进程不得传任意文件路径。保留原子写入、修订校验、事务恢复、回收区及符号链接/路径穿越保护；不能以修改时间缓存代替文件内容修订。
+Markdown 文件是文档事实来源，localStorage 只保存偏好。用户名属于本地偏好，首次为空时只收集用户名；没有预置姓名或密码，不能将它作为文件或工具权限依据。发布附件不得带入开发者的用户名或本机偏好。按稳定 ID 定位，渲染进程不得传任意文件路径。保留原子写入、修订校验、事务恢复、回收区及符号链接/路径穿越保护；不能以修改时间缓存代替文件内容修订。
 
 绝不删除、覆盖或打包真实 RhineLabData。测试复制程序并排除此目录，使用隔离配置和临时示例。同步多个工作副本时逐项核对来源及哈希，禁止整目录镜像覆盖个人数据。删除生成目录前核对其解析后的绝对路径位于目标项目中；不跨 shell 拼接删除命令。
 
@@ -97,5 +97,5 @@ Forge 的退出码不能单独证明打包完成。曾出现本机 Node 的 ZIP 
 ## 下一步开发顺序
 
 1. 按实际问题继续覆盖不同显卡、多 DPI/显示器、睡眠恢复与只读目录，特别是启动/跳过开场和未保存编辑期间的恢复。
-2. 正式 1.2.2 包含图片、全局/局部图谱、阅读导航、反向引用、历史恢复、三类生成封面、磨砂夹层、图片艺术风格，以及调色盘、镀层和收藏色。跨设备同步仍需按明确需求设计目录、迁移和冲突处理。
+2. 保持首次用户名、设置迁移、图片、图谱、历史与模型外观的共同身份和生命周期约束；后续范围与优先级见 HANDOFF.md。跨设备同步须先明确目录、偏好迁移和冲突规则。
 3. Windows 签名和更新机制仍按明确需求推进，保留便携目录及数据迁移能力。当前没有自动更新、云同步或安装器。

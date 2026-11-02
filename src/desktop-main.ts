@@ -1,3 +1,4 @@
+import { localUserName, parseUserName } from "./local-user";
 import { normalizeAppName, DEFAULT_APP_NAME } from "./app-name";
 import { appName, appNameHtml } from "./app-name";
 // Local desktop terminal: calibrated scene, opening, and Markdown knowledge library.
@@ -91,6 +92,7 @@ const $ = <T extends HTMLElement = HTMLElement>(selector: string) =>
   document.querySelector<T>(selector)!;
 import { logo, brandHeading } from "./brand";
 
+const sessionUsername = localUserName();
 $("#stage").innerHTML = `
   <div id="three-scene" class="three-scene"></div>
   <div class="scene-atmosphere archive-atmosphere"></div>
@@ -125,7 +127,7 @@ $("#stage").innerHTML = `
     <article id="detail-content" class="detail-content"></article>
   </section>
   <div class="powered">POWERED BY <b>${appNameHtml()}</b><i></i></div>
-  <footer class="system-footer"><span><i class="status-light"></i> SESSION AUTHORIZED</span><span>JOYCE MOORE <i>／</i> <span id="clock">00:00:00</span></span><button data-action="replay" title="重播启动流程">REINITIALIZE ↗</button></footer>
+  <footer class="system-footer"><span><i class="status-light"></i> SESSION AUTHORIZED</span><span><span id="session-user" class="session-user" title="${escapeHtml(sessionUsername)}">${escapeHtml(sessionUsername)}</span> <i>／</i> <span id="clock">00:00:00</span></span><button data-action="replay" title="重播启动流程">REINITIALIZE ↗</button></footer>
   <div id="modal-root"></div><div id="toast" class="toast" role="status"></div>
   <div id="loading" class="loading"><div class="loading-mark">${logo}</div><span>CONNECTING TO INTERNAL DATABASE</span><i></i></div>
 `;
@@ -205,6 +207,7 @@ const storedPrefs = readLocal<
     colorTheme: "light" | "dark";
     modelLook: ModelLookPreferences;
     displayName: string;
+    username: string;
     motion: StoredMotion;
     motionPreset: MotionPreset;
   }>
@@ -233,6 +236,7 @@ const prefs = {
   colorTheme: storedPrefs.colorTheme === "dark" ? "dark" : "light",
   modelLook: normalizeModelLook(storedPrefs.modelLook),
   displayName: normalizeAppName(storedPrefs.displayName),
+  username: sessionUsername,
 };
 const motionActive = (key: MotionKey) => motionEnabled(prefs.motion, key);
 function exportPreferences() {
@@ -943,7 +947,7 @@ function setTab(tab: string, sound = true) {
             .slice(0, 4)
             .map(
               (entry) =>
-                `<div class="log-row"><span>${entry.time}</span><span>JOYCE MOORE</span><b>READ AUTHORIZED</b></div>`,
+                `<div class="log-row"><span>${entry.time}</span><span>${escapeHtml(sessionUsername)}</span><b>READ AUTHORIZED</b></div>`,
             )
             .join(
               "",
@@ -1075,8 +1079,8 @@ let settingsPage = "general";
 function settingsMarkup() {
   const pages = [["general","通用"],["appearance","外观"],["audio","声音"],["motion","动态"],["quality","画质"],["data","数据"]];
   const panel = (id: string, title: string, content: string) => `<section class="settings-page" id="settings-${id}" aria-label="${title}" ${settingsPage !== id ? "hidden" : ""}><h2>${title}</h2>${content}</section>`;
-  return `<div class="settings-layout"><nav class="settings-nav" aria-label="设置分类">${pages.map(([id,label])=>`<button data-settings-page="${id}" aria-pressed="${settingsPage===id}" aria-controls="settings-${id}">${label}</button>`).join("")}<span class="settings-version">版本 1.2.2</span></nav><div class="settings-content">
-  ${panel("general","通用",`<div class="settings-section"><h3>应用内名称</h3><div class="settings-name-row"><input id="app-display-name" type="text" maxlength="48" aria-label="应用内名称" value="${appNameHtml()}"/><button data-action="save-app-name">保存并重新载入</button></div><div class="settings-name-footer"><span>仅更改程序内显示，最多 48 字。</span><button data-action="reset-app-name">恢复默认名称</button></div></div><div class="settings-section"><h3>主题</h3>${themeSettingsMarkup(prefs.colorTheme === "dark")}</div><div class="settings-section settings-utilities"><button data-action="fullscreen">切换全屏 ↗</button><button data-action="restart">重播开场 ↻</button></div>`)}
+  return `<div class="settings-layout"><nav class="settings-nav" aria-label="设置分类">${pages.map(([id,label])=>`<button data-settings-page="${id}" aria-pressed="${settingsPage===id}" aria-controls="settings-${id}">${label}</button>`).join("")}<span class="settings-version">版本 1.2.3</span></nav><div class="settings-content">
+  ${panel("general","通用",`<div class="settings-section"><h3>用户名</h3><div class="settings-name-row"><input id="settings-username" type="text" maxlength="32" autocomplete="username" aria-label="用户名" value="${escapeHtml(prefs.username)}"/><button data-action="save-username">保存并重新载入</button></div></div><div class="settings-section"><h3>应用内名称</h3><div class="settings-name-row"><input id="app-display-name" type="text" maxlength="48" aria-label="应用内名称" value="${appNameHtml()}"/><button data-action="save-app-name">保存并重新载入</button></div><div class="settings-name-footer"><span>仅更改程序内显示，最多 48 字。</span><button data-action="reset-app-name">恢复默认名称</button></div></div><div class="settings-section"><h3>主题</h3>${themeSettingsMarkup(prefs.colorTheme === "dark")}</div><div class="settings-section settings-utilities"><button data-action="fullscreen">切换全屏 ↗</button><button data-action="restart">重播开场 ↻</button></div>`)}
   ${panel("appearance","外观",modelLookMarkup(prefs.modelLook)+`<p class="settings-hint">单篇文档的模型颜色可在知识库文档工具区指定。</p>`)}
   ${panel("audio","声音",`<div class="settings-list">${audioSettingsMarkup(prefs)}</div>`)}
   ${panel("motion","动态",motionSettingsMarkup(prefs.motion,prefs.motionPreset)+motionPreferenceNoteMarkup())}
@@ -1193,6 +1197,15 @@ document.addEventListener("click", (e) => {
     document.querySelectorAll<HTMLElement>(".settings-page").forEach(page => { page.hidden = page.id !== "settings-" + settingsPage; });
     document.querySelectorAll<HTMLElement>("[data-settings-page]").forEach(button => button.setAttribute("aria-pressed", String(button.dataset.settingsPage === settingsPage)));
     document.querySelector(".settings-content")?.scrollTo(0,0);
+    return;
+  }
+  if (el.dataset.action === "save-username") {
+    try {
+      const username = parseUserName(document.querySelector<HTMLInputElement>("#settings-username")?.value);
+      localStorage.setItem("rhine-settings", JSON.stringify({ ...prefs, username }));
+      prefs.username = username;
+      location.reload();
+    } catch (error) { notify(error instanceof Error ? error.message : "用户名保存失败，请检查本机存储空间。"); }
     return;
   }
   if (el.dataset.action === "save-app-name" || el.dataset.action === "reset-app-name") {
@@ -1605,7 +1618,7 @@ async function start() {
       ),
       document.fonts.load(
         "400 20px MiSans",
-        "身份信息确认请求已接收开始处理权限验证通过欢迎访问莱茵生命内部资料档案编号保密级别商业区选择档案：0123456789 JOYCE MOORE",
+        "身份信息确认请求已接收开始处理权限验证通过欢迎访问莱茵生命内部资料档案编号保密级别商业区选择档案：0123456789 " + sessionUsername,
       ),
       document.fonts.load(
         "600 20px MiSans",

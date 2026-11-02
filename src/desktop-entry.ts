@@ -1,7 +1,9 @@
+import { ensureLocalUser } from "./local-user-gate";
 import { setDesktopDocuments } from "./desktop-data";
 import "./desktop-shell.css";
 async function startDesktop() {
   try {
+    await ensureLocalUser();
     const result = await window.rhine.list();
     setDesktopDocuments(result.documents,result.categories,result.nextLane);
     await import("./desktop-main");

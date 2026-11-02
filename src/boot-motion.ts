@@ -6,22 +6,17 @@ import { bootLogoTrack } from "./boot-logo-tracks";
 export const progress = (t: number, a: number, b: number) =>
   Math.max(0, Math.min(1, (t - a) / (b - a)));
 export const smooth = (p: number) => p * p * (3 - 2 * p);
-const typed = (text: string, f: number, start: number, end: number) =>
-  text.slice(
-    0,
-    f < start
-      ? 0
-      : Math.min(
-          text.length,
-          1 + Math.floor(((f - start) * (text.length - 1)) / (end - start)),
-        ),
-  );
+const typed = (text: string, f: number, start: number, end: number) => {
+  const characters = Array.from(text);
+  return characters.slice(0, f < start ? 0 : Math.min(characters.length,
+    1 + Math.floor(((f - start) * (characters.length - 1)) / (end - start)))).join("");
+};
 const at = (f: number, frames: number[]) => frames.includes(f);
 const accessCounts = [
   1, 1, 3, 4, 5, 6, 9, 11, 12, 14, 17, 18, 19, 20, 22, 23, 25, 26,
 ];
 
-export function bootMotion(appTime: number) {
+export function bootMotion(appTime: number, username = "") {
   const t = appTime + 5;
   const f = Math.floor(t * 25 + 0.00001);
   const step =
@@ -37,7 +32,7 @@ export function bootMotion(appTime: number) {
   let auth = "";
   if (f < 363) {
     auth = typed("ID CONFIRMED", f, 282, 295);
-    if (f >= 320) auth += " : " + typed("JOYCE MOORE", f, 321, 339);
+    if (f >= 320 && username) auth += " : " + typed(username, f, 321, 339);
   } else if (f < 421) auth = typed("REQUEST RECEIVED", f, 367, 389);
   else {
     auth = typed("START PROCESSING", f, 423, 440);
