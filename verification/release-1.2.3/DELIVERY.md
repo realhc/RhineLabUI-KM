@@ -1,6 +1,6 @@
 # 1.2.3 交付验收
 
-版本：正式 1.2.3。本地候选已通过验收，GitHub 发布尚在进行。
+版本：正式 1.2.3。[GitHub Release](https://github.com/realhc/RhineLabUI-KM/releases/tag/v1.2.3) 已公开为最新正式版；1.2.2 Release 已移除，源码标签与本地历史归档保留。
 
 ## 改动与范围
 
@@ -25,4 +25,8 @@
 - SHA-256：`32de1e923e10fa2000aa93db5ba6d39d565769d8933e0fa9dc44bc7369b49f8a`
 - ASAR SHA-256：`108452a8db86f5aa46eb48b5d30642c91c0a1e6c8966dfe36ab13f5b09c399e6`
 
-构建、原生与 ZIP 明细见同目录的 `build-result.json`、`native-result.json`、`zip-result.json`。
+构建、原生与 ZIP 明细见同目录的 `build-result.json`、`native-result.json`、`zip-result.json`。公开资产摘要核验见 `publish-result.json`。
+
+## 收尾清理
+
+逐个删除临时候选包、一次性脚本与已恢复的偏好快照，共 11 个文件，释放 284,351,306 字节（约 271 MiB）。本轮临时文件无残留，源码、正式发行包、验收证据、真实知识库和旧备份均保留。

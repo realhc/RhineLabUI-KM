@@ -1,0 +1,20 @@
+{
+  "version": "1.2.3",
+  "url": "https://github.com/realhc/RhineLabUI-KM/releases/tag/v1.2.3",
+  "latestStable": true,
+  "targetCommit": "8eae51a0494573a189da5cd810118c9eb049aba2",
+  "remoteAssetDigestsMatch": true,
+  "assets": [
+    {
+      "name": "RhineLab-win32-x64-1.2.3.zip",
+      "size": 191684830,
+      "digest": "sha256:32de1e923e10fa2000aa93db5ba6d39d565769d8933e0fa9dc44bc7369b49f8a"
+    },
+    {
+      "name": "SHA256SUMS.txt",
+      "size": 95,
+      "digest": "sha256:73da26569f472f84a46f1ab46a6625627ca950a998ff5537bb9b351943791d80"
+    }
+  ],
+  "old122ReleaseRemoved": true
+}

@@ -9,7 +9,7 @@
 
 首次填写、空值拒绝、重启记忆、设置改名、页脚和访问日志均通过最终程序验收。本机指定用户名已通过首启表单保存并重启确认，仅留本地偏好；公共包无用户名预设。59 个真实数据文件哈希一致，56 篇文档与 15 类资料保留，其他偏好和窗口字节恢复。两个模型 GLB 未变，ZIP 76 项逐项匹配运行目录且 CRC 通过。仅执行本轮相关检查。
 
-本地候选验收完成，GitHub 上传/公开及移除 1.2.2 Release 尚待执行。 验收记录见 [本轮交付记录](verification/release-1.2.3/DELIVERY.md)。
+已发布最新正式版 [v1.2.3](https://github.com/realhc/RhineLabUI-KM/releases/tag/v1.2.3)，远程附件摘要与本地一致。1.2.2 Release 已移除；旧标签与本地 ZIP 保留。 验收记录见 [本轮交付记录](verification/release-1.2.3/DELIVERY.md)。
 <!-- RELEASE_STATUS_END -->
 
 目标程序目录为 `release/v1.2.3/RhineLab-win32-x64/`，附件为 `RhineLab-win32-x64-1.2.3.zip` 和 `SHA256SUMS.txt`。最终版本状态以 [VERSIONS.md](docs/VERSIONS.md) 与对应 `verification/` 验收记录为准，历史流水见 [交接归档](docs/HANDOFF-HISTORY-2026-11-02.md)。
@@ -49,7 +49,7 @@
 2. 在修改偏好或启动验收前持久保存原始 localStorage、`window.json` 字节与真实库哈希，跨重试复用快照。入口先 `await ensureLocalUser()`，首次用户名表单出现在 `rhineReview`/终端加载之前，因此必须在表单提交前保存偏好，再填通用测试名并等待 ready；不能照旧等 ready 才取快照。终端 ready 后才重载夹具，按 startup 状态处理进入按钮。公共截图使用示例用户，本机指定身份只留本地偏好。开场截图等加载遮罩退出，简介截图等面板可见；验收后恢复偏好与窗口字节并核对整库。
 3. 最后一次源码变更后再构建。核对源码/锁文件、ASAR package 与 Windows EXE 版本、运行资源白名单、两个 GLB 字节、ZIP 每项与运行目录的哈希及 CRC。刷新 EXE 中的 ASAR 完整性；公共包排除用户数据、用户名/偏好、调试日志和私有字体。Forge 成功退出本身不代表交付成功。
 4. 提交前固定作者 `realhc <realhc@users.noreply.github.com>`（或账号已验证邮箱）、`user.useConfigOnly=true`；AI 仅为 `Co-authored-by: Codex <noreply@openai.com>`。推送前用 `git log -3` 核对 author/committer，不改写已推送历史。
-5. 推送源码与正式标签，创建草稿并上传干净 ZIP/清单；核对远程附件摘要后公开为最新正式版。`target_commitish` 使用完整 SHA，短 SHA 曾返回 422。新版本成功后，才逐个移除用户明确指定的旧 Release，不顺带删除源码标签或本地归档。
+5. 推送源码与正式标签，创建草稿并上传干净 ZIP/清单；核对远程附件摘要后公开为最新正式版。PowerShell 中 Git 的 ^{commit} 等 revision 参数需加引号，避免被当成语法解析。`target_commitish` 使用完整 SHA，短 SHA 曾返回 422。新版本成功后，才逐个移除用户明确指定的旧 Release，不顺带删除源码标签或本地归档。
 6. 更新当前交接与验收记录。只清理已确认可丢弃的候选包、一次性助手、快照和中间输出，**一次只删除一个明确路径**；先核对绝对路径和链接，不跟随 junction，不批量删除或镜像覆盖知识库。保留源码、依赖、正式包、证据和备份，报告清理范围、释放空间及残留。
 
 本机 Windows 默认只有工作区可写，修改 E 盘项目需使用已授权的提权工具，不重复询问已获授权的任务。Node.js 至少 22.12；PowerShell 用 `npm.cmd`，不是被策略阻止的 npm.ps1。缺依赖时先复用本机版本匹配的完整工作副本，不更改产品依赖；Vite 保留 ESM import 条件，不能一律按 CommonJS 入口解析。
